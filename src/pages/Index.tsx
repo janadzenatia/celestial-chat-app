@@ -1,41 +1,45 @@
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise } from "lucide-react";
-
-const zodiacSigns = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-
-const dailyInsights = [
-  "The stars align in your favor today. Trust your intuition and take bold steps forward.",
-  "A cosmic shift brings unexpected opportunities. Keep your eyes open for new connections.",
-  "Mercury's influence sharpens your communication. Express your deepest thoughts with confidence.",
-];
+import { getSunSign, getApproxMoonSign, getApproxRisingSign, getDailyInsight } from "@/lib/zodiac";
 
 const Index = () => {
   const { t } = useLanguage();
-  const today = new Date();
-  const insightIndex = today.getDate() % dailyInsights.length;
+  const { profile } = useAuth();
 
-  // Placeholder Big 3 (will be calculated from user's birth data later)
-  const big3 = {
-    sun: { sign: "Leo", emoji: "♌" },
-    moon: { sign: "Pisces", emoji: "♓" },
-    rising: { sign: "Scorpio", emoji: "♏" },
-  };
+  const dob = profile?.date_of_birth ?? null;
+  const tob = profile?.time_of_birth ?? null;
+
+  const sunSign = dob ? getSunSign(dob) : null;
+  const moonSign = dob ? getApproxMoonSign(dob) : null;
+  const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
+
+  const big3 = [
+    { label: t("dashboard.sun"), icon: Sun, sign: sunSign?.name ?? "—", emoji: sunSign?.emoji ?? "☀️" },
+    { label: t("dashboard.moon"), icon: Moon, sign: moonSign?.name ?? "—", emoji: moonSign?.emoji ?? "🌙" },
+    { label: t("dashboard.rising"), icon: Sunrise, sign: risingSign?.name ?? "—", emoji: risingSign?.emoji ?? "🌅" },
+  ];
+
+  const dailyInsight = getDailyInsight(sunSign);
 
   return (
     <div className="flex flex-col">
       <AppHeader />
 
       <div className="px-4 py-6 space-y-5">
+        {/* Greeting */}
+        {profile?.name && (
+          <p className="text-muted-foreground text-sm">
+            ✨ {t("dashboard.greeting") !== "dashboard.greeting" ? t("dashboard.greeting") : "Welcome"}, <span className="text-foreground font-medium">{profile.name}</span>
+          </p>
+        )}
+
         {/* Big 3 Card */}
         <section className="glass rounded-2xl p-5 shadow-gold">
           <h2 className="font-serif text-xl text-gradient-gold mb-4">{t("dashboard.big3")}</h2>
           <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: t("dashboard.sun"), icon: Sun, ...big3.sun },
-              { label: t("dashboard.moon"), icon: Moon, ...big3.moon },
-              { label: t("dashboard.rising"), icon: Sunrise, ...big3.rising },
-            ].map(({ label, icon: Icon, sign, emoji }) => (
+            {big3.map(({ label, icon: Icon, sign, emoji }) => (
               <div key={label} className="flex flex-col items-center gap-2 glass rounded-xl p-3">
                 <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
                 <span className="text-2xl">{emoji}</span>
@@ -44,13 +48,18 @@ const Index = () => {
               </div>
             ))}
           </div>
+          {!tob && dob && (
+            <p className="text-xs text-muted-foreground mt-3 text-center opacity-70">
+              ℹ️ Moon & Rising are approximate. Add your birth time in Profile for better accuracy.
+            </p>
+          )}
         </section>
 
         {/* Daily Insight */}
         <section className="glass rounded-2xl p-5 shadow-purple">
           <h2 className="font-serif text-xl text-gradient-gold mb-3">{t("dashboard.daily")}</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            ✨ {dailyInsights[insightIndex]}
+            ✨ {dailyInsight}
           </p>
         </section>
       </div>

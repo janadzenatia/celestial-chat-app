@@ -33,6 +33,7 @@ const translations: Translations = {
   "dashboard.moon": { en: "Moon", ka: "მთვარე" },
   "dashboard.rising": { en: "Rising", ka: "ასცენდენტი" },
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
+  "dashboard.greeting": { en: "Welcome", ka: "მოგესალმებით" },
 
   // Chat
   "chat.placeholder": { en: "Ask the stars...", ka: "ჰკითხე ვარსკვლავებს..." },
