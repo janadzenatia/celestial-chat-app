@@ -1,1 +1,4 @@
 project_id = "mlourvtiiblwawydtrhk"
+
+[functions.astro-chat]
+verify_jwt = false
