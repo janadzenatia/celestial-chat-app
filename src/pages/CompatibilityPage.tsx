@@ -41,7 +41,7 @@ const CompatibilityPage = () => {
           <h1 className="font-serif text-2xl text-gradient-gold">{t("compat.title")}</h1>
           {userSign && (
             <p className="text-sm text-muted-foreground">
-              {userSign.emoji} {userSign.name} · {userSign.element}
+              {userSign.emoji} {t(`zodiac.${userSign.name}`)} · {userSign.element}
             </p>
           )}
         </div>
