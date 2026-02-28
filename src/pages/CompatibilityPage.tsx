@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Heart, Sparkles, Star, Shield } from "lucide-react";
+import { Heart, Sparkles, Star, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { getSunSign } from "@/lib/zodiac";
 import { calculateCompatibility } from "@/lib/compatibility";
 import AppHeader from "@/components/AppHeader";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
 
 const levelColors = {
   soulmate: "text-pink-400",
@@ -51,30 +49,11 @@ const CompatibilityPage = () => {
         {/* Date Picker Card */}
         <div className="glass rounded-2xl p-6 space-y-4">
           <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal h-12 rounded-xl border-border bg-muted/50",
-                  !partnerDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4 text-gold" />
-                {partnerDate ? format(partnerDate, "PPP") : t("compat.pickDate")}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="center">
-              <Calendar
-                mode="single"
-                selected={partnerDate}
-                onSelect={setPartnerDate}
-                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                initialFocus
-                className={cn("p-3 pointer-events-auto")}
-              />
-            </PopoverContent>
-          </Popover>
+          <BirthDatePicker
+            value={partnerDate}
+            onChange={setPartnerDate}
+            placeholder={t("compat.pickDate")}
+          />
         </div>
 
         {/* Results */}
