@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
 
 const OnboardingPage = () => {
   const { t } = useLanguage();
@@ -16,21 +18,21 @@ const OnboardingPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
+  const [dobDate, setDobDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [place, setPlace] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || !dobDate) return;
 
     setIsLoading(true);
     const { error } = await supabase
       .from("profiles")
       .update({
         name,
-        date_of_birth: dob,
+        date_of_birth: format(dobDate, "yyyy-MM-dd"),
         time_of_birth: time || null,
         place_of_birth: place,
         onboarding_completed: true,
@@ -72,13 +74,7 @@ const OnboardingPage = () => {
 
           <div className="space-y-2">
             <Label className="text-muted-foreground text-sm">{t("onboarding.dob")}</Label>
-            <Input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              required
-              className="glass border-white/10 focus:border-primary"
-            />
+            <BirthDatePicker value={dobDate} onChange={setDobDate} />
           </div>
 
           <div className="space-y-2">
@@ -104,7 +100,7 @@ const OnboardingPage = () => {
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !dobDate}
             className="w-full gradient-gold text-primary-foreground font-semibold h-11 rounded-xl mt-2"
           >
             {isLoading ? "..." : t("onboarding.continue")}
