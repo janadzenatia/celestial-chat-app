@@ -43,6 +43,20 @@ const translations: Translations = {
   },
 
   // Premium
+  // Compatibility
+  "compat.title": { en: "Zodiac Compatibility", ka: "ზოდიაქოს თავსებადობა" },
+  "compat.partnerDob": { en: "Partner's Date of Birth", ka: "პარტნიორის დაბადების თარიღი" },
+  "compat.check": { en: "Check Compatibility", ka: "შეამოწმე თავსებადობა" },
+  "compat.score": { en: "Compatibility Score", ka: "თავსებადობის ქულა" },
+  "compat.strengths": { en: "Strengths", ka: "ძლიერი მხარეები" },
+  "compat.challenges": { en: "Challenges", ka: "გამოწვევები" },
+  "compat.soulmate": { en: "Soulmate", ka: "სულის მეგობარი" },
+  "compat.great": { en: "Great Match", ka: "შესანიშნავი წყვილი" },
+  "compat.good": { en: "Good Match", ka: "კარგი წყვილი" },
+  "compat.challenging": { en: "Challenging", ka: "რთული" },
+  "compat.pickDate": { en: "Pick a date", ka: "აირჩიეთ თარიღი" },
+
+  // Premium
   "premium.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
   "premium.monthly": { en: "Monthly", ka: "ყოველთვიური" },
   "premium.quarterly": { en: "Quarterly", ka: "კვარტალური" },
