@@ -35,6 +35,20 @@ const translations: Translations = {
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
   "dashboard.greeting": { en: "Welcome", ka: "მოგესალმებით" },
 
+  // Zodiac Signs
+  "zodiac.Aries": { en: "Aries", ka: "ვერძი" },
+  "zodiac.Taurus": { en: "Taurus", ka: "კურო" },
+  "zodiac.Gemini": { en: "Gemini", ka: "ტყუპები" },
+  "zodiac.Cancer": { en: "Cancer", ka: "კირჩხიბი" },
+  "zodiac.Leo": { en: "Leo", ka: "ლომი" },
+  "zodiac.Virgo": { en: "Virgo", ka: "ქალწული" },
+  "zodiac.Libra": { en: "Libra", ka: "სასწორი" },
+  "zodiac.Scorpio": { en: "Scorpio", ka: "მორიელი" },
+  "zodiac.Sagittarius": { en: "Sagittarius", ka: "მშვილდოსანი" },
+  "zodiac.Capricorn": { en: "Capricorn", ka: "თხის რქა" },
+  "zodiac.Aquarius": { en: "Aquarius", ka: "მერწყული" },
+  "zodiac.Pisces": { en: "Pisces", ka: "თევზები" },
+
   // Chat
   "chat.placeholder": { en: "Ask the stars...", ka: "ჰკითხე ვარსკვლავებს..." },
   "chat.disclaimer": {

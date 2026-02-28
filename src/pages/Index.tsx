@@ -16,9 +16,9 @@ const Index = () => {
   const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
 
   const big3 = [
-    { label: t("dashboard.sun"), icon: Sun, sign: sunSign?.name ?? "—", emoji: sunSign?.emoji ?? "☀️" },
-    { label: t("dashboard.moon"), icon: Moon, sign: moonSign?.name ?? "—", emoji: moonSign?.emoji ?? "🌙" },
-    { label: t("dashboard.rising"), icon: Sunrise, sign: risingSign?.name ?? "—", emoji: risingSign?.emoji ?? "🌅" },
+    { label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
+    { label: t("dashboard.moon"), icon: Moon, sign: moonSign ? t(`zodiac.${moonSign.name}`) : "—", emoji: moonSign?.emoji ?? "🌙" },
+    { label: t("dashboard.rising"), icon: Sunrise, sign: risingSign ? t(`zodiac.${risingSign.name}`) : "—", emoji: risingSign?.emoji ?? "🌅" },
   ];
 
   const dailyInsight = getDailyInsight(sunSign);
