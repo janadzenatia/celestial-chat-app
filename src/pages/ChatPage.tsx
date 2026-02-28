@@ -23,7 +23,13 @@ const ChatPage = () => {
 
   // Load chat history
   useEffect(() => {
-    if (!user) return;
+    // Clear previous user's messages immediately
+    setMessages([]);
+    setLoadingHistory(true);
+    if (!user) {
+      setLoadingHistory(false);
+      return;
+    }
     supabase
       .from("chat_messages")
       .select("role, content")
@@ -33,7 +39,7 @@ const ChatPage = () => {
         if (data) setMessages(data as Msg[]);
         setLoadingHistory(false);
       });
-  }, [user]);
+  }, [user?.id]);
 
   // Auto-scroll
   useEffect(() => {
