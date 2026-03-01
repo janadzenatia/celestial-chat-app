@@ -78,6 +78,16 @@ const translations: Translations = {
   "premium.upgrade": { en: "Upgrade Now", ka: "გააუმჯობესე ახლა" },
   "premium.bestValue": { en: "Best Value", ka: "საუკეთესო შეთავაზება" },
 
+  // Cosmic Match
+  "cosmic.title": { en: "Your Ideal Cosmic Match", ka: "თქვენი იდეალური კოსმიური წყვილი" },
+  "cosmic.badge": { en: "Premium", ka: "პრემიუმ" },
+  "cosmic.generate": { en: "Reveal My Match", ka: "გამოავლინე ჩემი წყვილი" },
+  "cosmic.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
+  "cosmic.signs": { en: "Compatible Signs", ka: "თავსებადი ნიშნები" },
+  "cosmic.years": { en: "Ideal Birth Years", ka: "იდეალური დაბადების წლები" },
+  "cosmic.profile": { en: "Partner Profile", ka: "პარტნიორის პროფილი" },
+  "cosmic.generating": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
+
   // Onboarding
   "onboarding.name": { en: "Your Name", ka: "თქვენი სახელი" },
   "onboarding.dob": { en: "Date of Birth", ka: "დაბადების თარიღი" },
