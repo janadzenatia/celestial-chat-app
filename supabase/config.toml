@@ -2,3 +2,6 @@ project_id = "mlourvtiiblwawydtrhk"
 
 [functions.astro-chat]
 verify_jwt = false
+
+[functions.daily-insight]
+verify_jwt = false

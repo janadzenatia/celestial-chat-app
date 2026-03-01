@@ -1,12 +1,14 @@
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Sun, Moon, Sunrise } from "lucide-react";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign, getDailyInsight } from "@/lib/zodiac";
+import { Sun, Moon, Sunrise, Loader2 } from "lucide-react";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
+  const { insight, loading: insightLoading } = useDailyInsight();
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -21,8 +23,6 @@ const Index = () => {
     { label: t("dashboard.rising"), icon: Sunrise, sign: risingSign ? t(`zodiac.${risingSign.name}`) : "—", emoji: risingSign?.emoji ?? "🌅" },
   ];
 
-  const dailyInsight = getDailyInsight(sunSign);
-
   return (
     <div className="flex flex-col">
       <AppHeader />
@@ -31,7 +31,7 @@ const Index = () => {
         {/* Greeting */}
         {profile?.name && (
           <p className="text-muted-foreground text-sm">
-            ✨ {t("dashboard.greeting") !== "dashboard.greeting" ? t("dashboard.greeting") : "Welcome"}, <span className="text-foreground font-medium">{profile.name}</span>
+            ✨ {t("dashboard.greeting")}, <span className="text-foreground font-medium">{profile.name}</span>
           </p>
         )}
 
@@ -58,9 +58,16 @@ const Index = () => {
         {/* Daily Insight */}
         <section className="glass rounded-2xl p-5 shadow-purple">
           <h2 className="font-serif text-xl text-gradient-gold mb-3">{t("dashboard.daily")}</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            ✨ {dailyInsight}
-          </p>
+          {insightLoading ? (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Reading the stars...</span>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              ✨ {insight || "Add your birth date to receive personalized insights."}
+            </p>
+          )}
         </section>
       </div>
     </div>
