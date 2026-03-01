@@ -1,14 +1,14 @@
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Sun, Moon, Sunrise, Loader2 } from "lucide-react";
+import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
-  const { insight, loading: insightLoading } = useDailyInsight();
+  const { insight, loading: insightLoading, refresh: refreshInsight } = useDailyInsight();
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -57,7 +57,17 @@ const Index = () => {
 
         {/* Daily Insight */}
         <section className="glass rounded-2xl p-5 shadow-purple">
-          <h2 className="font-serif text-xl text-gradient-gold mb-3">{t("dashboard.daily")}</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-serif text-xl text-gradient-gold">{t("dashboard.daily")}</h2>
+            <button
+              onClick={refreshInsight}
+              disabled={insightLoading}
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+              aria-label="Refresh insight"
+            >
+              <RefreshCw className={`w-4 h-4 ${insightLoading ? "animate-spin" : ""}`} />
+            </button>
+          </div>
           {insightLoading ? (
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
