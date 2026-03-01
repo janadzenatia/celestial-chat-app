@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.daily-insight]
 verify_jwt = false
+
+[functions.cosmic-match]
+verify_jwt = false

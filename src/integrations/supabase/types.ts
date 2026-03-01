@@ -38,6 +38,36 @@ export type Database = {
         }
         Relationships: []
       }
+      cosmic_matches: {
+        Row: {
+          birth_years: Json
+          compatible_signs: Json
+          created_at: string
+          id: string
+          language: string
+          personality_profile: string
+          user_id: string
+        }
+        Insert: {
+          birth_years?: Json
+          compatible_signs?: Json
+          created_at?: string
+          id?: string
+          language?: string
+          personality_profile: string
+          user_id: string
+        }
+        Update: {
+          birth_years?: Json
+          compatible_signs?: Json
+          created_at?: string
+          id?: string
+          language?: string
+          personality_profile?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_insights: {
         Row: {
           content: string
