@@ -1,9 +1,21 @@
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { User, Star, Shield } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { User, Star, Shield, LogOut } from "lucide-react";
 
 const ProfilePage = () => {
   const { t } = useLanguage();
+  const { signOut, profile } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    await signOut();
+    toast({ title: t("profile.loggedOut") });
+    navigate("/auth", { replace: true });
+  };
 
   return (
     <div className="flex flex-col">
@@ -15,7 +27,7 @@ const ProfilePage = () => {
             <User className="w-6 h-6 text-foreground" />
           </div>
           <div>
-            <h2 className="font-serif text-lg text-foreground">Stargazer</h2>
+            <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <Star className="w-3 h-3 text-primary" /> {t("profile.free")}
             </span>
@@ -46,6 +58,15 @@ const ProfilePage = () => {
             </p>
           </div>
         </section>
+
+        {/* Log Out */}
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors text-sm font-medium"
+        >
+          <LogOut className="w-4 h-4" />
+          {t("profile.logout")}
+        </button>
       </div>
     </div>
   );

@@ -256,8 +256,9 @@ const translations: Translations = {
     en: "Astrochat is for entertainment purposes only. Not a substitute for professional advice.",
     ka: "Astrochat მხოლოდ გასართობი მიზნებისთვისაა. არ ანაცვლებს პროფესიონალურ რჩევას."
   },
+  "profile.logout": { en: "Log Out", ka: "ანგარიშიდან გასვლა" },
+  "profile.loggedOut": { en: "Logged out successfully", ka: "წარმატებით გამოხვედით" },
 
-  // Cosmic Hook
   "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
   "hook.generating": { en: "Scanning the stars for you...", ka: "ვარსკვლავების სკანირება..." },
   "hook.dismiss": { en: "Dismiss", ka: "დახურვა" },
