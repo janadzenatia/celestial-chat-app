@@ -280,6 +280,36 @@ export type Database = {
         }
         Relationships: []
       }
+      wealth_reports: {
+        Row: {
+          career_timeline: string
+          cosmic_calling: string
+          created_at: string
+          id: string
+          language: string
+          user_id: string
+          wealth_dna: string
+        }
+        Insert: {
+          career_timeline?: string
+          cosmic_calling?: string
+          created_at?: string
+          id?: string
+          language?: string
+          user_id: string
+          wealth_dna?: string
+        }
+        Update: {
+          career_timeline?: string
+          cosmic_calling?: string
+          created_at?: string
+          id?: string
+          language?: string
+          user_id?: string
+          wealth_dna?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

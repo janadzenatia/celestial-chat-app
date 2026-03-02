@@ -1,5 +1,6 @@
 import AppHeader from "@/components/AppHeader";
 import CosmicMatchCard from "@/components/CosmicMatchCard";
+import WealthCareerCard from "@/components/WealthCareerCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -82,6 +83,9 @@ const Index = () => {
         </section>
         {/* Cosmic Match */}
         {dob && <CosmicMatchCard />}
+
+        {/* Wealth & Career Destiny */}
+        {dob && <WealthCareerCard />}
       </div>
     </div>
   );
