@@ -29,7 +29,7 @@ const ProfilePage = () => {
           <div>
             <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Star className="w-3 h-3 text-primary" /> {t("profile.free")}
+              <Star className="w-3 h-3 text-primary" /> {profile?.subscription_status === "premium" ? t("profile.premium") : t("profile.free")}
             </span>
           </div>
         </section>
@@ -44,7 +44,7 @@ const ProfilePage = () => {
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground">{t("profile.free")}</span>
+              <span className="text-foreground">{profile?.subscription_status === "premium" ? t("profile.premium") : t("profile.free")}</span>
             </div>
           </div>
         </section>

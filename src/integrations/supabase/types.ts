@@ -203,6 +203,7 @@ export type Database = {
           name: string | null
           onboarding_completed: boolean
           place_of_birth: string | null
+          subscription_status: string
           time_of_birth: string | null
           updated_at: string
           user_id: string
@@ -216,6 +217,7 @@ export type Database = {
           name?: string | null
           onboarding_completed?: boolean
           place_of_birth?: string | null
+          subscription_status?: string
           time_of_birth?: string | null
           updated_at?: string
           user_id: string
@@ -229,6 +231,7 @@ export type Database = {
           name?: string | null
           onboarding_completed?: boolean
           place_of_birth?: string | null
+          subscription_status?: string
           time_of_birth?: string | null
           updated_at?: string
           user_id?: string

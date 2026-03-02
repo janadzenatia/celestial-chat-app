@@ -11,6 +11,7 @@ import { BirthDatePicker } from "@/components/BirthDatePicker";
 import RelationshipForecastCard from "@/components/RelationshipForecast";
 import SynastryReportCard from "@/components/SynastryReportCard";
 import BirthTimeModal from "@/components/BirthTimeModal";
+import PremiumGate from "@/components/PremiumGate";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
 import { Input } from "@/components/ui/input";
@@ -202,33 +203,37 @@ const CompatibilityPage = () => {
           </div>
         )}
 
-        {/* Deep Synastry Report */}
+        {/* Deep Synastry Report — Premium gated */}
         {partnerDobStr && (
-          <SynastryReportCard
-            report={report}
-            loading={reportLoading}
-            generating={reportGenerating}
-            onGenerate={handleSynastryGenerate}
-            onRegenerate={generateReport}
-            userEmoji={userSign?.emoji}
-            partnerEmoji={partnerSign?.emoji}
-            partnerName={partnerName}
-            partnerHasTime={partnerHasTime}
-          />
+          <PremiumGate overlay>
+            <SynastryReportCard
+              report={report}
+              loading={reportLoading}
+              generating={reportGenerating}
+              onGenerate={handleSynastryGenerate}
+              onRegenerate={generateReport}
+              userEmoji={userSign?.emoji}
+              partnerEmoji={partnerSign?.emoji}
+              partnerName={partnerName}
+              partnerHasTime={partnerHasTime}
+            />
+          </PremiumGate>
         )}
 
-        {/* Relationship Forecast — always shown after synastry, uses teaser flow */}
+        {/* Relationship Forecast — Premium gated */}
         {partnerDobStr && (
-          <RelationshipForecastCard
-            intro={forecast?.intro}
-            periods={forecast?.periods ?? null}
-            loading={forecastLoading}
-            generating={forecastGenerating}
-            onGenerate={generateForecast}
-            onRegenerate={generateForecast}
-            relationshipDate={relationshipDate}
-            onRelationshipDateChange={setRelationshipDate}
-          />
+          <PremiumGate overlay>
+            <RelationshipForecastCard
+              intro={forecast?.intro}
+              periods={forecast?.periods ?? null}
+              loading={forecastLoading}
+              generating={forecastGenerating}
+              onGenerate={generateForecast}
+              onRegenerate={generateForecast}
+              relationshipDate={relationshipDate}
+              onRelationshipDateChange={setRelationshipDate}
+            />
+          </PremiumGate>
         )}
       </div>
 

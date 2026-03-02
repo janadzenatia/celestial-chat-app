@@ -12,6 +12,7 @@ interface Profile {
   language_preference: string;
   is_premium: boolean;
   onboarding_completed: boolean;
+  subscription_status: string;
 }
 
 interface AuthContextType {
