@@ -75,6 +75,43 @@ const translations: Translations = {
   "compat.pickDate": { en: "Pick a date", ka: "აირჩიეთ თარიღი" },
   "compat.relationshipDate": { en: "Marriage / Relationship Start Date", ka: "ქორწინების / ურთიერთობის დაწყების თარიღი" },
 
+  // Compatibility summaries
+  "compat.summary.soulmate": { en: "A cosmic soulmate connection. The stars align beautifully for this pairing.", ka: "კოსმიური სულის მეგობრის კავშირი. ვარსკვლავები ლამაზად ერწყმის ამ წყვილს." },
+  "compat.summary.great": { en: "A naturally strong bond. This is a dynamic and rewarding connection.", ka: "ბუნებრივად ძლიერი კავშირი. დინამიური და ნაყოფიერი ურთიერთობა." },
+  "compat.summary.good": { en: "A solid relationship built with mutual effort and understanding.", ka: "მყარი ურთიერთობა, აგებული ორმხრივი ძალისხმევით და გაგებით." },
+  "compat.summary.challenging": { en: "Cosmic tension exists, but great growth awaits those who persevere.", ka: "კოსმიური დაძაბულობა არსებობს, მაგრამ დიდი ზრდა ელით მათ, ვინც გამძლეობას გამოიჩენს." },
+
+  // Compatibility strengths
+  "compat.str.deepEmotional": { en: "Deep emotional understanding", ka: "ღრმა ემოციური გაგება" },
+  "compat.str.naturalChemistry": { en: "Natural chemistry and attraction", ka: "ბუნებრივი ქიმია და მიზიდულობა" },
+  "compat.str.sharedValues": { en: "Shared values and life goals", ka: "საერთო ღირებულებები და ცხოვრებისეული მიზნები" },
+  "compat.str.strongComm": { en: "Strong communication flow", ka: "ძლიერი კომუნიკაციის ნაკადი" },
+  "compat.str.complementary": { en: "Complementary strengths", ka: "ერთმანეთის შემავსებელი ძლიერი მხარეები" },
+  "compat.str.excitingDynamic": { en: "Exciting dynamic energy", ka: "ამაღელვებელი დინამიური ენერგია" },
+  "compat.str.mutualRespect": { en: "Mutual respect and admiration", ka: "ორმხრივი პატივისცემა და აღტაცება" },
+  "compat.str.growthDifferences": { en: "Growth through differences", ka: "განვითარება განსხვავებების მეშვეობით" },
+  "compat.str.balancedPerspectives": { en: "Balanced perspectives", ka: "დაბალანსებული პერსპექტივები" },
+  "compat.str.profoundGrowth": { en: "Opportunity for profound growth", ka: "ღრმა ზრდის შესაძლებლობა" },
+  "compat.str.patience": { en: "Learning patience and compromise", ka: "მოთმინებისა და კომპრომისის სწავლა" },
+  "compat.str.resilience": { en: "Building resilience together", ka: "გამძლეობის ერთად აშენება" },
+
+  // Compatibility challenges
+  "compat.ch.tooComfortable": { en: "May become too comfortable", ka: "შეიძლება ზედმეტად კომფორტული გახდეს" },
+  "compat.ch.individuality": { en: "Need to maintain individuality", ka: "საჭიროა ინდივიდუალობის შენარჩუნება" },
+  "compat.ch.miscommunication": { en: "Occasional miscommunication", ka: "ხანდახან გაუგებრობა კომუნიკაციაში" },
+  "compat.ch.differentPacing": { en: "Different pacing in decisions", ka: "განსხვავებული ტემპი გადაწყვეტილებებში" },
+  "compat.ch.emotionalStyles": { en: "Differing emotional styles", ka: "განსხვავებული ემოციური სტილები" },
+  "compat.ch.extraEffort": { en: "Need extra effort to connect deeply", ka: "საჭიროა დამატებითი ძალისხმევა ღრმა კავშირისთვის" },
+  "compat.ch.differentApproaches": { en: "Fundamentally different approaches", ka: "ფუნდამენტურად განსხვავებული მიდგომები" },
+  "compat.ch.clashingTemperaments": { en: "Clashing temperaments", ka: "ტემპერამენტების შეუთავსებლობა" },
+  "compat.ch.consciousCompromise": { en: "Requires conscious compromise", ka: "მოითხოვს შეგნებულ კომპრომისს" },
+
+  // Elements
+  "element.Fire": { en: "Fire", ka: "ცეცხლი" },
+  "element.Earth": { en: "Earth", ka: "მიწა" },
+  "element.Air": { en: "Air", ka: "ჰაერი" },
+  "element.Water": { en: "Water", ka: "წყალი" },
+
   // Relationship Forecast
   "forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
   "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღეთ 12-თვიანი ტრანზიტული პროგნოზი თქვენი ურთიერთობისთვის" },

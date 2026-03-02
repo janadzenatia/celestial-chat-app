@@ -1,11 +1,10 @@
-import { ZodiacSign, getSunSign } from "./zodiac";
+import { ZodiacSign } from "./zodiac";
 
 interface CompatibilityResult {
   score: number;
   level: "soulmate" | "great" | "good" | "challenging";
-  summary: string;
-  strengths: string[];
-  challenges: string[];
+  strengthKeys: string[];
+  challengeKeys: string[];
 }
 
 // Element compatibility matrix
@@ -32,34 +31,18 @@ const signBonus: Record<string, string[]> = {
   Pisces:      ["Cancer", "Scorpio", "Capricorn"],
 };
 
-const strengthsMap: Record<string, string[]> = {
-  soulmate: [
-    "Deep emotional understanding",
-    "Natural chemistry and attraction",
-    "Shared values and life goals",
-  ],
-  great: [
-    "Strong communication flow",
-    "Complementary strengths",
-    "Exciting dynamic energy",
-  ],
-  good: [
-    "Mutual respect and admiration",
-    "Growth through differences",
-    "Balanced perspectives",
-  ],
-  challenging: [
-    "Opportunity for profound growth",
-    "Learning patience and compromise",
-    "Building resilience together",
-  ],
+const strengthKeysMap: Record<string, string[]> = {
+  soulmate: ["compat.str.deepEmotional", "compat.str.naturalChemistry", "compat.str.sharedValues"],
+  great: ["compat.str.strongComm", "compat.str.complementary", "compat.str.excitingDynamic"],
+  good: ["compat.str.mutualRespect", "compat.str.growthDifferences", "compat.str.balancedPerspectives"],
+  challenging: ["compat.str.profoundGrowth", "compat.str.patience", "compat.str.resilience"],
 };
 
-const challengesMap: Record<string, string[]> = {
-  soulmate: ["May become too comfortable", "Need to maintain individuality"],
-  great: ["Occasional miscommunication", "Different pacing in decisions"],
-  good: ["Differing emotional styles", "Need extra effort to connect deeply"],
-  challenging: ["Fundamentally different approaches", "Clashing temperaments", "Requires conscious compromise"],
+const challengeKeysMap: Record<string, string[]> = {
+  soulmate: ["compat.ch.tooComfortable", "compat.ch.individuality"],
+  great: ["compat.ch.miscommunication", "compat.ch.differentPacing"],
+  good: ["compat.ch.emotionalStyles", "compat.ch.extraEffort"],
+  challenging: ["compat.ch.differentApproaches", "compat.ch.clashingTemperaments", "compat.ch.consciousCompromise"],
 };
 
 export function calculateCompatibility(
@@ -68,12 +51,10 @@ export function calculateCompatibility(
 ): CompatibilityResult {
   let baseScore = elementCompat[sign1.element][sign2.element];
 
-  // Bonus for classic pairings
   if (signBonus[sign1.name]?.includes(sign2.name)) {
     baseScore = Math.min(100, baseScore + 10);
   }
 
-  // Same sign bonus
   if (sign1.name === sign2.name) {
     baseScore = Math.max(baseScore, 75);
   }
@@ -82,18 +63,10 @@ export function calculateCompatibility(
   const level: CompatibilityResult["level"] =
     score >= 90 ? "soulmate" : score >= 75 ? "great" : score >= 60 ? "good" : "challenging";
 
-  const summaries: Record<string, string> = {
-    soulmate: `${sign1.emoji} ${sign1.name} and ${sign2.emoji} ${sign2.name} share a cosmic soulmate connection. The stars align beautifully for this pairing.`,
-    great: `${sign1.emoji} ${sign1.name} and ${sign2.emoji} ${sign2.name} have a naturally strong bond. This is a dynamic and rewarding connection.`,
-    good: `${sign1.emoji} ${sign1.name} and ${sign2.emoji} ${sign2.name} can build a solid relationship with mutual effort and understanding.`,
-    challenging: `${sign1.emoji} ${sign1.name} and ${sign2.emoji} ${sign2.name} face cosmic tension, but great growth awaits those who persevere.`,
-  };
-
   return {
     score,
     level,
-    summary: summaries[level],
-    strengths: strengthsMap[level],
-    challenges: challengesMap[level],
+    strengthKeys: strengthKeysMap[level],
+    challengeKeys: challengeKeysMap[level],
   };
 }

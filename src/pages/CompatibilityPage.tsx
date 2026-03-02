@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { format } from "date-fns";
+import { useState, useEffect } from "react";
+import { format, parse } from "date-fns";
 import { Heart, Sparkles, Star, Shield, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,6 +13,8 @@ import SynastryReportCard from "@/components/SynastryReportCard";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
 import { Input } from "@/components/ui/input";
+
+const STORAGE_KEY = "astrochat_compat_form";
 
 const levelColors = {
   soulmate: "text-pink-400",
@@ -28,13 +30,48 @@ const levelGradients = {
   challenging: "from-orange-500/20 to-red-500/20",
 };
 
+function loadSavedForm() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as {
+      partnerName: string;
+      partnerDate: string | null;
+      partnerTime: string;
+      relationshipDate: string | null;
+    };
+  } catch {
+    return null;
+  }
+}
+
 const CompatibilityPage = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
-  const [partnerDate, setPartnerDate] = useState<Date>();
-  const [partnerName, setPartnerName] = useState("");
-  const [partnerTime, setPartnerTime] = useState("");
-  const [relationshipDate, setRelationshipDate] = useState<Date>();
+
+  const saved = loadSavedForm();
+
+  const [partnerName, setPartnerName] = useState(saved?.partnerName ?? "");
+  const [partnerDate, setPartnerDate] = useState<Date | undefined>(
+    saved?.partnerDate ? parse(saved.partnerDate, "yyyy-MM-dd", new Date()) : undefined
+  );
+  const [partnerTime, setPartnerTime] = useState(saved?.partnerTime ?? "");
+  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>(
+    saved?.relationshipDate ? parse(saved.relationshipDate, "yyyy-MM-dd", new Date()) : undefined
+  );
+
+  // Persist form state
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        partnerName,
+        partnerDate: partnerDate ? format(partnerDate, "yyyy-MM-dd") : null,
+        partnerTime,
+        relationshipDate: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
+      })
+    );
+  }, [partnerName, partnerDate, partnerTime, relationshipDate]);
 
   const userSign = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const partnerDobStr = partnerDate ? format(partnerDate, "yyyy-MM-dd") : undefined;
@@ -53,7 +90,7 @@ const CompatibilityPage = () => {
           <h1 className="font-serif text-2xl text-gradient-gold">{t("compat.title")}</h1>
           {userSign && (
             <p className="text-sm text-muted-foreground">
-              {userSign.emoji} {t(`zodiac.${userSign.name}`)} · {userSign.element}
+              {userSign.emoji} {t(`zodiac.${userSign.name}`)} · {t(`element.${userSign.element}`)}
             </p>
           )}
         </div>
@@ -98,6 +135,16 @@ const CompatibilityPage = () => {
               className="glass border-white/10 focus:border-primary"
             />
           </div>
+
+          {/* Relationship Date — inside the form card */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
+            <BirthDatePicker
+              value={relationshipDate}
+              onChange={setRelationshipDate}
+              placeholder={t("compat.pickDate")}
+            />
+          </div>
         </div>
 
         {/* Basic Compatibility Results */}
@@ -126,7 +173,9 @@ const CompatibilityPage = () => {
                 />
               </div>
 
-              <p className="text-sm text-muted-foreground leading-relaxed">{result.summary}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {userSign!.emoji} {t(`zodiac.${userSign!.name}`)} & {partnerSign.emoji} {t(`zodiac.${partnerSign.name}`)} — {t(`compat.summary.${result.level}`)}
+              </p>
             </div>
 
             {/* Strengths */}
@@ -136,10 +185,10 @@ const CompatibilityPage = () => {
                 <h3 className="font-serif text-sm text-gradient-gold">{t("compat.strengths")}</h3>
               </div>
               <ul className="space-y-2">
-                {result.strengths.map((s, i) => (
+                {result.strengthKeys.map((key, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                     <Star className="w-3 h-3 mt-1 text-gold shrink-0" />
-                    {s}
+                    {t(key)}
                   </li>
                 ))}
               </ul>
@@ -152,10 +201,10 @@ const CompatibilityPage = () => {
                 <h3 className="font-serif text-sm text-gradient-gold">{t("compat.challenges")}</h3>
               </div>
               <ul className="space-y-2">
-                {result.challenges.map((c, i) => (
+                {result.challengeKeys.map((key, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                     <span className="w-3 h-3 mt-1 shrink-0 text-center text-xs text-purple-light">•</span>
-                    {c}
+                    {t(key)}
                   </li>
                 ))}
               </ul>
@@ -163,7 +212,7 @@ const CompatibilityPage = () => {
           </div>
         )}
 
-        {/* Deep Synastry Report — shown when partner DOB is set */}
+        {/* Deep Synastry Report */}
         {partnerDobStr && (
           <SynastryReportCard
             report={report}
@@ -176,29 +225,15 @@ const CompatibilityPage = () => {
           />
         )}
 
-        {/* Relationship Date — shown when partner date is set */}
-        {partnerDate && (
-          <>
-            <div className="glass rounded-2xl p-6 space-y-4">
-              <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-              <BirthDatePicker
-                value={relationshipDate}
-                onChange={setRelationshipDate}
-                placeholder={t("compat.pickDate")}
-              />
-            </div>
-
-            {/* Relationship Forecast */}
-            {relationshipDate && (
-              <RelationshipForecastCard
-                periods={forecast?.periods ?? null}
-                loading={forecastLoading}
-                generating={forecastGenerating}
-                onGenerate={generateForecast}
-                onRegenerate={generateForecast}
-              />
-            )}
-          </>
+        {/* Relationship Forecast */}
+        {partnerDate && relationshipDate && (
+          <RelationshipForecastCard
+            periods={forecast?.periods ?? null}
+            loading={forecastLoading}
+            generating={forecastGenerating}
+            onGenerate={generateForecast}
+            onRegenerate={generateForecast}
+          />
         )}
       </div>
     </div>
