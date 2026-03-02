@@ -18,20 +18,35 @@ const AuthPage = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const getLocalizedError = (message: string): string => {
+    const lower = message.toLowerCase();
+    if (lower.includes("invalid login credentials") || lower.includes("invalid_credentials")) {
+      return t("auth.invalidCredentials");
+    }
+    if (lower.includes("user not found")) {
+      return t("auth.userNotFound");
+    }
+    return message || t("auth.genericError");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSignUp && !termsAccepted) {
-      toast({ title: "Please accept the Terms & Conditions", variant: "destructive" });
+      toast({ title: t("auth.acceptTerms"), variant: "destructive" });
       return;
     }
     setIsLoading(true);
-    const { error } = isSignUp ? await signUp(email, password) : await signIn(email, password);
-    setIsLoading(false);
-
-    if (error) {
-      toast({ title: error.message, variant: "destructive" });
-    } else if (isSignUp) {
-      toast({ title: "Check your email to verify your account! ✨" });
+    try {
+      const { error } = isSignUp ? await signUp(email, password) : await signIn(email, password);
+      if (error) {
+        toast({ title: getLocalizedError(error.message), variant: "destructive" });
+      } else if (isSignUp) {
+        toast({ title: t("auth.checkEmail") });
+      }
+    } catch (err: any) {
+      toast({ title: t("auth.genericError"), variant: "destructive" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -102,12 +117,12 @@ const AuthPage = () => {
             disabled={isLoading || (isSignUp && !termsAccepted)}
             className="w-full gradient-gold text-primary-foreground font-semibold h-11 rounded-xl"
           >
-            {isLoading ? "..." : isSignUp ? t("auth.signup") : t("auth.login")}
+            {isLoading ? t("auth.loading") : isSignUp ? t("auth.signup") : t("auth.login")}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-5">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          {isSignUp ? t("auth.alreadyHaveAccount") : t("auth.noAccount")}{" "}
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-primary hover:underline font-medium"
