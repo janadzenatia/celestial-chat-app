@@ -259,6 +259,16 @@ const translations: Translations = {
   "profile.logout": { en: "Log Out", ka: "ანგარიშიდან გასვლა" },
   "profile.loggedOut": { en: "Logged out successfully", ka: "წარმატებით გამოხვედით" },
 
+  // Paywall
+  "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
+  "paywall.subtitle": { en: "Access all premium astrology features", ka: "მიიღე წვდომა ყველა პრემიუმ ასტროლოგიურ ფუნქციაზე" },
+  "paywall.unlock": { en: "Unlock Premium", ka: "პრემიუმის გააქტიურება" },
+  "paywall.processing": { en: "Processing...", ka: "მიმდინარეობს..." },
+  "paywall.success": { en: "Premium Activated! ✨", ka: "პრემიუმი გააქტიურებულია! ✨" },
+  "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
+  "paywall.bestValue": { en: "Best Value", ka: "საუკეთესო არჩევანი" },
+  "paywall.disclaimer": { en: "Cancel anytime. Entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნით." },
+
   "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
   "hook.generating": { en: "Scanning the stars for you...", ka: "ვარსკვლავების სკანირება..." },
   "hook.dismiss": { en: "Dismiss", ka: "დახურვა" },

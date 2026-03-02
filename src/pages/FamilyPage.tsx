@@ -5,6 +5,7 @@ import AppHeader from "@/components/AppHeader";
 import MyChildrenTab from "@/components/family/MyChildrenTab";
 import MissingPieceTab from "@/components/family/MissingPieceTab";
 import ZodiacCalculatorTab from "@/components/family/ZodiacCalculatorTab";
+import PremiumGate from "@/components/PremiumGate";
 import { cn } from "@/lib/utils";
 
 type FamilyTab = "children" | "missing" | "calculator";
@@ -51,10 +52,12 @@ const FamilyPage = () => {
           ))}
         </div>
 
-        {/* Tab Content */}
-        {activeTab === "children" && <MyChildrenTab />}
-        {activeTab === "missing" && <MissingPieceTab />}
-        {activeTab === "calculator" && <ZodiacCalculatorTab />}
+        {/* Tab Content — Premium gated */}
+        <PremiumGate>
+          {activeTab === "children" && <MyChildrenTab />}
+          {activeTab === "missing" && <MissingPieceTab />}
+          {activeTab === "calculator" && <ZodiacCalculatorTab />}
+        </PremiumGate>
       </div>
     </div>
   );

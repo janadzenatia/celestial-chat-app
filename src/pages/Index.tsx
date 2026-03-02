@@ -4,6 +4,7 @@ import WealthCareerCard from "@/components/WealthCareerCard";
 import CosmicHookBanner from "@/components/CosmicHookBanner";
 import SynastryCTABanner from "@/components/SynastryCTABanner";
 import CosmicCalendarCard from "@/components/CosmicCalendarCard";
+import PremiumGate from "@/components/PremiumGate";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -96,13 +97,25 @@ const Index = () => {
         {dob && <SynastryCTABanner />}
 
         {/* Cosmic Match */}
-        {dob && <CosmicMatchCard />}
+        {dob && (
+          <PremiumGate overlay>
+            <CosmicMatchCard />
+          </PremiumGate>
+        )}
 
         {/* Cosmic Traffic Light Calendar */}
-        {dob && <CosmicCalendarCard />}
+        {dob && (
+          <PremiumGate overlay>
+            <CosmicCalendarCard />
+          </PremiumGate>
+        )}
 
         {/* Wealth & Career Destiny */}
-        {dob && <WealthCareerCard />}
+        {dob && (
+          <PremiumGate overlay>
+            <WealthCareerCard />
+          </PremiumGate>
+        )}
       </div>
     </div>
   );
