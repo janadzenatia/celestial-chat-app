@@ -21,9 +21,8 @@ const ChatPage = () => {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Load chat history
+  // Load chat history & handle hook context
   useEffect(() => {
-    // Clear previous user's messages immediately
     setMessages([]);
     setLoadingHistory(true);
     if (!user) {
@@ -38,8 +37,94 @@ const ChatPage = () => {
       .then(({ data }) => {
         if (data) setMessages(data as Msg[]);
         setLoadingHistory(false);
+
+        // Check for hook context from notification banner
+        const hookContextStr = sessionStorage.getItem("chat_hook_context");
+        if (hookContextStr) {
+          sessionStorage.removeItem("chat_hook_context");
+          try {
+            const hookCtx = JSON.parse(hookContextStr);
+            if (hookCtx.hook) {
+              triggerHookChat(hookCtx, data as Msg[] || []);
+            }
+          } catch { /* ignore */ }
+        }
       });
   }, [user?.id]);
+
+  const triggerHookChat = async (hookCtx: { hook: string; subject: string; subjectDob?: string }, existingMsgs: Msg[]) => {
+    setIsLoading(true);
+    const lang = language === "ka" ? "Georgian" : "English";
+    const hookPrompt = `The user just tapped a cosmic notification that said: "${hookCtx.hook}". The notification was about ${hookCtx.subject === "self" ? "the user themselves" : `their family member named ${hookCtx.subject}`}. Now elaborate on what's happening astrologically and offer to help. Be warm, specific, and mystical. Respond in ${lang}.`;
+
+    const systemUserMsg: Msg = { role: "user", content: hookPrompt };
+    let assistantSoFar = "";
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          messages: [...existingMsgs.slice(-10), systemUserMsg],
+          birthData: getBirthData(),
+          language,
+        }),
+      });
+
+      if (!resp.ok) {
+        setIsLoading(false);
+        return;
+      }
+
+      const reader = resp.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      const upsert = (chunk: string) => {
+        assistantSoFar += chunk;
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === "assistant") {
+            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+          }
+          return [...prev, { role: "assistant", content: assistantSoFar }];
+        });
+      };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        let idx: number;
+        while ((idx = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (!line.startsWith("data: ")) continue;
+          const json = line.slice(6).trim();
+          if (json === "[DONE]") break;
+          try {
+            const parsed = JSON.parse(json);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) upsert(content);
+          } catch {
+            buffer = line + "\n" + buffer;
+            break;
+          }
+        }
+      }
+
+      if (assistantSoFar) {
+        await persistMessage({ role: "assistant", content: assistantSoFar });
+      }
+    } catch (e) {
+      console.error("Hook chat error:", e);
+    }
+    setIsLoading(false);
+  };
 
   // Auto-scroll
   useEffect(() => {
