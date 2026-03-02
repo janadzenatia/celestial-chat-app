@@ -10,19 +10,26 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { name, sunSign, moonSign, risingSign, language } = await req.json();
+    const { name, sunSign, moonSign, risingSign, language, period } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const userName = name || "Star Seeker";
+    const isMorning = period === "morning";
 
-    const prompt = `Generate a personalized daily horoscope for ${userName}.
+    const toneInstruction = isMorning
+      ? "This is a MORNING/DAY phrase (00:00–14:00). Be motivating, energizing, and forward-looking. Inspire action and confidence for the day ahead."
+      : "This is an EVENING/NIGHT phrase (14:00–23:59). Be reflective, calming, and introspective. Help them process the day and find peace.";
+
+    const prompt = `Generate a personalized "Phrase of the Day" for ${userName}.
 
 Their Big 3:
 - Sun Sign: ${sunSign || "Unknown"}
 - Moon Sign: ${moonSign || "Unknown"}
 - Rising Sign: ${risingSign || "Unknown"}
+
+${toneInstruction}
 
 Rules:
 - Address them by name directly.
@@ -43,7 +50,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "You are Astrochat — a witty, empathetic, and mystical AI astrologer. You provide personalized daily horoscopes." },
+          { role: "system", content: "You are Astrochat — a witty, empathetic, and mystical AI astrologer. You provide personalized daily phrases." },
           { role: "user", content: prompt },
         ],
       }),

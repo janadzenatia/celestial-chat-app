@@ -4,6 +4,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
+function getCurrentPeriod(): "morning" | "evening" {
+  const hour = new Date().getHours();
+  return hour < 14 ? "morning" : "evening";
+}
+
 export function useDailyInsight() {
   const { user, profile } = useAuth();
   const { language } = useLanguage();
@@ -18,9 +23,12 @@ export function useDailyInsight() {
     }
 
     const today = new Date().toISOString().split("T")[0];
+    const period = getCurrentPeriod();
+    const cacheKey = `${today}_${period}`;
     setLoading(true);
 
     if (skipCache) {
+      // Delete both periods for today when refreshing
       await supabase
         .from("daily_insights")
         .delete()
@@ -28,16 +36,20 @@ export function useDailyInsight() {
         .eq("insight_date", today)
         .eq("language", language);
     } else {
+      // Check cache using content prefix marker for period
       const { data: cached } = await supabase
         .from("daily_insights")
         .select("content")
         .eq("user_id", user.id)
         .eq("insight_date", today)
         .eq("language", language)
-        .maybeSingle();
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-      if (cached?.content) {
-        setInsight(cached.content);
+      // Find cached entry for current period
+      const match = cached?.find((c) => c.content.startsWith(`[${period}]`));
+      if (match) {
+        setInsight(match.content.replace(`[${period}]`, ""));
         setLoading(false);
         return;
       }
@@ -57,6 +69,7 @@ export function useDailyInsight() {
           moonSign: moonSign?.name,
           risingSign: risingSign?.name,
           language,
+          period,
         },
       });
 
@@ -65,11 +78,12 @@ export function useDailyInsight() {
 
       if (content) {
         setInsight(content);
+        // Store with period prefix for cache differentiation
         await supabase.from("daily_insights").insert({
           user_id: user.id,
           insight_date: today,
           language,
-          content,
+          content: `[${period}]${content}`,
         });
       }
     } catch (e) {
@@ -85,5 +99,7 @@ export function useDailyInsight() {
 
   const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
-  return { insight, loading, refresh };
+  const period = getCurrentPeriod();
+
+  return { insight, loading, refresh, period };
 }
