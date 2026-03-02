@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.relationship-forecast]
 verify_jwt = false
+
+[functions.synastry-report]
+verify_jwt = false
