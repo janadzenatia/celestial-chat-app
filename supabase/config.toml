@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.baby-personality]
 verify_jwt = false
+
+[functions.wealth-career]
+verify_jwt = false
