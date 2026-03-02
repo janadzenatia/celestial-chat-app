@@ -13,6 +13,7 @@ serve(async (req) => {
     const {
       userName, userDob, userSunSign, userMoonSign, userRisingSign,
       partnerName, partnerDob, partnerSunSign, partnerMoonSign, partnerRisingSign,
+      partnerHasTime,
       language,
     } = await req.json();
 
@@ -20,8 +21,19 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const lang = language === "ka" ? "Georgian" : "English";
+    const today = new Date().toISOString().split("T")[0];
+
+    const timeAckInstruction = partnerHasTime
+      ? `IMPORTANT: The partner's exact birth time was provided, so Moon and Rising signs are calculated with higher precision. Begin your analysis by acknowledging this: mention that because the exact birth time was provided, ${partnerName || "the partner"}'s Moon and Rising sign analysis is more precise.`
+      : `Note: The partner's birth time was not provided, so Moon and Rising signs are approximate estimates.`;
 
     const prompt = `You are an expert relationship synastry astrologer. Generate a deep compatibility analysis for this couple.
+
+CRITICAL CONTEXT:
+- Today's date is ${today}. The current year is ${new Date().getFullYear()}.
+- Any references to time or dates must be accurate to this context.
+
+${timeAckInstruction}
 
 Person 1:
 - Name: ${userName || "Person 1"}
@@ -40,6 +52,7 @@ Person 2:
 Analyze the synastry between these two charts. You MUST respond with ONLY a valid JSON object (no markdown, no code fences) with this exact structure:
 
 {
+  "time_acknowledged": ${partnerHasTime ? "true" : "false"},
   "overall_score": 85,
   "emotional": {
     "score": 80,
@@ -65,6 +78,7 @@ Rules:
 - Each "analysis" must be 2-3 sentences, specific to these two people's chart dynamics
 - Reference actual astrological aspects: Moon conjunct Moon, Venus trine Mars, etc.
 - Be mystical yet practical — mention how the energy manifests in real-life behavior
+- "time_acknowledged" must be ${partnerHasTime ? "true" : "false"}
 - ALL text content (analysis fields) MUST be written in ${lang}
 - Respond with ONLY the JSON object, nothing else.`;
 
@@ -77,7 +91,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "You are an expert synastry astrologer. Return ONLY valid JSON, no markdown formatting." },
+          { role: "system", content: `You are an expert synastry astrologer. Today is ${today}. Return ONLY valid JSON, no markdown formatting.` },
           { role: "user", content: prompt },
         ],
       }),

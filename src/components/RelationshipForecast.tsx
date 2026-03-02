@@ -26,6 +26,7 @@ const typeConfig = {
 };
 
 interface RelationshipForecastProps {
+  intro?: string;
   periods: ForecastPeriod[] | null;
   loading: boolean;
   generating: boolean;
@@ -34,6 +35,7 @@ interface RelationshipForecastProps {
 }
 
 export default function RelationshipForecastCard({
+  intro,
   periods,
   loading,
   generating,
@@ -96,6 +98,13 @@ export default function RelationshipForecastCard({
           <RefreshCw className={cn("w-4 h-4", generating && "animate-spin")} />
         </button>
       </div>
+
+      {/* Intro paragraph */}
+      {intro && (
+        <div className="glass rounded-2xl p-5">
+          <p className="text-sm text-muted-foreground leading-relaxed italic">{intro}</p>
+        </div>
+      )}
 
       {/* Timeline */}
       <div className="relative space-y-4">

@@ -1,4 +1,4 @@
-import { Heart, Flame, MessageCircle, Target, Loader2, Sparkles, RefreshCw } from "lucide-react";
+import { Heart, Flame, MessageCircle, Target, Loader2, Sparkles, RefreshCw, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SynastryReport } from "@/hooks/useSynastryReport";
@@ -52,6 +52,8 @@ interface SynastryReportCardProps {
   onRegenerate: () => void;
   userEmoji?: string;
   partnerEmoji?: string;
+  partnerName?: string;
+  partnerHasTime?: boolean;
 }
 
 export default function SynastryReportCard({
@@ -62,6 +64,8 @@ export default function SynastryReportCard({
   onRegenerate,
   userEmoji,
   partnerEmoji,
+  partnerName,
+  partnerHasTime,
 }: SynastryReportCardProps) {
   const { t } = useLanguage();
 
@@ -103,8 +107,20 @@ export default function SynastryReportCard({
     );
   }
 
+  const showTimeBanner = report.time_acknowledged || partnerHasTime;
+
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Time Precision Banner */}
+      {showTimeBanner && (
+        <div className="glass rounded-2xl p-4 border border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/10 flex items-start gap-3">
+          <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {t("synastry.timeBanner").replace("{name}", partnerName || t("synastry.partner"))}
+          </p>
+        </div>
+      )}
+
       {/* Overall Score */}
       <div className="glass rounded-2xl p-6 text-center space-y-3">
         <div className="flex items-center justify-between">
