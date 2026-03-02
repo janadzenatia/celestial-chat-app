@@ -52,12 +52,10 @@ const FamilyPage = () => {
           ))}
         </div>
 
-        {/* Tab Content — Premium gated */}
-        <PremiumGate>
-          {activeTab === "children" && <MyChildrenTab />}
-          {activeTab === "missing" && <MissingPieceTab />}
-          {activeTab === "calculator" && <ZodiacCalculatorTab />}
-        </PremiumGate>
+        {/* Tab Content — Children & Missing Piece are premium gated, Calculator is free */}
+        {activeTab === "children" && <PremiumGate><MyChildrenTab /></PremiumGate>}
+        {activeTab === "missing" && <PremiumGate><MissingPieceTab /></PremiumGate>}
+        {activeTab === "calculator" && <ZodiacCalculatorTab />}
       </div>
     </div>
   );

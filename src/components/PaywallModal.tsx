@@ -32,7 +32,7 @@ const PaywallModal = ({ open, onOpenChange }: PaywallModalProps) => {
     },
     annual: {
       en: { price: "$19.99", label: "Annual Star Pass — Best Value" },
-      ka: { price: "49.99 ₾", label: "1 წლიანი ვარსკვლავური პასი — საუკეთესო არჩევანი" },
+      ka: { price: "49.99 ₾", label: "1 წლიანი ვარსკვლავური პაკეტი — საუკეთესო არჩევანი" },
     },
   };
 
