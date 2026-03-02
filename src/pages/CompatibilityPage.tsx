@@ -12,6 +12,8 @@ import RelationshipForecastCard from "@/components/RelationshipForecast";
 import SynastryReportCard from "@/components/SynastryReportCard";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
+
+const partnerHasTime = (time: string) => Boolean(time && time.trim().length >= 4);
 import { Input } from "@/components/ui/input";
 
 const STORAGE_KEY = "astrochat_compat_form";
@@ -78,7 +80,7 @@ const CompatibilityPage = () => {
   const partnerSign = partnerDobStr ? getSunSign(partnerDobStr) : null;
   const result = userSign && partnerSign ? calculateCompatibility(userSign, partnerSign) : null;
 
-  const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate);
+  const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined);
 
   return (
@@ -222,12 +224,15 @@ const CompatibilityPage = () => {
             onRegenerate={generateReport}
             userEmoji={userSign?.emoji}
             partnerEmoji={partnerSign?.emoji}
+            partnerName={partnerName}
+            partnerHasTime={partnerHasTime(partnerTime)}
           />
         )}
 
         {/* Relationship Forecast */}
         {partnerDate && relationshipDate && (
           <RelationshipForecastCard
+            intro={forecast?.intro}
             periods={forecast?.periods ?? null}
             loading={forecastLoading}
             generating={forecastGenerating}

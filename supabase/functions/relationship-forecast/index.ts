@@ -10,50 +10,65 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { userDob, userSunSign, userMoonSign, userRisingSign, partnerDob, partnerSunSign, relationshipDate, language } = await req.json();
+    const {
+      userName, userDob, userSunSign, userMoonSign, userRisingSign,
+      partnerName, partnerDob, partnerSunSign, partnerMoonSign, partnerRisingSign,
+      relationshipDate, language,
+    } = await req.json();
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const lang = language === "ka" ? "Georgian" : "English";
+    const today = new Date().toISOString().split("T")[0]; // e.g. 2026-03-02
 
-    const prompt = `You are an expert relationship transit astrologer. Analyze the upcoming 12 months of astrological transits for this couple.
+    const prompt = `You are an elite relationship transit astrologer with 30+ years of experience. Generate a deep, personalized 12-month relationship forecast.
 
-User:
+CRITICAL CONTEXT:
+- Today's date is ${today}. All forecasts must be for FUTURE dates only. Never reference past dates.
+- The current year is ${new Date().getFullYear()}.
+
+Person 1:
+- Name: ${userName || "Person 1"}
 - Date of Birth: ${userDob}
 - Sun Sign: ${userSunSign || "Unknown"}
 - Moon Sign: ${userMoonSign || "Unknown"}
 - Rising Sign: ${userRisingSign || "Unknown"}
 
-Partner:
+Person 2:
+- Name: ${partnerName || "Person 2"}
 - Date of Birth: ${partnerDob}
 - Sun Sign: ${partnerSunSign || "Unknown"}
+- Moon Sign: ${partnerMoonSign || "Unknown"}
+- Rising Sign: ${partnerRisingSign || "Unknown"}
 
 Relationship Start / Marriage Date: ${relationshipDate}
-
-Based on the composite chart and upcoming planetary transits from today onward for the next 12 months, generate a relationship forecast.
 
 You MUST respond with ONLY a valid JSON object (no markdown, no code fences) with this exact structure:
 
 {
+  "intro": "A personalized 3-4 sentence introductory paragraph. Calculate how long they've been together from ${relationshipDate} to ${today}. Address them by name. Mention 1-2 significant past astrological years they navigated together. Then preview the upcoming cosmic energy themes for the next 12 months.",
   "periods": [
     {
       "month": "Month Year",
       "title": "Short evocative title",
       "type": "positive" | "challenge" | "neutral",
-      "description": "2-3 sentences of actionable advice"
+      "description": "3-4 sentences of deeply specific, actionable advice referencing actual planetary transits"
     }
   ]
 }
 
 Rules:
-- Generate exactly 3 forecast periods spread across the next 12 months
-- "month" should be like "October 2026" format
-- "type" must be one of: "positive", "challenge", "neutral"
-- "title" should be evocative and specific (e.g., "Deep Emotional Bonding", "Communication Challenge")
-- "description" should include specific actionable advice for the couple
-- Reference actual planetary transits and astrological dynamics
+- "intro" MUST calculate the real duration from ${relationshipDate} to ${today} (years, months). Address both people by name (${userName || "Person 1"} & ${partnerName || "Person 2"}).
+- Generate exactly 6-7 forecast periods, covering bi-monthly intervals across the next 12 months starting from ${today}
+- "month" should use format like "March-April 2026" for bi-monthly periods
+- "type" must be one of: "positive", "challenge", "neutral" — vary them realistically
+- "title" should be evocative and specific (e.g., "Venus Conjunct Mars: Reignited Passion", "Saturn Square: Financial Crossroads")
+- "description" should be 3-4 sentences with SPECIFIC transit references (e.g., "Jupiter enters your 7th house", "Saturn squares your composite Venus")
+- Include actionable advice: what to do, what to avoid, rituals or dates to watch
+- Tone: deeply empathetic, expert, mystical yet practical
 - ALL text content MUST be written in ${lang}
-- Month names should also be in ${lang}
+- Month names MUST be in ${lang}
 - Respond with ONLY the JSON object, nothing else.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -65,7 +80,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "You are an expert relationship transit astrologer. Return ONLY valid JSON, no markdown formatting." },
+          { role: "system", content: `You are an elite relationship transit astrologer. Today is ${today}. All forecasts must reference future dates only. Return ONLY valid JSON, no markdown formatting.` },
           { role: "user", content: prompt },
         ],
       }),

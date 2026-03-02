@@ -13,10 +13,11 @@ export interface ForecastPeriod {
 }
 
 export interface RelationshipForecast {
+  intro?: string;
   periods: ForecastPeriod[];
 }
 
-export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: Date) {
+export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: Date, partnerName?: string, partnerTime?: string) {
   const { user, profile } = useAuth();
   const { language } = useLanguage();
   const [forecast, setForecast] = useState<RelationshipForecast | null>(null);
@@ -45,7 +46,15 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
         .maybeSingle();
 
       if (data) {
-        setForecast({ periods: data.periods as unknown as ForecastPeriod[] });
+        const periods = data.periods as unknown;
+        // Handle both old format (array) and new format (object with intro + periods)
+        if (Array.isArray(periods)) {
+          setForecast({ periods: periods as ForecastPeriod[] });
+        } else if (periods && typeof periods === "object" && "periods" in (periods as any)) {
+          setForecast(periods as RelationshipForecast);
+        } else {
+          setForecast(null);
+        }
       } else {
         setForecast(null);
       }
@@ -74,16 +83,22 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
     const userMoonSign = getApproxMoonSign(dob);
     const userRisingSign = getApproxRisingSign(dob, tob);
     const partnerSunSign = getSunSign(partnerDobStr);
+    const partnerMoonSign = getApproxMoonSign(partnerDobStr);
+    const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null);
 
     try {
       const resp = await supabase.functions.invoke("relationship-forecast", {
         body: {
+          userName: profile.name,
           userDob: dob,
           userSunSign: userSunSign?.name,
           userMoonSign: userMoonSign?.name,
           userRisingSign: userRisingSign?.name,
+          partnerName: partnerName || "",
           partnerDob: partnerDobStr,
           partnerSunSign: partnerSunSign?.name,
+          partnerMoonSign: partnerMoonSign?.name,
+          partnerRisingSign: partnerRisingSign?.name,
           relationshipDate: relDateStr,
           language,
         },
@@ -94,12 +109,13 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
       if (result?.periods) {
         setForecast(result);
+        // Store the full object (intro + periods) in the periods JSONB column
         await supabase.from("relationship_forecasts").insert({
           user_id: user.id,
           partner_dob: partnerDobStr,
           relationship_date: relDateStr,
           language,
-          periods: result.periods as any,
+          periods: result as any,
         });
       }
     } catch (e) {
@@ -107,7 +123,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
     } finally {
       setGenerating(false);
     }
-  }, [user?.id, profile, partnerDobStr, relDateStr, language]);
+  }, [user?.id, profile, partnerDobStr, relDateStr, partnerName, partnerTime, language]);
 
   return { forecast, loading, generating, generate };
 }

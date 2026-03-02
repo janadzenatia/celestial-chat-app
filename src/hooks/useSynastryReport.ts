@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
-import { format } from "date-fns";
 
 export interface SynastryCategory {
   score: number;
@@ -12,6 +11,7 @@ export interface SynastryCategory {
 
 export interface SynastryReport {
   overall_score: number;
+  time_acknowledged?: boolean;
   emotional: SynastryCategory;
   romantic: SynastryCategory;
   communication: SynastryCategory;
@@ -81,6 +81,8 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
     const partnerMoonSign = getApproxMoonSign(partnerDob);
     const partnerRisingSign = getApproxRisingSign(partnerDob, partnerTime || null);
 
+    const partnerHasTime = Boolean(partnerTime && partnerTime.trim().length >= 4);
+
     try {
       const resp = await supabase.functions.invoke("synastry-report", {
         body: {
@@ -94,6 +96,7 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
           partnerSunSign: partnerSunSign?.name,
           partnerMoonSign: partnerMoonSign?.name,
           partnerRisingSign: partnerRisingSign?.name,
+          partnerHasTime,
           language,
         },
       });
