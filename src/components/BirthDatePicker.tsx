@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { format, parse, isValid, getDaysInMonth } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -13,8 +14,9 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December",
 ];
 
+const MIN_YEAR = 1920;
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
+const years = Array.from({ length: currentYear - MIN_YEAR + 1 }, (_, i) => currentYear - i);
 
 interface BirthDatePickerProps {
   value?: Date;
@@ -24,19 +26,19 @@ interface BirthDatePickerProps {
 }
 
 export function BirthDatePicker({ value, onChange, placeholder = "Pick a date", className }: BirthDatePickerProps) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [textValue, setTextValue] = useState(value ? format(value, "dd/MM/yyyy") : "");
   const [viewMonth, setViewMonth] = useState(value ?? new Date(2000, 0, 1));
+  const [error, setError] = useState<string | null>(null);
 
-  // Sync text when value changes externally
   useEffect(() => {
     if (value) setTextValue(format(value, "dd/MM/yyyy"));
   }, [value]);
 
   const handleTextChange = (raw: string) => {
-    // Allow only digits and slashes
     const cleaned = raw.replace(/[^\d/]/g, "");
-    setTextValue(cleaned);
+    setError(null);
 
     // Auto-insert slashes
     let auto = cleaned.replace(/\//g, "");
@@ -47,13 +49,24 @@ export function BirthDatePicker({ value, onChange, placeholder = "Pick a date", 
     }
     setTextValue(auto);
 
-    // Try to parse complete date
+    // Validate complete date
     if (auto.length === 10) {
       const parsed = parse(auto, "dd/MM/yyyy", new Date());
-      if (isValid(parsed) && parsed <= new Date() && parsed >= new Date("1900-01-01")) {
-        onChange(parsed);
-        setViewMonth(parsed);
+      const year = parsed.getFullYear();
+
+      if (!isValid(parsed) || year < MIN_YEAR || year > currentYear) {
+        setError(t("validation.invalidDate"));
+        onChange(undefined);
+        return;
       }
+      if (parsed > new Date()) {
+        setError(t("validation.futureDate"));
+        onChange(undefined);
+        return;
+      }
+      setError(null);
+      onChange(parsed);
+      setViewMonth(parsed);
     }
   };
 
@@ -61,7 +74,6 @@ export function BirthDatePicker({ value, onChange, placeholder = "Pick a date", 
     const m = parseInt(monthStr);
     const newDate = new Date(viewMonth);
     newDate.setMonth(m);
-    // Clamp day to valid range for new month
     const maxDay = getDaysInMonth(newDate);
     if (newDate.getDate() > maxDay) newDate.setDate(maxDay);
     setViewMonth(newDate);
@@ -77,6 +89,7 @@ export function BirthDatePicker({ value, onChange, placeholder = "Pick a date", 
   };
 
   const handleCalendarSelect = (date: Date | undefined) => {
+    setError(null);
     onChange(date);
     if (date) {
       setTextValue(format(date, "dd/MM/yyyy"));
@@ -86,62 +99,67 @@ export function BirthDatePicker({ value, onChange, placeholder = "Pick a date", 
   };
 
   return (
-    <div className={cn("flex gap-2", className)}>
-      {/* Manual text input */}
-      <Input
-        value={textValue}
-        onChange={(e) => handleTextChange(e.target.value)}
-        placeholder="DD/MM/YYYY"
-        maxLength={10}
-        className="flex-1 glass border-white/10 focus:border-primary"
-      />
-      {/* Calendar popover */}
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="shrink-0 border-border bg-muted/50 hover:bg-muted"
-          >
-            <CalendarIcon className="h-4 w-4 text-gold" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="end">
-          {/* Year & Month dropdowns */}
-          <div className="flex gap-2 p-3 pb-0">
-            <Select value={String(viewMonth.getMonth())} onValueChange={handleMonthSelect}>
-              <SelectTrigger className="h-8 text-xs flex-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="max-h-52">
-                {MONTHS.map((m, i) => (
-                  <SelectItem key={i} value={String(i)} className="text-xs">{m}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={String(viewMonth.getFullYear())} onValueChange={handleYearSelect}>
-              <SelectTrigger className="h-8 text-xs w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="max-h-52">
-                {years.map((y) => (
-                  <SelectItem key={y} value={String(y)} className="text-xs">{y}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <Calendar
-            mode="single"
-            selected={value}
-            onSelect={handleCalendarSelect}
-            month={viewMonth}
-            onMonthChange={setViewMonth}
-            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-            initialFocus
-            className={cn("p-3 pointer-events-auto")}
-          />
-        </PopoverContent>
-      </Popover>
+    <div className={cn("space-y-1", className)}>
+      <div className="flex gap-2">
+        <Input
+          value={textValue}
+          onChange={(e) => handleTextChange(e.target.value)}
+          placeholder="DD/MM/YYYY"
+          maxLength={10}
+          className={cn(
+            "flex-1 glass border-white/10 focus:border-primary",
+            error && "border-destructive focus:border-destructive"
+          )}
+        />
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 border-border bg-muted/50 hover:bg-muted"
+            >
+              <CalendarIcon className="h-4 w-4 text-gold" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="end">
+            <div className="flex gap-2 p-3 pb-0">
+              <Select value={String(viewMonth.getMonth())} onValueChange={handleMonthSelect}>
+                <SelectTrigger className="h-8 text-xs flex-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-52">
+                  {MONTHS.map((m, i) => (
+                    <SelectItem key={i} value={String(i)} className="text-xs">{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={String(viewMonth.getFullYear())} onValueChange={handleYearSelect}>
+                <SelectTrigger className="h-8 text-xs w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-52">
+                  {years.map((y) => (
+                    <SelectItem key={y} value={String(y)} className="text-xs">{y}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Calendar
+              mode="single"
+              selected={value}
+              onSelect={handleCalendarSelect}
+              month={viewMonth}
+              onMonthChange={setViewMonth}
+              disabled={(date) => date > new Date() || date < new Date(`${MIN_YEAR}-01-01`)}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      {error && (
+        <p className="text-xs text-destructive animate-in fade-in slide-in-from-top-1 duration-200">{error}</p>
+      )}
     </div>
   );
 }
