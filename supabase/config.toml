@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.cosmic-match]
 verify_jwt = false
+
+[functions.relationship-forecast]
+verify_jwt = false

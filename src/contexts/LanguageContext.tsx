@@ -69,6 +69,14 @@ const translations: Translations = {
   "compat.good": { en: "Good Match", ka: "კარგი წყვილი" },
   "compat.challenging": { en: "Challenging", ka: "რთული" },
   "compat.pickDate": { en: "Pick a date", ka: "აირჩიეთ თარიღი" },
+  "compat.relationshipDate": { en: "Marriage / Relationship Start Date", ka: "ქორწინების / ურთიერთობის დაწყების თარიღი" },
+
+  // Relationship Forecast
+  "forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
+  "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღეთ 12-თვიანი ტრანზიტული პროგნოზი თქვენი ურთიერთობისთვის" },
+  "forecast.generate": { en: "Reveal Forecast", ka: "პროგნოზის ნახვა" },
+  "forecast.generating": { en: "Reading the transits...", ka: "ტრანზიტების წაკითხვა..." },
+  "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
 
   // Premium
   "premium.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
