@@ -1,6 +1,7 @@
 import AppHeader from "@/components/AppHeader";
 import CosmicMatchCard from "@/components/CosmicMatchCard";
 import WealthCareerCard from "@/components/WealthCareerCard";
+import CosmicHookBanner from "@/components/CosmicHookBanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -30,6 +31,9 @@ const Index = () => {
       <AppHeader />
 
       <div className="px-4 py-6 space-y-5">
+        {/* Cosmic Hook Notification */}
+        {dob && <CosmicHookBanner />}
+
         {/* Greeting */}
         {profile?.name && (
           <p className="text-muted-foreground text-sm">

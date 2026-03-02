@@ -239,6 +239,11 @@ const translations: Translations = {
     en: "Astrochat is for entertainment purposes only. Not a substitute for professional advice.",
     ka: "Astrochat მხოლოდ გასართობი მიზნებისთვისაა. არ ანაცვლებს პროფესიონალურ რჩევას."
   },
+
+  // Cosmic Hook
+  "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
+  "hook.generating": { en: "Scanning the stars for you...", ka: "ვარსკვლავების სკანირება..." },
+  "hook.dismiss": { en: "Dismiss", ka: "დახურვა" },
 };
 
 interface LanguageContextType {

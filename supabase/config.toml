@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.wealth-career]
 verify_jwt = false
+
+[functions.cosmic-hook]
+verify_jwt = false
