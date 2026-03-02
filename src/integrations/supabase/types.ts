@@ -106,6 +106,36 @@ export type Database = {
         }
         Relationships: []
       }
+      cosmic_calendars: {
+        Row: {
+          created_at: string
+          days: Json
+          id: string
+          language: string
+          month: number
+          user_id: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          days?: Json
+          id?: string
+          language?: string
+          month: number
+          user_id: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          days?: Json
+          id?: string
+          language?: string
+          month?: number
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
       cosmic_matches: {
         Row: {
           birth_years: Json

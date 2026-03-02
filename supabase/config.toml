@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.cosmic-hook]
 verify_jwt = false
+
+[functions.cosmic-calendar]
+verify_jwt = false

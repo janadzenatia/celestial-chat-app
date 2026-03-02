@@ -2,6 +2,8 @@ import AppHeader from "@/components/AppHeader";
 import CosmicMatchCard from "@/components/CosmicMatchCard";
 import WealthCareerCard from "@/components/WealthCareerCard";
 import CosmicHookBanner from "@/components/CosmicHookBanner";
+import SynastryCTABanner from "@/components/SynastryCTABanner";
+import CosmicCalendarCard from "@/components/CosmicCalendarCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -9,9 +11,9 @@ import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac
 import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { profile } = useAuth();
-  const { insight, loading: insightLoading, refresh: refreshInsight } = useDailyInsight();
+  const { insight, loading: insightLoading, refresh: refreshInsight, period } = useDailyInsight();
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -64,7 +66,12 @@ const Index = () => {
         {/* Daily Insight */}
         <section className="glass rounded-2xl p-5 shadow-purple">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-serif text-xl text-gradient-gold">{t("dashboard.daily")}</h2>
+            <div>
+              <h2 className="font-serif text-xl text-gradient-gold">{t("dashboard.phrase")}</h2>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                {period === "morning" ? (language === "ka" ? "☀️ დღის" : "☀️ Morning") : (language === "ka" ? "🌙 საღამოს" : "🌙 Evening")}
+              </span>
+            </div>
             <button
               onClick={refreshInsight}
               disabled={insightLoading}
@@ -85,8 +92,14 @@ const Index = () => {
             </p>
           )}
         </section>
+        {/* Synastry CTA */}
+        {dob && <SynastryCTABanner />}
+
         {/* Cosmic Match */}
         {dob && <CosmicMatchCard />}
+
+        {/* Cosmic Traffic Light Calendar */}
+        {dob && <CosmicCalendarCard />}
 
         {/* Wealth & Career Destiny */}
         {dob && <WealthCareerCard />}

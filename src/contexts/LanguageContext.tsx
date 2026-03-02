@@ -75,7 +75,24 @@ const translations: Translations = {
   "dashboard.moon": { en: "Moon", ka: "მთვარე" },
   "dashboard.rising": { en: "Rising", ka: "ასცენდენტი" },
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
+  "dashboard.phrase": { en: "Phrase of the Day", ka: "დღის ფრაზა" },
   "dashboard.greeting": { en: "Welcome", ka: "მოგესალმებით" },
+
+  // Synastry CTA
+  "synastry.cta.message": {
+    en: "Basic Zodiac signs only reveal 20% of your relationship story. For a truly accurate reading, exact birth times change everything.",
+    ka: "მხოლოდ ზოდიაქოს ნიშანი ურთიერთობის სურათის 20%-ს აჩვენებს. ზუსტი ანალიზისთვის აუცილებელია დაბადების საათის ცოდნა."
+  },
+  "synastry.cta.button": { en: "Calculate Deep Synastry", ka: "ღრმა თავსებადობის ანალიზი" },
+
+  // Cosmic Calendar
+  "calendar.title": { en: "Cosmic Traffic Light", ka: "კოსმიური შუქნიშანი" },
+  "calendar.description": { en: "Reveal your green and red days this month — know when to act and when to pause.", ka: "აღმოაჩინეთ თქვენი მწვანე და წითელი დღეები ამ თვეში — იცოდეთ როდის იმოქმედოთ და როდის შეჩერდეთ." },
+  "calendar.generate": { en: "Reveal My Calendar", ka: "ჩემი კალენდრის ნახვა" },
+  "calendar.generating": { en: "Mapping the stars...", ka: "ვარსკვლავების რუქის შედგენა..." },
+  "calendar.favorable": { en: "Favorable", ka: "ხელსაყრელი" },
+  "calendar.challenging": { en: "Challenging", ka: "რთული" },
+  "calendar.neutral": { en: "Neutral", ka: "ნეიტრალური" },
 
   // Zodiac Signs
   "zodiac.Aries": { en: "Aries", ka: "ვერძი" },
