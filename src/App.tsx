@@ -9,6 +9,7 @@ import AppLayout from "@/components/AppLayout";
 import Index from "./pages/Index";
 import ChatPage from "./pages/ChatPage";
 import CompatibilityPage from "./pages/CompatibilityPage";
+import FamilyPage from "./pages/FamilyPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";
 import OnboardingPage from "./pages/OnboardingPage";
@@ -54,6 +55,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/compatibility" element={<CompatibilityPage />} />
+                <Route path="/family" element={<FamilyPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
               <Route path="*" element={<NotFound />} />

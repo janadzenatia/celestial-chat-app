@@ -38,6 +38,74 @@ export type Database = {
         }
         Relationships: []
       }
+      child_reports: {
+        Row: {
+          blueprint: string
+          child_id: string
+          created_at: string
+          emotional_connection: string
+          id: string
+          language: string
+          parenting_advice: string
+          user_id: string
+        }
+        Insert: {
+          blueprint?: string
+          child_id: string
+          created_at?: string
+          emotional_connection?: string
+          id?: string
+          language?: string
+          parenting_advice?: string
+          user_id: string
+        }
+        Update: {
+          blueprint?: string
+          child_id?: string
+          created_at?: string
+          emotional_connection?: string
+          id?: string
+          language?: string
+          parenting_advice?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "child_reports_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      children: {
+        Row: {
+          created_at: string
+          date_of_birth: string
+          id: string
+          name: string
+          time_of_birth: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth: string
+          id?: string
+          name: string
+          time_of_birth?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string
+          id?: string
+          name?: string
+          time_of_birth?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       cosmic_matches: {
         Row: {
           birth_years: Json

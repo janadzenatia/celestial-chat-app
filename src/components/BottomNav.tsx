@@ -1,4 +1,4 @@
-import { Home, MessageCircle, Heart, User } from "lucide-react";
+import { Home, MessageCircle, Heart, User, Baby } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -6,6 +6,7 @@ const tabs = [
   { key: "nav.home", icon: Home, path: "/" },
   { key: "nav.chat", icon: MessageCircle, path: "/chat" },
   { key: "nav.compatibility", icon: Heart, path: "/compatibility" },
+  { key: "nav.family", icon: Baby, path: "/family" },
   { key: "nav.profile", icon: User, path: "/profile" },
 ];
 
