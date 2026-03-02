@@ -1,8 +1,10 @@
-import { Loader2, Calendar, TrendingUp, AlertTriangle, Minus, Sparkles, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Calendar, TrendingUp, AlertTriangle, Minus, Sparkles, RefreshCw, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ForecastPeriod } from "@/hooks/useRelationshipForecast";
 import { Button } from "@/components/ui/button";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
 
 const typeConfig = {
   positive: {
@@ -32,6 +34,8 @@ interface RelationshipForecastProps {
   generating: boolean;
   onGenerate: () => void;
   onRegenerate: () => void;
+  relationshipDate?: Date;
+  onRelationshipDateChange?: (date: Date | undefined) => void;
 }
 
 export default function RelationshipForecastCard({
@@ -41,8 +45,11 @@ export default function RelationshipForecastCard({
   generating,
   onGenerate,
   onRegenerate,
+  relationshipDate,
+  onRelationshipDateChange,
 }: RelationshipForecastProps) {
   const { t } = useLanguage();
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   if (loading) {
     return (
@@ -53,7 +60,10 @@ export default function RelationshipForecastCard({
     );
   }
 
+  // Teaser state: no forecast yet
   if (!periods) {
+    const hasRelDate = Boolean(relationshipDate);
+
     return (
       <div className="glass rounded-2xl p-6 space-y-4 text-center">
         <div className="flex items-center justify-center gap-2">
@@ -61,23 +71,48 @@ export default function RelationshipForecastCard({
           <h3 className="font-serif text-lg text-gradient-gold">{t("forecast.title")}</h3>
         </div>
         <p className="text-sm text-muted-foreground">{t("forecast.description")}</p>
-        <Button
-          onClick={onGenerate}
-          disabled={generating}
-          className="gradient-cosmic text-foreground font-medium px-6"
-        >
-          {generating ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {t("forecast.generating")}
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              {t("forecast.generate")}
-            </>
-          )}
-        </Button>
+
+        {/* Inline date picker for relationship date */}
+        {showDatePicker && !hasRelDate && onRelationshipDateChange && (
+          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
+            <BirthDatePicker
+              value={relationshipDate}
+              onChange={(d) => {
+                onRelationshipDateChange(d);
+              }}
+              placeholder={t("compat.pickDate")}
+            />
+          </div>
+        )}
+
+        {!hasRelDate && !showDatePicker ? (
+          <Button
+            onClick={() => setShowDatePicker(true)}
+            className="gradient-cosmic text-foreground font-medium px-6"
+          >
+            <Lock className="w-4 h-4 mr-2" />
+            {t("forecast.unlock")}
+          </Button>
+        ) : hasRelDate ? (
+          <Button
+            onClick={onGenerate}
+            disabled={generating}
+            className="gradient-cosmic text-foreground font-medium px-6"
+          >
+            {generating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {t("forecast.generating")}
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                {t("forecast.generate")}
+              </>
+            )}
+          </Button>
+        ) : null}
       </div>
     );
   }
@@ -108,25 +143,18 @@ export default function RelationshipForecastCard({
 
       {/* Timeline */}
       <div className="relative space-y-4">
-        {/* Vertical line */}
         <div className="absolute left-[19px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/50 via-secondary/50 to-primary/50" />
-
         {periods.map((period, i) => {
           const config = typeConfig[period.type] || typeConfig.neutral;
           const Icon = config.icon;
-
           return (
             <div key={i} className="relative flex gap-4">
-              {/* Dot */}
               <div className={cn(
                 "relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gradient-to-br border",
-                config.bg,
-                config.border
+                config.bg, config.border
               )}>
                 <Icon className={cn("w-4 h-4", config.color)} />
               </div>
-
-              {/* Content */}
               <div className={cn("glass rounded-xl p-4 flex-1 space-y-1")}>
                 <div className="flex items-center justify-between">
                   <span className={cn("text-xs font-semibold uppercase tracking-wider", config.color)}>

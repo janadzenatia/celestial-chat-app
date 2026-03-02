@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { format, parse } from "date-fns";
-import { Heart, Sparkles, Star, Shield, Clock } from "lucide-react";
+import { Heart, Sparkles, Star, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,10 +10,9 @@ import AppHeader from "@/components/AppHeader";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import RelationshipForecastCard from "@/components/RelationshipForecast";
 import SynastryReportCard from "@/components/SynastryReportCard";
+import BirthTimeModal from "@/components/BirthTimeModal";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
-
-const partnerHasTime = (time: string) => Boolean(time && time.trim().length >= 4);
 import { Input } from "@/components/ui/input";
 
 const STORAGE_KEY = "astrochat_compat_form";
@@ -61,6 +60,7 @@ const CompatibilityPage = () => {
   const [relationshipDate, setRelationshipDate] = useState<Date | undefined>(
     saved?.relationshipDate ? parse(saved.relationshipDate, "yyyy-MM-dd", new Date()) : undefined
   );
+  const [timeModalOpen, setTimeModalOpen] = useState(false);
 
   // Persist form state
   useEffect(() => {
@@ -80,8 +80,31 @@ const CompatibilityPage = () => {
   const partnerSign = partnerDobStr ? getSunSign(partnerDobStr) : null;
   const result = userSign && partnerSign ? calculateCompatibility(userSign, partnerSign) : null;
 
+  const partnerHasTime = Boolean(partnerTime && partnerTime.trim().length >= 4);
+
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined);
+
+  // Intercept synastry generate with birth time modal
+  const handleSynastryGenerate = () => {
+    if (partnerHasTime) {
+      // Already have time, generate directly
+      generateReport();
+    } else {
+      setTimeModalOpen(true);
+    }
+  };
+
+  const handleTimeSubmit = (time: string) => {
+    setPartnerTime(time);
+    // Generate will re-trigger with updated time via the hook
+    setTimeout(() => generateReport(), 100);
+  };
+
+  const handleTimeSkip = () => {
+    setTimeModalOpen(false);
+    generateReport();
+  };
 
   return (
     <div className="flex flex-col">
@@ -97,9 +120,8 @@ const CompatibilityPage = () => {
           )}
         </div>
 
-        {/* Partner Input Card */}
+        {/* Partner Input Card — only name & DOB */}
         <div className="glass rounded-2xl p-6 space-y-4">
-          {/* Partner Name */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("compat.partnerName")}</label>
             <Input
@@ -110,7 +132,6 @@ const CompatibilityPage = () => {
             />
           </div>
 
-          {/* Partner DOB */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
             <BirthDatePicker
@@ -119,62 +140,29 @@ const CompatibilityPage = () => {
               placeholder={t("compat.pickDate")}
             />
           </div>
-
-          {/* Partner Birth Time */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-              {t("compat.partnerTime")}
-            </label>
-            <Input
-              value={partnerTime}
-              onChange={(e) => {
-                const val = e.target.value.replace(/[^\d:]/g, "");
-                if (val.length <= 5) setPartnerTime(val);
-              }}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              maxLength={5}
-              className="glass border-white/10 focus:border-primary"
-            />
-          </div>
-
-          {/* Relationship Date — inside the form card */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-            <BirthDatePicker
-              value={relationshipDate}
-              onChange={setRelationshipDate}
-              placeholder={t("compat.pickDate")}
-            />
-          </div>
         </div>
 
         {/* Basic Compatibility Results */}
         {result && partnerSign && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Score Card */}
             <div className={cn("glass rounded-2xl p-6 text-center space-y-4 bg-gradient-to-br", levelGradients[result.level])}>
               <div className="flex items-center justify-center gap-4">
                 <span className="text-4xl">{userSign!.emoji}</span>
                 <Heart className="w-6 h-6 text-pink-400 animate-pulse" />
                 <span className="text-4xl">{partnerSign.emoji}</span>
               </div>
-
               <div>
                 <div className="text-5xl font-serif font-bold text-gradient-gold">{result.score}%</div>
                 <p className={cn("text-sm font-semibold mt-1", levelColors[result.level])}>
                   {t(`compat.${result.level}`)}
                 </p>
               </div>
-
-              {/* Score Bar */}
               <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <div
                   className="h-full gradient-gold rounded-full transition-all duration-1000 ease-out"
                   style={{ width: `${result.score}%` }}
                 />
               </div>
-
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {userSign!.emoji} {t(`zodiac.${userSign!.name}`)} & {partnerSign.emoji} {t(`zodiac.${partnerSign.name}`)} — {t(`compat.summary.${result.level}`)}
               </p>
@@ -220,17 +208,17 @@ const CompatibilityPage = () => {
             report={report}
             loading={reportLoading}
             generating={reportGenerating}
-            onGenerate={generateReport}
+            onGenerate={handleSynastryGenerate}
             onRegenerate={generateReport}
             userEmoji={userSign?.emoji}
             partnerEmoji={partnerSign?.emoji}
             partnerName={partnerName}
-            partnerHasTime={partnerHasTime(partnerTime)}
+            partnerHasTime={partnerHasTime}
           />
         )}
 
-        {/* Relationship Forecast */}
-        {partnerDate && relationshipDate && (
+        {/* Relationship Forecast — always shown after synastry, uses teaser flow */}
+        {partnerDobStr && (
           <RelationshipForecastCard
             intro={forecast?.intro}
             periods={forecast?.periods ?? null}
@@ -238,9 +226,25 @@ const CompatibilityPage = () => {
             generating={forecastGenerating}
             onGenerate={generateForecast}
             onRegenerate={generateForecast}
+            relationshipDate={relationshipDate}
+            onRelationshipDateChange={setRelationshipDate}
           />
         )}
       </div>
+
+      {/* Birth Time Modal */}
+      <BirthTimeModal
+        open={timeModalOpen}
+        onOpenChange={setTimeModalOpen}
+        partnerName={partnerName}
+        generating={reportGenerating}
+        onSubmitWithTime={(time) => {
+          setPartnerTime(time);
+          setTimeModalOpen(false);
+          handleTimeSubmit(time);
+        }}
+        onSkip={handleTimeSkip}
+      />
     </div>
   );
 };

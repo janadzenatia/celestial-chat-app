@@ -144,6 +144,23 @@ const translations: Translations = {
   },
   "synastry.partner": { en: "the partner", ka: "პარტნიორის" },
 
+  // Birth Time Modal
+  "timeModal.title": { en: "Unlock Deeper Analysis", ka: "ღრმა ანალიზის გახსნა" },
+  "timeModal.description": {
+    en: "Do you know {name}'s exact birth time? It unlocks deeper Moon & Rising sign analysis for maximum precision.",
+    ka: "იცით {name}-ის ზუსტი დაბადების დრო? ეს ხსნის მთვარისა და ასცენდენტის ღრმა ანალიზს მაქსიმალური სიზუსტისთვის."
+  },
+  "timeModal.inputLabel": { en: "Birth Time", ka: "დაბადების დრო" },
+  "timeModal.withTime": { en: "Analyze with Time", ka: "ანალიზი დროით" },
+  "timeModal.skip": { en: "Skip — I don't know", ka: "გამოტოვება — არ ვიცი" },
+
+  // Forecast teaser
+  "forecast.unlock": { en: "Unlock Forecast", ka: "პროგნოზის გახსნა" },
+
+  // Validation
+  "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვთ შეიყვანოთ ვალიდური თარიღი (წელი 1920–დღემდე)" },
+  "validation.futureDate": { en: "Date cannot be in the future", ka: "თარიღი არ შეიძლება იყოს მომავალში" },
+
   // Premium
   "premium.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
   "premium.monthly": { en: "Monthly", ka: "ყოველთვიური" },
