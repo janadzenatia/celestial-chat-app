@@ -268,6 +268,7 @@ const translations: Translations = {
   "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
   "paywall.bestValue": { en: "Best Value", ka: "საუკეთესო არჩევანი" },
   "paywall.disclaimer": { en: "Cancel anytime. Entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნით." },
+  "paywall.premiumContent": { en: "Premium Content", ka: "პრემიუმ კონტენტი" },
 
   "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
   "hook.generating": { en: "Scanning the stars for you...", ka: "ვარსკვლავების სკანირება..." },
