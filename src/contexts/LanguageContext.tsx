@@ -43,8 +43,8 @@ const translations: Translations = {
   "family.conceptionWindow": { en: "Ideal Conception Window", ka: "იდეალური ჩასახვის პერიოდი" },
   "family.conceptionNote": { en: "Based on approximately 40 weeks (280 days) of pregnancy", ka: "დაფუძნებულია ორსულობის დაახლოებით 40 კვირაზე (280 დღე)" },
   "family.expectingTitle": { en: "I'm Expecting!", ka: "ველოდები ბავშვს!" },
-  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანეთ სავარაუდო ვადა ბავშვის ნიშნის აღმოსაჩენად" },
-  "family.dueDate": { en: "Estimated Due Date", ka: "სავარაუდო ვადა" },
+  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანეთ მშობიარობის სავარაუდო თარიღი ბავშვის ნიშნის გასაგებად" },
+  "family.dueDate": { en: "Estimated Due Date", ka: "დაბადების თარიღი" },
   "family.revealPersonality": { en: "Reveal Baby's Personality", ka: "ბავშვის პიროვნების გამოვლენა" },
 
   // Common
@@ -211,6 +211,7 @@ const translations: Translations = {
   // Validation
   "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვთ შეიყვანოთ ვალიდური თარიღი (წელი 1920–დღემდე)" },
   "validation.futureDate": { en: "Date cannot be in the future", ka: "თარიღი არ შეიძლება იყოს მომავალში" },
+  "validation.invalidDueDate": { en: "Please enter a valid pregnancy due date.", ka: "გთხოვთ, შეიყვანოთ მშობიარობის რეალური თარიღი." },
 
   // Wealth & Career
   "wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },

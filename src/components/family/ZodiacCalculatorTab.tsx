@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign } from "@/lib/zodiac";
-import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { DueDatePicker } from "@/components/DueDatePicker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -150,7 +150,7 @@ export default function ZodiacCalculatorTab() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("family.dueDate")}</label>
-            <BirthDatePicker
+            <DueDatePicker
               value={dueDate}
               onChange={(d) => { setDueDate(d); setBabySummary(null); }}
               placeholder={t("compat.pickDate")}
