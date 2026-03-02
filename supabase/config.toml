@@ -14,3 +14,12 @@ verify_jwt = false
 
 [functions.synastry-report]
 verify_jwt = false
+
+[functions.child-synastry]
+verify_jwt = false
+
+[functions.missing-piece]
+verify_jwt = false
+
+[functions.baby-personality]
+verify_jwt = false
