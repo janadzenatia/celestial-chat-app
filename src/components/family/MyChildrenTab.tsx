@@ -7,6 +7,7 @@ import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
 interface Child {
@@ -33,6 +34,9 @@ export default function MyChildrenTab() {
   const [childDate, setChildDate] = useState<Date | undefined>();
   const [childTime, setChildTime] = useState("");
   const [saving, setSaving] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
+  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
 
   // Reports state keyed by child id
   const [reports, setReports] = useState<Record<string, ChildReport>>({});
@@ -265,13 +269,18 @@ export default function MyChildrenTab() {
         </div>
       ) : (
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            if (!isPremium) { setPaywallOpen(true); return; }
+            setShowForm(true);
+          }}
           className="w-full glass rounded-2xl p-5 flex items-center justify-center gap-2 text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors border border-dashed border-white/20"
         >
           <Plus className="w-5 h-5" />
           <span className="font-medium">{t("family.addChild")}</span>
         </button>
       )}
+
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 }

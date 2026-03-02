@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign } from "@/lib/zodiac";
 import { Button } from "@/components/ui/button";
+import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
 interface SuggestedSign {
@@ -24,6 +25,9 @@ export default function MissingPieceTab() {
   const { profile } = useAuth();
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<MissingPieceResult | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
+  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
 
   // Read saved partner data from localStorage
   const getSavedPartner = () => {
@@ -119,13 +123,22 @@ export default function MissingPieceTab() {
         <span>+</span>
         <span>{partnerSun?.emoji} {partner?.name}</span>
       </div>
-      <Button onClick={generate} disabled={generating} className="gradient-cosmic text-foreground font-medium px-6">
+      <Button
+        onClick={() => {
+          if (!isPremium) { setPaywallOpen(true); return; }
+          generate();
+        }}
+        disabled={generating}
+        className="gradient-cosmic text-foreground font-medium px-6"
+      >
         {generating ? (
           <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzing")}</>
         ) : (
           <><Sparkles className="w-4 h-4 mr-2" />{t("family.findMissingPiece")}</>
         )}
       </Button>
+
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 }
