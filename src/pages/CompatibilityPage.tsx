@@ -8,6 +8,8 @@ import { getSunSign } from "@/lib/zodiac";
 import { calculateCompatibility } from "@/lib/compatibility";
 import AppHeader from "@/components/AppHeader";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import RelationshipForecastCard from "@/components/RelationshipForecast";
+import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 
 const levelColors = {
   soulmate: "text-pink-400",
@@ -27,10 +29,13 @@ const CompatibilityPage = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
   const [partnerDate, setPartnerDate] = useState<Date>();
+  const [relationshipDate, setRelationshipDate] = useState<Date>();
 
   const userSign = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const partnerSign = partnerDate ? getSunSign(format(partnerDate, "yyyy-MM-dd")) : null;
   const result = userSign && partnerSign ? calculateCompatibility(userSign, partnerSign) : null;
+
+  const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate);
 
   return (
     <div className="flex flex-col">
@@ -117,6 +122,31 @@ const CompatibilityPage = () => {
               </ul>
             </div>
           </div>
+        )}
+
+        {/* Relationship Date — shown when partner date is set */}
+        {partnerDate && (
+          <>
+            <div className="glass rounded-2xl p-6 space-y-4">
+              <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
+              <BirthDatePicker
+                value={relationshipDate}
+                onChange={setRelationshipDate}
+                placeholder={t("compat.pickDate")}
+              />
+            </div>
+
+            {/* Relationship Forecast */}
+            {relationshipDate && (
+              <RelationshipForecastCard
+                periods={forecast?.periods ?? null}
+                loading={forecastLoading}
+                generating={forecastGenerating}
+                onGenerate={generateForecast}
+                onRegenerate={generateForecast}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

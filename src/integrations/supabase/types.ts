@@ -137,6 +137,36 @@ export type Database = {
         }
         Relationships: []
       }
+      relationship_forecasts: {
+        Row: {
+          created_at: string
+          id: string
+          language: string
+          partner_dob: string
+          periods: Json
+          relationship_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language?: string
+          partner_dob: string
+          periods?: Json
+          relationship_date: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: string
+          partner_dob?: string
+          periods?: Json
+          relationship_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
