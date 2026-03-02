@@ -59,6 +59,10 @@ const translations: Translations = {
   // Premium
   // Compatibility
   "compat.title": { en: "Zodiac Compatibility", ka: "ზოდიაქოს თავსებადობა" },
+  "compat.partnerName": { en: "Partner's Name", ka: "პარტნიორის სახელი" },
+  "compat.partnerNamePlaceholder": { en: "Enter name...", ka: "შეიყვანეთ სახელი..." },
+  "compat.partnerTime": { en: "Partner's Birth Time (optional)", ka: "პარტნიორის დაბადების დრო (არასავალდებულო)" },
+  "compat.partnerTimePlaceholder": { en: "HH:MM (e.g. 14:30)", ka: "სთ:წთ (მაგ. 14:30)" },
   "compat.partnerDob": { en: "Partner's Date of Birth", ka: "პარტნიორის დაბადების თარიღი" },
   "compat.check": { en: "Check Compatibility", ka: "შეამოწმე თავსებადობა" },
   "compat.score": { en: "Compatibility Score", ka: "თავსებადობის ქულა" },
@@ -77,6 +81,18 @@ const translations: Translations = {
   "forecast.generate": { en: "Reveal Forecast", ka: "პროგნოზის ნახვა" },
   "forecast.generating": { en: "Reading the transits...", ka: "ტრანზიტების წაკითხვა..." },
   "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
+
+  // Synastry Report
+  "synastry.title": { en: "Deep Synastry Report", ka: "ღრმა სინასტრიის ანალიზი" },
+  "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღეთ დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
+  "synastry.generate": { en: "Generate Deep Report", ka: "ღრმა ანალიზის გენერაცია" },
+  "synastry.generating": { en: "Analyzing charts...", ka: "რუქების ანალიზი..." },
+  "synastry.loading": { en: "Loading report...", ka: "ანალიზის ჩატვირთვა..." },
+  "synastry.overallScore": { en: "Overall Compatibility Score", ka: "საერთო თავსებადობის ქულა" },
+  "synastry.emotional": { en: "Emotional Connection", ka: "ემოციური კავშირი" },
+  "synastry.romantic": { en: "Physical & Romantic Chemistry", ka: "ფიზიკური და რომანტიკული ქიმია" },
+  "synastry.communication": { en: "Communication", ka: "კომუნიკაცია" },
+  "synastry.goals": { en: "Shared Goals & Finances", ka: "საერთო მიზნები და ფინანსები" },
 
   // Premium
   "premium.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { Heart, Sparkles, Star, Shield } from "lucide-react";
+import { Heart, Sparkles, Star, Shield, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +9,10 @@ import { calculateCompatibility } from "@/lib/compatibility";
 import AppHeader from "@/components/AppHeader";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import RelationshipForecastCard from "@/components/RelationshipForecast";
+import SynastryReportCard from "@/components/SynastryReportCard";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
+import { useSynastryReport } from "@/hooks/useSynastryReport";
+import { Input } from "@/components/ui/input";
 
 const levelColors = {
   soulmate: "text-pink-400",
@@ -29,13 +32,17 @@ const CompatibilityPage = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
   const [partnerDate, setPartnerDate] = useState<Date>();
+  const [partnerName, setPartnerName] = useState("");
+  const [partnerTime, setPartnerTime] = useState("");
   const [relationshipDate, setRelationshipDate] = useState<Date>();
 
   const userSign = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
-  const partnerSign = partnerDate ? getSunSign(format(partnerDate, "yyyy-MM-dd")) : null;
+  const partnerDobStr = partnerDate ? format(partnerDate, "yyyy-MM-dd") : undefined;
+  const partnerSign = partnerDobStr ? getSunSign(partnerDobStr) : null;
   const result = userSign && partnerSign ? calculateCompatibility(userSign, partnerSign) : null;
 
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate);
+  const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined);
 
   return (
     <div className="flex flex-col">
@@ -51,17 +58,49 @@ const CompatibilityPage = () => {
           )}
         </div>
 
-        {/* Date Picker Card */}
+        {/* Partner Input Card */}
         <div className="glass rounded-2xl p-6 space-y-4">
-          <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
-          <BirthDatePicker
-            value={partnerDate}
-            onChange={setPartnerDate}
-            placeholder={t("compat.pickDate")}
-          />
+          {/* Partner Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">{t("compat.partnerName")}</label>
+            <Input
+              value={partnerName}
+              onChange={(e) => setPartnerName(e.target.value)}
+              placeholder={t("compat.partnerNamePlaceholder")}
+              className="glass border-white/10 focus:border-primary"
+            />
+          </div>
+
+          {/* Partner DOB */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
+            <BirthDatePicker
+              value={partnerDate}
+              onChange={setPartnerDate}
+              placeholder={t("compat.pickDate")}
+            />
+          </div>
+
+          {/* Partner Birth Time */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+              {t("compat.partnerTime")}
+            </label>
+            <Input
+              value={partnerTime}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^\d:]/g, "");
+                if (val.length <= 5) setPartnerTime(val);
+              }}
+              placeholder={t("compat.partnerTimePlaceholder")}
+              maxLength={5}
+              className="glass border-white/10 focus:border-primary"
+            />
+          </div>
         </div>
 
-        {/* Results */}
+        {/* Basic Compatibility Results */}
         {result && partnerSign && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Score Card */}
@@ -122,6 +161,19 @@ const CompatibilityPage = () => {
               </ul>
             </div>
           </div>
+        )}
+
+        {/* Deep Synastry Report — shown when partner DOB is set */}
+        {partnerDobStr && (
+          <SynastryReportCard
+            report={report}
+            loading={reportLoading}
+            generating={reportGenerating}
+            onGenerate={generateReport}
+            onRegenerate={generateReport}
+            userEmoji={userSign?.emoji}
+            partnerEmoji={partnerSign?.emoji}
+          />
         )}
 
         {/* Relationship Date — shown when partner date is set */}
