@@ -4,6 +4,7 @@ import WealthCareerCard from "@/components/WealthCareerCard";
 import CosmicHookBanner from "@/components/CosmicHookBanner";
 import SynastryCTABanner from "@/components/SynastryCTABanner";
 import CosmicCalendarCard from "@/components/CosmicCalendarCard";
+import CosmicBlueprintCard from "@/components/CosmicBlueprintCard";
 import PremiumGate from "@/components/PremiumGate";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -93,12 +94,15 @@ const Index = () => {
             </p>
           )}
         </section>
-        {/* Cosmic Match */}
+        {/* My Cosmic Blueprint — Premium gated */}
         {dob && (
           <PremiumGate overlay>
-            <CosmicMatchCard />
+            <CosmicBlueprintCard />
           </PremiumGate>
         )}
+
+        {/* Cosmic Match — free hook, no premium badge */}
+        {dob && <CosmicMatchCard />}
 
         {/* Synastry CTA — below match results, above deep analysis */}
         {dob && <SynastryCTABanner />}

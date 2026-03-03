@@ -32,7 +32,6 @@ const CompatibilityPage = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
 
-  // Partner data from profile
   const partnerName = profile?.partner_name || "";
   const partnerDobStr = profile?.partner_birth_date || undefined;
   const partnerTimeStr = profile?.partner_time_of_birth || undefined;
@@ -42,12 +41,10 @@ const CompatibilityPage = () => {
   const [showDeepReport, setShowDeepReport] = useState(false);
   const [partnerTime, setPartnerTime] = useState("");
 
-  // Sync partnerTime from profile
   useEffect(() => {
     setPartnerTime(partnerTimeStr || "");
   }, [partnerTimeStr]);
 
-  // Parse relationship date from profile
   const relationshipDate = relationshipDateStr
     ? parse(relationshipDateStr, "yyyy-MM-dd", new Date())
     : undefined;
@@ -61,6 +58,9 @@ const CompatibilityPage = () => {
 
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined, relationshipDateStr);
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
+
+  // Deep report is "active" when synastry accordion is visible
+  const deepReportReady = showDeepReport && report;
 
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
@@ -101,7 +101,7 @@ const CompatibilityPage = () => {
           )}
         </div>
 
-        {/* Partner Card — with embedded synastry accordion */}
+        {/* 1. Partner Card — always visible */}
         <PartnerCard
           onPartnerChange={() => setShowDeepReport(false)}
           onDeepSynastry={handleDeepSynastry}
@@ -110,8 +110,8 @@ const CompatibilityPage = () => {
           showDeepReport={showDeepReport}
         />
 
-        {/* Basic Compatibility Results */}
-        {result && partnerSign && (
+        {/* 2. Basic Compatibility — HIDDEN once deep report is ready */}
+        {result && partnerSign && !deepReportReady && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className={cn("glass rounded-2xl p-6 text-center space-y-4 bg-gradient-to-br", levelGradients[result.level])}>
               <div className="flex items-center justify-center gap-4">
@@ -170,7 +170,17 @@ const CompatibilityPage = () => {
           </div>
         )}
 
-        {/* Relationship Forecast — ONLY shown after deep synastry button + premium */}
+        {/* 3. Warning text + Yellow CTA — HIDDEN once deep report is ready */}
+        {partnerDobStr && !deepReportReady && (
+          <div className="space-y-4">
+            {/* Warning text */}
+            <p className="text-sm text-muted-foreground leading-relaxed text-center px-2">
+              {t("synastry.cta.message")}
+            </p>
+          </div>
+        )}
+
+        {/* Relationship Forecast — ONLY shown after deep synastry + premium */}
         {partnerDobStr && showDeepReport && (
           <PremiumGate overlay>
             <RelationshipForecastCard

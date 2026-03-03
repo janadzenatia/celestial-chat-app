@@ -334,36 +334,38 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
           </div>
         )}
 
-        {/* Deep Synastry CTA */}
-        <div className="px-5 pb-5">
-          <button
-            onClick={handleDeepSynastry}
-            disabled={synastryGenerating}
-            className={cn(
-              "w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-opacity",
-              isPremium
-                ? "gradient-gold text-primary-foreground hover:opacity-90"
-                : "bg-muted/50 border border-primary/20 text-foreground hover:bg-muted"
-            )}
-          >
-            {synastryGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {t("synastry.generating")}
-              </>
-            ) : isPremium ? (
-              <>
-                <Sparkles className="w-4 h-4" />
-                {t("partner.deepSynastry")}
-              </>
-            ) : (
-              <>
-                <Lock className="w-4 h-4 text-primary" />
-                {t("partner.deepSynastry")}
-              </>
-            )}
-          </button>
-        </div>
+        {/* Deep Synastry CTA — hidden once report is rendered */}
+        {!(showDeepReport && synastryReport) && (
+          <div className="px-5 pb-5">
+            <button
+              onClick={handleDeepSynastry}
+              disabled={synastryGenerating}
+              className={cn(
+                "w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-opacity",
+                isPremium
+                  ? "gradient-gold text-primary-foreground hover:opacity-90"
+                  : "bg-muted/50 border border-primary/20 text-foreground hover:bg-muted"
+              )}
+            >
+              {synastryGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("synastry.generating")}
+                </>
+              ) : isPremium ? (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  {t("partner.deepSynastry")}
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4 text-primary" />
+                  {t("partner.deepSynastry")}
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       <PartnerFormDialog

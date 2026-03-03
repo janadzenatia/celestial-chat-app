@@ -329,6 +329,12 @@ const translations: Translations = {
   },
   "auth.and": { en: "and", ka: "და" },
 
+  // Cosmic Blueprint
+  "blueprint.title": { en: "My Cosmic Blueprint", ka: "ჩემი კოსმიური გეგმა" },
+  "blueprint.description": { en: "Discover your core personality, karmic path, and hidden strengths", ka: "აღმოაჩინეთ თქვენი ბირთვული პიროვნება, კარმული გზა და ფარული ძლიერი მხარეები" },
+  "blueprint.generate": { en: "Reveal My Blueprint", ka: "ჩემი გეგმის გამოვლენა" },
+  "blueprint.generating": { en: "Mapping your cosmic DNA...", ka: "კოსმიური DNA-ის რუქის შედგენა..." },
+
   // Partner Card
   "partner.add": { en: "Add Partner", ka: "პარტნიორის დამატება" },
   "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახეთ პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },

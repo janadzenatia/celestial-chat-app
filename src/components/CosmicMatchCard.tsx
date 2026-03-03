@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCosmicMatch } from "@/hooks/useCosmicMatch";
-import { Heart, Sparkles, CalendarDays, User, Loader2, RefreshCw, Lock } from "lucide-react";
+import { Heart, Sparkles, CalendarDays, User, Loader2, RefreshCw } from "lucide-react";
 
 const CosmicMatchCard = () => {
   const { t } = useLanguage();
@@ -20,22 +20,16 @@ const CosmicMatchCard = () => {
             <Heart className="w-5 h-5 text-primary" fill="currentColor" />
             <h2 className="font-serif text-xl text-gradient-gold">{t("cosmic.title")}</h2>
           </div>
-          <div className="flex items-center gap-2">
-            {match && (
-              <button
-                onClick={generate}
-                disabled={isWorking}
-                className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
-                aria-label="Regenerate"
-              >
-                <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
-              </button>
-            )}
-            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full gradient-cosmic text-foreground flex items-center gap-1">
-              <Lock className="w-3 h-3" />
-              {t("cosmic.badge")}
-            </span>
-          </div>
+          {match && (
+            <button
+              onClick={generate}
+              disabled={isWorking}
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+              aria-label="Regenerate"
+            >
+              <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
+            </button>
+          )}
         </div>
 
         {/* Content */}
