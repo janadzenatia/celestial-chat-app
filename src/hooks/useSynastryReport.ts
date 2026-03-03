@@ -18,7 +18,7 @@ export interface SynastryReport {
   goals: SynastryCategory;
 }
 
-export function useSynastryReport(partnerDob?: string, partnerName?: string, partnerTime?: string) {
+export function useSynastryReport(partnerDob?: string, partnerName?: string, partnerTime?: string, relationshipStartDate?: string) {
   const { user, profile } = useAuth();
   const { language } = useLanguage();
   const [report, setReport] = useState<SynastryReport | null>(null);
@@ -98,6 +98,7 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
           partnerRisingSign: partnerRisingSign?.name,
           partnerHasTime,
           language,
+          relationshipStartDate: relationshipStartDate || null,
         },
       });
 
@@ -124,7 +125,7 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
     } finally {
       setGenerating(false);
     }
-  }, [user?.id, profile, partnerDob, partnerName, partnerTime, language]);
+  }, [user?.id, profile, partnerDob, partnerName, partnerTime, language, relationshipStartDate]);
 
   return { report, loading, generating, generate };
 }

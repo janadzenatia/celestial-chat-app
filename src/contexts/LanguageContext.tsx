@@ -340,6 +340,9 @@ const translations: Translations = {
   "partner.generatingLove": { en: "Discovering love language...", ka: "სიყვარულის ენის აღმოჩენა..." },
   "partner.noLoveLanguage": { en: "Love language summary will appear here", ka: "სიყვარულის ენის აღწერა აქ გამოჩნდება" },
   "partner.deepSynastry": { en: "Generate Deep Synastry", ka: "ღრმა სინასტრიის ანალიზი" },
+  "partner.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
+  "partner.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
+  "partner.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
 };
 
 interface LanguageContextType {

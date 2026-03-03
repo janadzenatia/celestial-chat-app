@@ -14,7 +14,7 @@ serve(async (req) => {
     const {
       userName, userDob, userSunSign, userMoonSign, userRisingSign,
       partnerName, partnerDob, partnerSunSign, partnerMoonSign, partnerRisingSign,
-      partnerHasTime, language,
+      partnerHasTime, language, relationshipStartDate,
     } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -31,6 +31,7 @@ serve(async (req) => {
 
 CRITICAL CONTEXT:
 - Today's date is ${today}. The current year is ${new Date().getFullYear()}.
+${relationshipStartDate ? `- Relationship Start Date: ${relationshipStartDate}. Use this date to accurately calculate the relationship duration. Do NOT guess or hallucinate the length of the relationship.` : "- No relationship start date was provided."}
 
 ${timeAckInstruction}
 

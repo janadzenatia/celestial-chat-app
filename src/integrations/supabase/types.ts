@@ -205,7 +205,10 @@ export type Database = {
           partner_birth_date: string | null
           partner_love_language: string | null
           partner_name: string | null
+          partner_place_of_birth: string | null
+          partner_time_of_birth: string | null
           place_of_birth: string | null
+          relationship_start_date: string | null
           subscription_status: string
           time_of_birth: string | null
           updated_at: string
@@ -222,7 +225,10 @@ export type Database = {
           partner_birth_date?: string | null
           partner_love_language?: string | null
           partner_name?: string | null
+          partner_place_of_birth?: string | null
+          partner_time_of_birth?: string | null
           place_of_birth?: string | null
+          relationship_start_date?: string | null
           subscription_status?: string
           time_of_birth?: string | null
           updated_at?: string
@@ -239,7 +245,10 @@ export type Database = {
           partner_birth_date?: string | null
           partner_love_language?: string | null
           partner_name?: string | null
+          partner_place_of_birth?: string | null
+          partner_time_of_birth?: string | null
           place_of_birth?: string | null
+          relationship_start_date?: string | null
           subscription_status?: string
           time_of_birth?: string | null
           updated_at?: string
