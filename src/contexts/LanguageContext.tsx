@@ -314,6 +314,18 @@ const translations: Translations = {
     ka: "რეგისტრაციით თქვენ ეთანხმებით ჩვენს"
   },
   "auth.and": { en: "and", ka: "და" },
+
+  // Partner Card
+  "partner.add": { en: "Add Partner", ka: "პარტნიორის დამატება" },
+  "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახეთ პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },
+  "partner.edit": { en: "Edit Partner", ka: "პარტნიორის რედაქტირება" },
+  "partner.deleteTitle": { en: "Remove Partner?", ka: "პარტნიორის წაშლა?" },
+  "partner.deleteDesc": { en: "This will remove the saved partner profile and all related data.", ka: "ეს წაშლის შენახულ პარტნიორის პროფილს და ყველა დაკავშირებულ მონაცემს." },
+  "partner.deleteConfirm": { en: "Remove", ka: "წაშლა" },
+  "partner.loveLanguage": { en: "Love Language & Relationship Style", ka: "სიყვარულის ენა და ურთიერთობის სტილი" },
+  "partner.generatingLove": { en: "Discovering love language...", ka: "სიყვარულის ენის აღმოჩენა..." },
+  "partner.noLoveLanguage": { en: "Love language summary will appear here", ka: "სიყვარულის ენის აღწერა აქ გამოჩნდება" },
+  "partner.deepSynastry": { en: "Generate Deep Synastry", ka: "ღრმა სინასტრიის ანალიზი" },
 };
 
 interface LanguageContextType {

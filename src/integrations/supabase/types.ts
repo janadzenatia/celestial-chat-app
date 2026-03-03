@@ -202,6 +202,9 @@ export type Database = {
           language_preference: string
           name: string | null
           onboarding_completed: boolean
+          partner_birth_date: string | null
+          partner_love_language: string | null
+          partner_name: string | null
           place_of_birth: string | null
           subscription_status: string
           time_of_birth: string | null
@@ -216,6 +219,9 @@ export type Database = {
           language_preference?: string
           name?: string | null
           onboarding_completed?: boolean
+          partner_birth_date?: string | null
+          partner_love_language?: string | null
+          partner_name?: string | null
           place_of_birth?: string | null
           subscription_status?: string
           time_of_birth?: string | null
@@ -230,6 +236,9 @@ export type Database = {
           language_preference?: string
           name?: string | null
           onboarding_completed?: boolean
+          partner_birth_date?: string | null
+          partner_love_language?: string | null
+          partner_name?: string | null
           place_of_birth?: string | null
           subscription_status?: string
           time_of_birth?: string | null

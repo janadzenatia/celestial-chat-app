@@ -7,14 +7,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getSunSign } from "@/lib/zodiac";
 import { calculateCompatibility } from "@/lib/compatibility";
 import AppHeader from "@/components/AppHeader";
-import { BirthDatePicker } from "@/components/BirthDatePicker";
 import RelationshipForecastCard from "@/components/RelationshipForecast";
 import SynastryReportCard from "@/components/SynastryReportCard";
 import BirthTimeModal from "@/components/BirthTimeModal";
 import PremiumGate from "@/components/PremiumGate";
+import PartnerCard from "@/components/PartnerCard";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
-import { Input } from "@/components/ui/input";
 
 const STORAGE_KEY = "astrochat_compat_form";
 
@@ -32,64 +31,54 @@ const levelGradients = {
   challenging: "from-orange-500/20 to-red-500/20",
 };
 
-function loadSavedForm() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as {
-      partnerName: string;
-      partnerDate: string | null;
-      partnerTime: string;
-      relationshipDate: string | null;
-    };
-  } catch {
-    return null;
-  }
-}
-
 const CompatibilityPage = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
 
-  const saved = loadSavedForm();
+  // Partner data from profile
+  const partnerName = profile?.partner_name || "";
+  const partnerDobStr = profile?.partner_birth_date || undefined;
 
-  const [partnerName, setPartnerName] = useState(saved?.partnerName ?? "");
-  const [partnerDate, setPartnerDate] = useState<Date | undefined>(
-    saved?.partnerDate ? parse(saved.partnerDate, "yyyy-MM-dd", new Date()) : undefined
-  );
-  const [partnerTime, setPartnerTime] = useState(saved?.partnerTime ?? "");
-  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>(
-    saved?.relationshipDate ? parse(saved.relationshipDate, "yyyy-MM-dd", new Date()) : undefined
-  );
+  const [partnerTime, setPartnerTime] = useState("");
+  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return undefined;
+      const saved = JSON.parse(raw);
+      return saved?.relationshipDate ? parse(saved.relationshipDate, "yyyy-MM-dd", new Date()) : undefined;
+    } catch { return undefined; }
+  });
   const [timeModalOpen, setTimeModalOpen] = useState(false);
+  const [showDeepReport, setShowDeepReport] = useState(false);
 
-  // Persist form state
+  // Persist relationship date
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        partnerName,
-        partnerDate: partnerDate ? format(partnerDate, "yyyy-MM-dd") : null,
-        partnerTime,
-        relationshipDate: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
-      })
-    );
-  }, [partnerName, partnerDate, partnerTime, relationshipDate]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      partnerTime,
+      relationshipDate: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
+    }));
+  }, [partnerTime, relationshipDate]);
 
   const userSign = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
-  const partnerDobStr = partnerDate ? format(partnerDate, "yyyy-MM-dd") : undefined;
   const partnerSign = partnerDobStr ? getSunSign(partnerDobStr) : null;
   const result = userSign && partnerSign ? calculateCompatibility(userSign, partnerSign) : null;
 
+  const partnerDate = partnerDobStr ? parse(partnerDobStr, "yyyy-MM-dd", new Date()) : undefined;
   const partnerHasTime = Boolean(partnerTime && partnerTime.trim().length >= 4);
 
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined);
 
-  // Intercept synastry generate with birth time modal
+  const handleDeepSynastry = (_pName: string, _pDob: string) => {
+    setShowDeepReport(true);
+    // If no report exists, trigger generation flow
+    if (!report && !reportLoading) {
+      handleSynastryGenerate();
+    }
+  };
+
   const handleSynastryGenerate = () => {
     if (partnerHasTime) {
-      // Already have time, generate directly
       generateReport();
     } else {
       setTimeModalOpen(true);
@@ -98,7 +87,6 @@ const CompatibilityPage = () => {
 
   const handleTimeSubmit = (time: string) => {
     setPartnerTime(time);
-    // Generate will re-trigger with updated time via the hook
     setTimeout(() => generateReport(), 100);
   };
 
@@ -121,27 +109,11 @@ const CompatibilityPage = () => {
           )}
         </div>
 
-        {/* Partner Input Card — only name & DOB */}
-        <div className="glass rounded-2xl p-6 space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.partnerName")}</label>
-            <Input
-              value={partnerName}
-              onChange={(e) => setPartnerName(e.target.value)}
-              placeholder={t("compat.partnerNamePlaceholder")}
-              className="glass border-white/10 focus:border-primary"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
-            <BirthDatePicker
-              value={partnerDate}
-              onChange={setPartnerDate}
-              placeholder={t("compat.pickDate")}
-            />
-          </div>
-        </div>
+        {/* Partner Card */}
+        <PartnerCard
+          onPartnerChange={() => setShowDeepReport(false)}
+          onDeepSynastry={handleDeepSynastry}
+        />
 
         {/* Basic Compatibility Results */}
         {result && partnerSign && (
@@ -203,21 +175,19 @@ const CompatibilityPage = () => {
           </div>
         )}
 
-        {/* Deep Synastry Report — Premium gated */}
-        {partnerDobStr && (
-          <PremiumGate overlay>
-            <SynastryReportCard
-              report={report}
-              loading={reportLoading}
-              generating={reportGenerating}
-              onGenerate={handleSynastryGenerate}
-              onRegenerate={generateReport}
-              userEmoji={userSign?.emoji}
-              partnerEmoji={partnerSign?.emoji}
-              partnerName={partnerName}
-              partnerHasTime={partnerHasTime}
-            />
-          </PremiumGate>
+        {/* Deep Synastry Report — shown after premium user clicks */}
+        {partnerDobStr && showDeepReport && (
+          <SynastryReportCard
+            report={report}
+            loading={reportLoading}
+            generating={reportGenerating}
+            onGenerate={handleSynastryGenerate}
+            onRegenerate={generateReport}
+            userEmoji={userSign?.emoji}
+            partnerEmoji={partnerSign?.emoji}
+            partnerName={partnerName}
+            partnerHasTime={partnerHasTime}
+          />
         )}
 
         {/* Relationship Forecast — Premium gated */}

@@ -13,6 +13,9 @@ interface Profile {
   is_premium: boolean;
   onboarding_completed: boolean;
   subscription_status: string;
+  partner_name: string | null;
+  partner_birth_date: string | null;
+  partner_love_language: string | null;
 }
 
 interface AuthContextType {
