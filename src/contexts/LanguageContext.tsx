@@ -349,6 +349,20 @@ const translations: Translations = {
   "partner.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
   "partner.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
   "partner.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
+
+  // Edit Profile
+  "profile.edit": { en: "Edit Profile", ka: "პროფილის რედაქტირება" },
+  "profile.editTitle": { en: "Edit Profile", ka: "მონაცემების რედაქტირება" },
+  "profile.name": { en: "Name", ka: "სახელი" },
+  "profile.dob": { en: "Date of Birth", ka: "დაბადების თარიღი" },
+  "profile.timeOfBirth": { en: "Time of Birth", ka: "დაბადების დრო" },
+  "profile.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
+  "profile.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
+  "profile.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
+  "profile.saveChanges": { en: "Save Changes", ka: "ცვლილებების შენახვა" },
+  "profile.saving": { en: "Saving...", ka: "ინახება..." },
+  "profile.updateSuccess": { en: "Profile updated successfully!", ka: "პროფილი წარმატებით განახლდა!" },
+  "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადეთ თავიდან." },
 };
 
 interface LanguageContextType {
