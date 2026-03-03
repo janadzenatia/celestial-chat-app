@@ -4,6 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -177,9 +178,12 @@ export default function MyChildrenTab() {
                 <span className="text-2xl">{sun?.emoji || "⭐"}</span>
                 <div>
                   <h3 className="font-serif text-base text-foreground">{child.name}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {sun ? `${t(`zodiac.${sun.name}`)} · ${t(`element.${sun.element}`)}` : child.date_of_birth}
-                  </p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-muted-foreground">
+                      {sun ? `${t(`zodiac.${sun.name}`)} · ${t(`element.${sun.element}`)}` : child.date_of_birth}
+                    </span>
+                    <ChineseZodiacBadge dateOfBirth={child.date_of_birth} />
+                  </div>
                 </div>
               </div>
               <button onClick={() => deleteChild(child.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
