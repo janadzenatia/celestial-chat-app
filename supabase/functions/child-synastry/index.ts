@@ -74,7 +74,22 @@ Rules:
     let content = data.choices?.[0]?.message?.content || "";
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
-    const parsed = JSON.parse(content);
+    // Fix common AI JSON issues: trailing commas, single quotes, control chars
+    content = content
+      .replace(/,\s*([}\]])/g, "$1")           // trailing commas
+      .replace(/[\x00-\x1F\x7F]/g, " ")        // control characters
+      .replace(/(?<=:\s*)"([^"]*)"([^,}\]\s])/g, '"$1$2'); // merge broken strings
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(content);
+    } catch {
+      // Try to extract JSON object from the content
+      const match = content.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error("Could not parse AI response as JSON");
+      const cleaned = match[0].replace(/,\s*([}\]])/g, "$1");
+      parsed = JSON.parse(cleaned);
+    }
     return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("child-synastry error:", e);
