@@ -16,6 +16,9 @@ interface Profile {
   partner_name: string | null;
   partner_birth_date: string | null;
   partner_love_language: string | null;
+  partner_time_of_birth: string | null;
+  partner_place_of_birth: string | null;
+  relationship_start_date: string | null;
 }
 
 interface AuthContextType {

@@ -8,14 +8,11 @@ import { getSunSign } from "@/lib/zodiac";
 import { calculateCompatibility } from "@/lib/compatibility";
 import AppHeader from "@/components/AppHeader";
 import RelationshipForecastCard from "@/components/RelationshipForecast";
-import SynastryReportCard from "@/components/SynastryReportCard";
 import BirthTimeModal from "@/components/BirthTimeModal";
 import PremiumGate from "@/components/PremiumGate";
 import PartnerCard from "@/components/PartnerCard";
 import { useRelationshipForecast } from "@/hooks/useRelationshipForecast";
 import { useSynastryReport } from "@/hooks/useSynastryReport";
-
-const STORAGE_KEY = "astrochat_compat_form";
 
 const levelColors = {
   soulmate: "text-pink-400",
@@ -38,26 +35,22 @@ const CompatibilityPage = () => {
   // Partner data from profile
   const partnerName = profile?.partner_name || "";
   const partnerDobStr = profile?.partner_birth_date || undefined;
+  const partnerTimeStr = profile?.partner_time_of_birth || undefined;
+  const relationshipDateStr = profile?.relationship_start_date || undefined;
 
-  const [partnerTime, setPartnerTime] = useState("");
-  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return undefined;
-      const saved = JSON.parse(raw);
-      return saved?.relationshipDate ? parse(saved.relationshipDate, "yyyy-MM-dd", new Date()) : undefined;
-    } catch { return undefined; }
-  });
   const [timeModalOpen, setTimeModalOpen] = useState(false);
   const [showDeepReport, setShowDeepReport] = useState(false);
+  const [partnerTime, setPartnerTime] = useState("");
 
-  // Persist relationship date
+  // Sync partnerTime from profile
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      partnerTime,
-      relationshipDate: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
-    }));
-  }, [partnerTime, relationshipDate]);
+    setPartnerTime(partnerTimeStr || "");
+  }, [partnerTimeStr]);
+
+  // Parse relationship date from profile
+  const relationshipDate = relationshipDateStr
+    ? parse(relationshipDateStr, "yyyy-MM-dd", new Date())
+    : undefined;
 
   const userSign = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const partnerSign = partnerDobStr ? getSunSign(partnerDobStr) : null;
@@ -66,12 +59,11 @@ const CompatibilityPage = () => {
   const partnerDate = partnerDobStr ? parse(partnerDobStr, "yyyy-MM-dd", new Date()) : undefined;
   const partnerHasTime = Boolean(partnerTime && partnerTime.trim().length >= 4);
 
+  const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined, relationshipDateStr);
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
-  const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined);
 
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
-    // If no report exists, trigger generation flow
     if (!report && !reportLoading) {
       handleSynastryGenerate();
     }
@@ -109,10 +101,13 @@ const CompatibilityPage = () => {
           )}
         </div>
 
-        {/* Partner Card */}
+        {/* Partner Card — with embedded synastry accordion */}
         <PartnerCard
           onPartnerChange={() => setShowDeepReport(false)}
           onDeepSynastry={handleDeepSynastry}
+          synastryReport={report}
+          synastryGenerating={reportGenerating}
+          showDeepReport={showDeepReport}
         />
 
         {/* Basic Compatibility Results */}
@@ -175,23 +170,8 @@ const CompatibilityPage = () => {
           </div>
         )}
 
-        {/* Deep Synastry Report — shown after premium user clicks */}
+        {/* Relationship Forecast — ONLY shown after deep synastry button + premium */}
         {partnerDobStr && showDeepReport && (
-          <SynastryReportCard
-            report={report}
-            loading={reportLoading}
-            generating={reportGenerating}
-            onGenerate={handleSynastryGenerate}
-            onRegenerate={generateReport}
-            userEmoji={userSign?.emoji}
-            partnerEmoji={partnerSign?.emoji}
-            partnerName={partnerName}
-            partnerHasTime={partnerHasTime}
-          />
-        )}
-
-        {/* Relationship Forecast — Premium gated */}
-        {partnerDobStr && (
           <PremiumGate overlay>
             <RelationshipForecastCard
               intro={forecast?.intro}
@@ -201,7 +181,7 @@ const CompatibilityPage = () => {
               onGenerate={generateForecast}
               onRegenerate={generateForecast}
               relationshipDate={relationshipDate}
-              onRelationshipDateChange={setRelationshipDate}
+              onRelationshipDateChange={() => {}}
             />
           </PremiumGate>
         )}

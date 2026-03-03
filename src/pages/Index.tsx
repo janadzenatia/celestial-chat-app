@@ -93,15 +93,15 @@ const Index = () => {
             </p>
           )}
         </section>
-        {/* Synastry CTA */}
-        {dob && <SynastryCTABanner />}
-
         {/* Cosmic Match */}
         {dob && (
           <PremiumGate overlay>
             <CosmicMatchCard />
           </PremiumGate>
         )}
+
+        {/* Synastry CTA — below match results, above deep analysis */}
+        {dob && <SynastryCTABanner />}
 
         {/* Cosmic Traffic Light Calendar */}
         {dob && (
