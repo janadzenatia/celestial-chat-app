@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,12 +21,12 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const lang = language === "ka" ? "Georgian" : "English";
-    const today = new Date().toISOString().split("T")[0]; // e.g. 2026-03-02
+    const today = new Date().toISOString().split("T")[0];
 
-    const prompt = `You are an elite relationship transit astrologer with 30+ years of experience. Generate a deep, personalized 12-month relationship forecast.
+    const prompt = `Generate a deep, personalized 12-month relationship forecast.
 
 CRITICAL CONTEXT:
-- Today's date is ${today}. All forecasts must be for FUTURE dates only. Never reference past dates.
+- Today's date is ${today}. All forecasts must be for FUTURE dates only.
 - The current year is ${new Date().getFullYear()}.
 
 Person 1:
@@ -44,10 +45,10 @@ Person 2:
 
 Relationship Start / Marriage Date: ${relationshipDate}
 
-You MUST respond with ONLY a valid JSON object (no markdown, no code fences) with this exact structure:
+You MUST respond with ONLY a valid JSON object (no markdown, no code fences):
 
 {
-  "intro": "A personalized 3-4 sentence introductory paragraph. Calculate how long they've been together from ${relationshipDate} to ${today}. Address them by name. Mention 1-2 significant past astrological years they navigated together. Then preview the upcoming cosmic energy themes for the next 12 months.",
+  "intro": "A personalized 3-4 sentence introductory paragraph. Calculate how long they've been together. Address them by name. Preview the upcoming cosmic energy themes.",
   "periods": [
     {
       "month": "Month Year",
@@ -59,17 +60,22 @@ You MUST respond with ONLY a valid JSON object (no markdown, no code fences) wit
 }
 
 Rules:
-- "intro" MUST calculate the real duration from ${relationshipDate} to ${today} (years, months). Address both people by name (${userName || "Person 1"} & ${partnerName || "Person 2"}).
+- "intro" MUST calculate the real duration from ${relationshipDate} to ${today}. Address both by name.
 - Generate exactly 6-7 forecast periods, covering bi-monthly intervals across the next 12 months starting from ${today}
-- "month" should use format like "March-April 2026" for bi-monthly periods
-- "type" must be one of: "positive", "challenge", "neutral" — vary them realistically
-- "title" should be evocative and specific (e.g., "Venus Conjunct Mars: Reignited Passion", "Saturn Square: Financial Crossroads")
-- "description" should be 3-4 sentences with SPECIFIC transit references (e.g., "Jupiter enters your 7th house", "Saturn squares your composite Venus")
-- Include actionable advice: what to do, what to avoid, rituals or dates to watch
-- Tone: deeply empathetic, expert, mystical yet practical
+- "month" format: "March-April 2026" for bi-monthly periods
+- "type": "positive", "challenge", or "neutral" — vary realistically
+- For "challenge" periods: always emphasize that this is a growth opportunity and provide specific constructive advice
+- "title" should be evocative and specific (e.g., "**Venus Conjunct Mars**: Reignited Passion")
+- "description": 3-4 sentences with specific transit references and actionable advice
+- Strengths and opportunities first, then growth areas with guidance
 - ALL text content MUST be written in ${lang}
 - Month names MUST be in ${lang}
-- Respond with ONLY the JSON object, nothing else.`;
+- Respond with ONLY the JSON object.`;
+
+    const systemPrompt = buildSystemPrompt(
+      `You are an elite relationship transit astrologer. Today is ${today}. All forecasts must reference future dates only. Return ONLY valid JSON, no markdown formatting.`,
+      language
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -80,7 +86,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: `You are an elite relationship transit astrologer. Today is ${today}. All forecasts must reference future dates only. Return ONLY valid JSON, no markdown formatting.` },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),

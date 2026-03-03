@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,8 +14,7 @@ serve(async (req) => {
     const {
       userName, userDob, userSunSign, userMoonSign, userRisingSign,
       partnerName, partnerDob, partnerSunSign, partnerMoonSign, partnerRisingSign,
-      partnerHasTime,
-      language,
+      partnerHasTime, language,
     } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -27,11 +27,10 @@ serve(async (req) => {
       ? `IMPORTANT: The partner's exact birth time was provided, so Moon and Rising signs are calculated with higher precision. Begin your analysis by acknowledging this: mention that because the exact birth time was provided, ${partnerName || "the partner"}'s Moon and Rising sign analysis is more precise.`
       : `Note: The partner's birth time was not provided, so Moon and Rising signs are approximate estimates.`;
 
-    const prompt = `You are an expert relationship synastry astrologer. Generate a deep compatibility analysis for this couple.
+    const prompt = `Generate a deep compatibility analysis for this couple.
 
 CRITICAL CONTEXT:
 - Today's date is ${today}. The current year is ${new Date().getFullYear()}.
-- Any references to time or dates must be accurate to this context.
 
 ${timeAckInstruction}
 
@@ -56,31 +55,38 @@ Analyze the synastry between these two charts. You MUST respond with ONLY a vali
   "overall_score": 85,
   "emotional": {
     "score": 80,
-    "analysis": "2-3 sentences about emotional connection based on Moon sign interplay..."
+    "analysis": "2-3 sentences about emotional connection based on Moon sign interplay. Highlight strengths first, then any growth areas with constructive advice..."
   },
   "romantic": {
     "score": 90,
-    "analysis": "2-3 sentences about physical/romantic chemistry based on Mars & Venus energy..."
+    "analysis": "2-3 sentences about physical/romantic chemistry based on Mars & Venus energy. Lead with what works beautifully..."
   },
   "communication": {
     "score": 75,
-    "analysis": "2-3 sentences about communication style based on Mercury dynamics..."
+    "analysis": "2-3 sentences about communication style based on Mercury dynamics. Start with natural communication gifts..."
   },
   "goals": {
     "score": 85,
-    "analysis": "2-3 sentences about shared goals & finances based on Jupiter & Saturn..."
+    "analysis": "2-3 sentences about shared goals & finances based on Jupiter & Saturn. Emphasize shared vision first..."
   }
 }
 
 Rules:
-- "overall_score" must be 0-100, representing the overall synastry compatibility
+- "overall_score" must be 0-100
 - Each category score must be 0-100
-- Each "analysis" must be 2-3 sentences, specific to these two people's chart dynamics
-- Reference actual astrological aspects: Moon conjunct Moon, Venus trine Mars, etc.
-- Be mystical yet practical — mention how the energy manifests in real-life behavior
+- Each "analysis" must be 2-3 sentences, specific to these two people
+- Reference actual astrological aspects: **Moon conjunct Moon**, **Venus trine Mars**, etc.
+- Always lead with the strengths of each category before discussing challenges
+- Every challenge MUST include actionable advice on how to navigate it
+- Be mystical yet practical
 - "time_acknowledged" must be ${partnerHasTime ? "true" : "false"}
-- ALL text content (analysis fields) MUST be written in ${lang}
+- ALL text content MUST be written in ${lang}
 - Respond with ONLY the JSON object, nothing else.`;
+
+    const systemPrompt = buildSystemPrompt(
+      `You are an expert relationship synastry astrologer. Today is ${today}. Return ONLY valid JSON, no markdown formatting.`,
+      language
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -91,7 +97,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: `You are an expert synastry astrologer. Today is ${today}. Return ONLY valid JSON, no markdown formatting.` },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),

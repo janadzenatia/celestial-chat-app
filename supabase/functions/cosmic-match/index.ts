@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,7 +18,7 @@ serve(async (req) => {
     const lang = language === "ka" ? "Georgian" : "English";
     const userName = name || "Star Seeker";
 
-    const prompt = `You are a deep psychological astrologer generating a highly personalized "Ideal Cosmic Match" profile.
+    const prompt = `Generate a highly personalized "Ideal Cosmic Match" profile.
 
 User Profile:
 - Name: ${userName}
@@ -26,7 +27,7 @@ User Profile:
 - Moon Sign: ${moonSign || "Unknown"}
 - Rising Sign: ${risingSign || "Unknown"}
 
-Generate a personalized ideal romantic partner profile. You MUST respond with ONLY a valid JSON object (no markdown, no code fences) with this exact structure:
+Generate a personalized ideal romantic partner profile. Respond with ONLY a valid JSON object (no markdown, no code fences):
 
 {
   "compatible_signs": ["Sign1", "Sign2", "Sign3"],
@@ -34,14 +35,18 @@ Generate a personalized ideal romantic partner profile. You MUST respond with ON
   "personality_profile": "A detailed paragraph..."
 }
 
-Rules for content:
-- "compatible_signs": Pick 2-3 zodiac signs that are the absolute best match for this user's specific chart combination (Sun + Moon + Rising synergy). Use English sign names (Aries, Taurus, etc.).
-- "birth_years": Suggest exactly 3 specific birth years that would create powerful astrological harmony. Consider element cycles, Jupiter returns, and Saturn placements relative to the user's birth year. The years should be realistic (within ±10 years of the user's birth year).
-- "personality_profile": Write 3-4 sentences describing the ideal partner's character, emotional nature, how they complement the user's chart, and how they will treat ${userName}. Be specific, mystical yet practical. Reference actual astrological dynamics.
+Rules:
+- "compatible_signs": 2-3 zodiac signs that are the best match for this user's chart combination. Use English sign names.
+- "birth_years": 3 specific birth years that create powerful astrological harmony. Within ±10 years of the user's birth year.
+- "personality_profile": 3-4 sentences describing the ideal partner's character. Lead with how this partner complements ${userName}'s strengths. Be empowering and optimistic.
+- ALL text content (personality_profile) MUST be written in ${lang}.
+- Sign names in compatible_signs MUST always be in English.
+- Respond with ONLY the JSON object.`;
 
-ALL text content (personality_profile) MUST be written in ${lang}.
-Sign names in compatible_signs MUST always be in English.
-Respond with ONLY the JSON object, nothing else.`;
+    const systemPrompt = buildSystemPrompt(
+      "You are a deep psychological astrologer specializing in romantic compatibility. Return ONLY valid JSON, no markdown formatting.",
+      language
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -52,7 +57,7 @@ Respond with ONLY the JSON object, nothing else.`;
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "You are a deep psychological astrologer. Return ONLY valid JSON, no markdown formatting." },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),
@@ -78,8 +83,6 @@ Respond with ONLY the JSON object, nothing else.`;
 
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
-
-    // Strip markdown code fences if present
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
     try {

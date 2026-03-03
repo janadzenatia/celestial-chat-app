@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,17 +23,20 @@ serve(async (req) => {
       familyContext = `\n\nThe user has these saved family members:\n${familyMembers.map((m: any) => `- ${m.name} (born ${m.dateOfBirth}, relationship: ${m.relationship})`).join("\n")}`;
     }
 
-    const systemPrompt = `You are an elite AI astrologer generating a push notification hook. Today is ${today}.
+    const basePrompt = `You are an elite AI astrologer generating a push notification hook. Today is ${today}.
 
 The user's name is "${userName || "Unknown"}". Their birth date is ${dateOfBirth || "Unknown"}, birth time is ${timeOfBirth || "Not provided"}.${familyContext}
 
 TASK: Generate a single highly emotional, intriguing 1-sentence push notification. Rules:
-1. If there are family members, pick ONE specific family member by name and reference a tough or unique astrological event they face TODAY based on planetary transits.
-2. Do NOT give the solution or advice in the notification. Create curiosity and urgency.
-3. End with a call-to-action like "Tap to ask the AI how to handle this."
-4. If there are NO family members, focus on the user's own chart — mention a career, financial, or personal opportunity they might be missing today.
-5. Respond in ${lang} ONLY.
-6. Return ONLY a JSON object: { "hook": "the notification text", "subject": "name of the person referenced or 'self'", "subjectDob": "their date of birth or null" }`;
+1. If there are family members, pick ONE specific family member by name and reference a unique astrological event they face TODAY based on planetary transits.
+2. Do NOT give the solution or advice in the notification. Create curiosity and positive urgency — never fear or dread.
+3. End with a call-to-action like "Tap to discover more."
+4. If there are NO family members, focus on the user's own chart — mention a career, personal growth, or relationship opportunity they might be missing today.
+5. NEVER predict anything negative, fearful, or fatalistic. Focus on opportunities and cosmic gifts.
+6. Respond in ${lang} ONLY.
+7. Return ONLY a JSON object: { "hook": "the notification text", "subject": "name of the person referenced or 'self'", "subjectDob": "their date of birth or null" }`;
+
+    const systemPrompt = buildSystemPrompt(basePrompt, language);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
