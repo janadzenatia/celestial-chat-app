@@ -68,6 +68,7 @@ const translations: Translations = {
   "auth.loading": { en: "Please wait...", ka: "გთხოვთ მოიცადოთ..." },
   "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვთ ანგარიში?" },
   "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვთ ანგარიში?" },
+  "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელეთ" },
 
   // Dashboard
   "dashboard.big3": { en: "Your Big 3", ka: "თქვენი დიდი 3" },
