@@ -1,20 +1,50 @@
+import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { User, Star, Shield, LogOut } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { User, Star, Shield, LogOut, XCircle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const ProfilePage = () => {
   const { t } = useLanguage();
-  const { signOut, profile } = useAuth();
+  const { signOut, profile, user, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+
+  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
 
   const handleLogout = async () => {
     await signOut();
     toast({ title: t("profile.loggedOut") });
     navigate("/auth", { replace: true });
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!user) return;
+    setCanceling(true);
+    await new Promise((r) => setTimeout(r, 1500));
+    await supabase
+      .from("profiles")
+      .update({ subscription_status: "free", is_premium: false })
+      .eq("user_id", user.id);
+    await refreshProfile();
+    setCanceling(false);
+    setCancelOpen(false);
+    toast({ title: t("profile.cancelSuccess") });
   };
 
   return (
@@ -29,7 +59,7 @@ const ProfilePage = () => {
           <div>
             <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
             <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Star className="w-3 h-3 text-primary" /> {profile?.subscription_status === "premium" ? t("profile.premium") : t("profile.free")}
+              <Star className="w-3 h-3 text-primary" /> {isPremium ? t("profile.premium") : t("profile.free")}
             </span>
           </div>
         </section>
@@ -44,7 +74,7 @@ const ProfilePage = () => {
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground">{profile?.subscription_status === "premium" ? t("profile.premium") : t("profile.free")}</span>
+              <span className="text-foreground">{isPremium ? t("profile.premium") : t("profile.free")}</span>
             </div>
           </div>
         </section>
@@ -59,6 +89,17 @@ const ProfilePage = () => {
           </div>
         </section>
 
+        {/* Cancel Subscription - only for premium */}
+        {isPremium && (
+          <button
+            onClick={() => setCancelOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/70 hover:text-destructive hover:bg-destructive/5 transition-colors text-sm"
+          >
+            <XCircle className="w-4 h-4" />
+            {t("profile.cancelSubscription")}
+          </button>
+        )}
+
         {/* Log Out */}
         <button
           onClick={handleLogout}
@@ -68,6 +109,26 @@ const ProfilePage = () => {
           {t("profile.logout")}
         </button>
       </div>
+
+      {/* Cancel Confirmation Dialog */}
+      <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
+        <AlertDialogContent className="glass border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t("profile.cancelTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("profile.cancelDescription")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={canceling}>{t("profile.keepPremium")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleCancelSubscription}
+              disabled={canceling}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {canceling ? t("profile.canceling") : t("profile.yesCancel")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
