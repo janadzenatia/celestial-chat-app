@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,24 +21,28 @@ serve(async (req) => {
     const birthYear = new Date(dateOfBirth).getFullYear();
     const currentAge = new Date().getFullYear() - birthYear;
 
-    const systemPrompt = `You are an elite Vocational Astrologer and Financial Destiny analyst. Today is ${today}. The user is named ${name || "User"}, born on ${dateOfBirth}${timeOfBirth ? ` at ${timeOfBirth}` : ""}, currently approximately ${currentAge} years old.
+    const basePrompt = `You are an elite Vocational Astrologer and Financial Destiny analyst. Today is ${today}. The user is named ${name || "User"}, born on ${dateOfBirth}${timeOfBirth ? ` at ${timeOfBirth}` : ""}, currently approximately ${currentAge} years old.
 
 You must estimate the 2nd House (wealth), 10th House (Midheaven/career), and Jupiter/Saturn cycles to generate a deep, realistic, lifelong analysis.
 
 Respond ONLY with a valid JSON object (no markdown, no code fences) with exactly these 3 keys:
 
 {
-  "cosmic_calling": "A detailed section about 3 highly specific, modern career paths where this person has the absolute highest chance of success and fulfillment. Include why each career aligns with their chart.",
-  "wealth_dna": "A realistic assessment of their financial potential. What is their money-making superpower? At what specific age or age range are they most likely to hit their ultimate financial peak? Be specific and encouraging but honest.",
-  "career_timeline": "A macro-timeline of their ENTIRE life with 5-7 distinct periods (e.g. 'Ages 22-28: The Foundation', 'Ages 30-35: The Breakthrough', 'Ages 40-45: The Saturnian Challenge'). Each period should have a title and 2-3 sentences describing growth opportunities and challenges. Make it personalized to their birth data."
+  "cosmic_calling": "A detailed section about 3 highly specific, modern career paths where this person has the absolute highest chance of success. Lead with their natural talents and strengths. Include why each career aligns with their chart.",
+  "wealth_dna": "A realistic but empowering assessment of their financial potential. What is their money-making superpower? At what specific age or age range are they most likely to hit their financial peak? Frame challenges as growth opportunities.",
+  "career_timeline": "A macro-timeline of their ENTIRE life with 5-7 distinct periods. Each period should have a title and 2-3 sentences. Lead with growth opportunities in each phase, then mention challenges with actionable advice on how to navigate them."
 }
 
 Rules:
 - Respond ENTIRELY in ${lang}.
 - Be deeply personalized, empathetic, professional, and encouraging.
-- Use astrological terminology naturally but keep it accessible.
+- Always highlight strengths and natural talents first before discussing challenges.
+- Every challenge MUST include constructive advice on how to overcome it.
+- Use astrological terminology naturally but keep it accessible — **bold** key terms.
 - The career_timeline must cover from early 20s through retirement age.
 - Do NOT wrap in markdown code blocks. Return raw JSON only.`;
+
+    const systemPrompt = buildSystemPrompt(basePrompt, language);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -75,7 +80,6 @@ Rules:
 
     if (!content) throw new Error("No content in AI response");
 
-    // Parse JSON, handling potential markdown wrapping
     let parsed;
     try {
       const cleaned = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();

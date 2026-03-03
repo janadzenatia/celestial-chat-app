@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt, FAMILY_PERSONA_EXTRA } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,12 +19,12 @@ serve(async (req) => {
     const lang = language === "ka" ? "Georgian" : "English";
     const today = new Date().toISOString().split("T")[0];
 
-    const prompt = `You are an expert family planning astrologer. A couple wants to know which Zodiac signs would create the ideal child to bring cosmic balance to their relationship.
+    const prompt = `A couple wants to know which Zodiac signs would create the ideal child to bring cosmic balance to their relationship.
 
 Parent 1: ${userName || "Parent 1"} — Sun: ${userSunSign}, Moon: ${userMoonSign}, Element: ${userElement}
 Parent 2: ${partnerName || "Parent 2"} — Sun: ${partnerSunSign}, Moon: ${partnerMoonSign}, Element: ${partnerElement}
 
-Analyze the elemental makeup of both parents. Suggest 1-2 ideal Zodiac signs for their future child that would bring ultimate balance to their specific relationship dynamic.
+Analyze the elemental makeup of both parents. Suggest 1-2 ideal Zodiac signs for their future child that would bring balance and harmony.
 
 Return ONLY valid JSON (no markdown):
 
@@ -33,18 +34,25 @@ Return ONLY valid JSON (no markdown):
       "sign": "Taurus",
       "emoji": "♉",
       "element": "Earth",
-      "reasoning": "2-3 sentences explaining why this sign would balance the parents' dynamic..."
+      "reasoning": "2-3 sentences explaining why this sign would beautifully balance the parents' dynamic. Focus on the child's gifts and potential..."
     }
   ],
-  "summary": "2-3 sentences with an overarching cosmic insight about what element/quality their family needs most."
+  "summary": "2-3 sentences with an overarching cosmic insight about what element/quality their family needs most. Be warm and encouraging."
 }
 
 Rules:
 - Suggest 1-2 signs maximum
-- Be warm, encouraging, specific to these parents
-- Explain how the child's element/modality balances or complements the parents
+- Be extremely warm, nurturing, and encouraging — this is about a future child
+- Focus on the child's potential and how they will enrich the family
+- Explain how the child's element/modality complements the parents
 - ALL text MUST be in ${lang}
 - Return ONLY JSON.`;
+
+    const systemPrompt = buildSystemPrompt(
+      `You are an expert family planning astrologer. Today is ${today}. Return ONLY valid JSON.`,
+      language,
+      FAMILY_PERSONA_EXTRA
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -55,7 +63,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: `You are a family astrologer. Today is ${today}. Return ONLY valid JSON.` },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),

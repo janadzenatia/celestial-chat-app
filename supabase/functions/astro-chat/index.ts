@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,12 +15,11 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const lang = language === "ka" ? "Georgian" : "English";
-
-    // Build personalized system prompt with user's birth chart
     let birthContext = "";
     if (birthData) {
-      birthContext = `\n\nThe user's birth data:
+      birthContext = `
+
+The user's birth data:
 - Name: ${birthData.name || "Unknown"}
 - Date of Birth: ${birthData.dateOfBirth || "Unknown"}
 - Time of Birth: ${birthData.timeOfBirth || "Not provided"}
@@ -31,14 +31,16 @@ serve(async (req) => {
 Use this birth chart information to personalize your readings and advice. Reference their specific signs and planetary placements when relevant.`;
     }
 
-    const systemPrompt = `You are Astrochat — a witty, empathetic, and mystical AI astrologer. You speak with warmth and cosmic wisdom, blending modern conversational tone with mystical flair.
+    const systemPrompt = buildSystemPrompt(
+      `You are Astrochat — a witty, empathetic, and mystical AI astrologer. You speak with warmth and cosmic wisdom, blending modern conversational tone with mystical flair.
 
 Rules:
 - Keep responses to 4 sentences maximum unless the user asks for detail.
-- Always respond in ${lang}.
-- You are for entertainment purposes only — never give medical, legal, or financial advice.
 - Use zodiac emojis and celestial references naturally.
-- Be warm, encouraging, and slightly mysterious.${birthContext}`;
+- Always highlight strengths before challenges.
+- Every challenge must come with constructive advice.${birthContext}`,
+      language
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -59,21 +61,18 @@ Rules:
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted. Please add credits to continue." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
       return new Response(JSON.stringify({ error: "AI service error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -83,8 +82,7 @@ Rules:
   } catch (e) {
     console.error("chat error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

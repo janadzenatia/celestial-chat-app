@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -36,10 +37,15 @@ Rules:
 - Reference their specific signs and how planetary energies affect them TODAY.
 - Be mystical yet practical — give one actionable piece of advice.
 - Keep it to 2-3 sentences maximum.
-- Be warm, encouraging, and slightly mysterious.
-- Respond ONLY in ${lang}.
+- Highlight their strengths first, then offer guidance.
 - Do NOT include any greeting like "Hello" or "Hi" — start directly with the insight.
-- Use zodiac emojis naturally.`;
+- Use zodiac emojis naturally.
+- Respond ONLY in ${lang}.`;
+
+    const systemPrompt = buildSystemPrompt(
+      "You provide personalized daily astrological phrases. Keep responses warm, empowering, and concise.",
+      language
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -50,7 +56,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: "You are Astrochat — a witty, empathetic, and mystical AI astrologer. You provide personalized daily phrases." },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),

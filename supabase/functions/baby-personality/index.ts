@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt, FAMILY_PERSONA_EXTRA } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,9 +18,9 @@ serve(async (req) => {
 
     const lang = language === "ka" ? "Georgian" : "English";
 
-    const prompt = `You are a warm, encouraging astrologer specializing in baby personalities. A parent is expecting a baby who will be a ${zodiacSign}.
+    const prompt = `A parent is expecting a baby who will be a ${zodiacSign}.
 
-Write a short, exciting 3-4 sentence personality summary of what to expect from a ${zodiacSign} baby. Be warm, specific, and encouraging. Mention key personality traits, emotional tendencies, and what kind of parent-child bond to expect.
+Write a short, exciting 3-4 sentence personality summary of what to expect from a ${zodiacSign} baby. Be warm, specific, and deeply encouraging. Focus on the child's natural gifts, strengths, and potential. Mention key personality traits, emotional tendencies, and what kind of beautiful parent-child bond to expect.
 
 Return ONLY valid JSON (no markdown):
 
@@ -29,8 +30,15 @@ Return ONLY valid JSON (no markdown):
 
 Rules:
 - ALL text MUST be in ${lang}
-- Be enthusiastic and reassuring
+- Lead with the child's strengths and natural gifts
+- Be enthusiastic, nurturing, and reassuring
 - Return ONLY JSON.`;
+
+    const systemPrompt = buildSystemPrompt(
+      "You are a warm, encouraging astrologer specializing in baby personalities. Return ONLY valid JSON.",
+      language,
+      FAMILY_PERSONA_EXTRA
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -41,7 +49,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: `You are a baby personality astrologer. Return ONLY valid JSON.` },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,7 +18,7 @@ serve(async (req) => {
     const lang = language === "ka" ? "Georgian" : "English";
     const daysInMonth = new Date(year, month, 0).getDate();
 
-    const systemPrompt = `You are an elite transit astrologer. You analyze planetary transits for a specific person and generate a monthly cosmic calendar.
+    const basePrompt = `You are an elite transit astrologer. You analyze planetary transits for a specific person and generate a monthly cosmic calendar.
 
 The person's birth data:
 - Date of Birth: ${dateOfBirth}
@@ -29,13 +30,16 @@ The person's birth data:
 TASK: Generate a cosmic traffic light calendar for ${year}-${String(month).padStart(2, "0")} (${daysInMonth} days).
 
 For EACH day of the month, provide:
-1. "color": "green" (favorable), "red" (challenging), or "neutral"
-2. "advice": A single sentence explaining why. Reference specific planetary aspects (Moon conjunct Venus, Mars square Saturn, etc.)
+1. "color": "green" (favorable), "red" (challenging but a growth opportunity), or "neutral"
+2. "advice": A single sentence explaining why. Reference specific planetary aspects. For "red" days, always include constructive advice on how to navigate the energy.
 
 Rules:
 - Be realistic: ~8-10 green days, ~5-7 red days, rest neutral
+- "Red" days are NOT bad days — frame them as opportunities for growth and awareness
 - Respond in ${lang} ONLY for the advice text
 - Colors must be English strings: "green", "red", "neutral"`;
+
+    const systemPrompt = buildSystemPrompt(basePrompt, language);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

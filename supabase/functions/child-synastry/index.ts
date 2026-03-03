@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildSystemPrompt, FAMILY_PERSONA_EXTRA } from "../_shared/persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,7 +19,7 @@ serve(async (req) => {
     const lang = language === "ka" ? "Georgian" : "English";
     const today = new Date().toISOString().split("T")[0];
 
-    const prompt = `You are a warm, empathetic expert family astrologer. Analyze the parent-child astrological dynamic.
+    const prompt = `Analyze the parent-child astrological dynamic.
 
 CRITICAL: Today's date is ${today}. Current year is ${new Date().getFullYear()}.
 
@@ -36,16 +37,24 @@ ${childHasTime ? "- Birth time provided: Moon and Rising are precise." : "- No b
 Return ONLY a valid JSON object (no markdown) with this structure:
 
 {
-  "blueprint": "3-4 sentences describing ${childName}'s cosmic personality blueprint — Sun, Moon, Rising qualities, element balance, key strengths and natural tendencies.",
-  "emotional_connection": "3-4 sentences analyzing the emotional dynamic between ${parentName || "the parent"} and ${childName} — Moon sign interplay, attachment styles, how they nurture each other.",
-  "parenting_advice": "3-4 sentences with specific parenting advice — friction points to watch, communication tips, how to support ${childName}'s unique cosmic nature."
+  "blueprint": "3-4 sentences describing ${childName}'s cosmic personality blueprint — lead with their natural gifts and strengths. Mention Sun, Moon, Rising qualities, element balance, and key talents.",
+  "emotional_connection": "3-4 sentences analyzing the emotional dynamic between ${parentName || "the parent"} and ${childName} — highlight the beautiful aspects of their bond first, then areas where extra understanding helps them grow closer.",
+  "parenting_advice": "3-4 sentences with specific parenting advice — how to nurture ${childName}'s unique cosmic nature, communication tips, and how to turn any friction points into opportunities for deeper connection."
 }
 
 Rules:
 - ALL text MUST be in ${lang}
-- Be warm, encouraging, specific to these charts
-- Reference real astrological aspects
+- Be extremely warm, nurturing, and encouraging
+- Focus on the child's potential, gifts, and the beauty of the parent-child bond
+- Frame any challenges as growth opportunities with constructive advice
+- Reference real astrological aspects using **bold** for key terms
 - Return ONLY the JSON, nothing else.`;
+
+    const systemPrompt = buildSystemPrompt(
+      `You are a warm, expert family astrologer. Today is ${today}. Return ONLY valid JSON.`,
+      language,
+      FAMILY_PERSONA_EXTRA
+    );
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -56,7 +65,7 @@ Rules:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: `You are a family astrologer. Today is ${today}. Return ONLY valid JSON.` },
+          { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
         ],
       }),
@@ -74,22 +83,21 @@ Rules:
     let content = data.choices?.[0]?.message?.content || "";
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
-    // Fix common AI JSON issues: trailing commas, single quotes, control chars
+    // Robust JSON parsing with fallback
     content = content
-      .replace(/,\s*([}\]])/g, "$1")           // trailing commas
-      .replace(/[\x00-\x1F\x7F]/g, " ")        // control characters
-      .replace(/(?<=:\s*)"([^"]*)"([^,}\]\s])/g, '"$1$2'); // merge broken strings
+      .replace(/,\s*([}\]])/g, "$1")
+      .replace(/[\x00-\x1F\x7F]/g, " ");
 
     let parsed: any;
     try {
       parsed = JSON.parse(content);
     } catch {
-      // Try to extract JSON object from the content
       const match = content.match(/\{[\s\S]*\}/);
       if (!match) throw new Error("Could not parse AI response as JSON");
       const cleaned = match[0].replace(/,\s*([}\]])/g, "$1");
       parsed = JSON.parse(cleaned);
     }
+
     return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("child-synastry error:", e);
