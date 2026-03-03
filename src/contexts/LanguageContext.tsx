@@ -284,6 +284,36 @@ const translations: Translations = {
   "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
   "hook.generating": { en: "Scanning the stars for you...", ka: "ვარსკვლავების სკანირება..." },
   "hook.dismiss": { en: "Dismiss", ka: "დახურვა" },
+
+  // Legal Pages
+  "legal.termsTitle": { en: "Terms & Conditions", ka: "წესები და პირობები" },
+  "legal.privacyTitle": { en: "Privacy Policy", ka: "კონფიდენციალურობის პოლიტიკა" },
+  "legal.disclaimerTitle": { en: "Disclaimer", ka: "პასუხისმგებლობის შეზღუდვა" },
+  "legal.disclaimerText": {
+    en: "Astrochat is provided for entertainment purposes only and does not replace professional medical, psychological, or financial advice.",
+    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ ან ფინანსურ კონსულტაციას."
+  },
+  "legal.refundTitle": { en: "Refund Policy", ka: "თანხის დაბრუნების პოლიტიკა" },
+  "legal.refundText": {
+    en: "All purchases and subscriptions are final and non-refundable. Astrochat does not process or issue refunds. Since transactions are managed by the Apple App Store or Google Play, their respective refund policies apply.",
+    ka: "ყველა ტრანზაქცია საბოლოოა და თანხა უკან არ ბრუნდება. Astrochat არ ამუშავებს და არ გასცემს რეფანდს. ვინაიდან გადახდები ხორციელდება Apple App Store-ის ან Google Play-ს მეშვეობით, თანხის დაბრუნების საკითხებზე ვრცელდება მათი შიდა წესები."
+  },
+  "legal.useTitle": { en: "Use of Service", ka: "სერვისის გამოყენება" },
+  "legal.ipTitle": { en: "Intellectual Property", ka: "ინტელექტუალური საკუთრება" },
+  "legal.liabilityTitle": { en: "Limitation of Liability", ka: "პასუხისმგებლობის შეზღუდვა" },
+  "legal.changesTitle": { en: "Changes to Terms", ka: "წესების ცვლილებები" },
+  "legal.dataCollectionTitle": { en: "Data Collection", ka: "მონაცემების შეგროვება" },
+  "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ თქვენს მონაცემებს" },
+  "legal.thirdPartyTitle": { en: "Third-Party Services", ka: "მესამე მხარის სერვისები" },
+  "legal.securityTitle": { en: "Data Security", ka: "მონაცემთა უსაფრთხოება" },
+  "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდით" },
+  "legal.termsLink": { en: "Terms & Conditions", ka: "წესები და პირობები" },
+  "legal.privacyLink": { en: "Privacy Policy", ka: "კონფიდენციალურობა" },
+  "auth.legalFooter": {
+    en: "By signing up, you agree to our",
+    ka: "რეგისტრაციით თქვენ ეთანხმებით ჩვენს"
+  },
+  "auth.and": { en: "and", ka: "და" },
 };
 
 interface LanguageContextType {
