@@ -328,6 +328,21 @@ const translations: Translations = {
     ka: "რეგისტრაციით თქვენ ეთანხმებით ჩვენს"
   },
   "auth.and": { en: "and", ka: "და" },
+  "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდათ პაროლი?" },
+  "auth.forgotTitle": { en: "Reset Password", ka: "პაროლის აღდგენა" },
+  "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანეთ ელ.ფოსტა და გამოგიგზავნით აღდგენის ლინკს." },
+  "auth.sendResetLink": { en: "Send Reset Link", ka: "აღდგენის ლინკის გაგზავნა" },
+  "auth.resetSent": { en: "Password reset link sent! Check your email. ✨", ka: "პაროლის აღდგენის ლინკი გაიგზავნა! შეამოწმეთ ელ.ფოსტა. ✨" },
+  "auth.backToLogin": { en: "Back to login", ka: "შესვლაზე დაბრუნება" },
+  "reset.title": { en: "Set New Password", ka: "ახალი პაროლის დაყენება" },
+  "reset.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
+  "reset.confirmPassword": { en: "Confirm Password", ka: "გაიმეორეთ პაროლი" },
+  "reset.submit": { en: "Update Password", ka: "პაროლის განახლება" },
+  "reset.mismatch": { en: "Passwords do not match", ka: "პაროლები არ ემთხვევა" },
+  "reset.tooShort": { en: "Password must be at least 6 characters", ka: "პაროლი მინიმუმ 6 სიმბოლო უნდა იყოს" },
+  "reset.success": { en: "Password updated successfully! ✨", ka: "პაროლი წარმატებით განახლდა! ✨" },
+  "reset.invalidLink": { en: "Invalid Reset Link", ka: "არასწორი ლინკი" },
+  "reset.invalidLinkDesc": { en: "This link is invalid or has expired. Please request a new one.", ka: "ეს ლინკი არასწორია ან ვადაგასულია. გთხოვთ მოითხოვოთ ახალი." },
 
   // Cosmic Blueprint
   "blueprint.title": { en: "My Cosmic Blueprint", ka: "ჩემი კოსმიური გეგმა" },

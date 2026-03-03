@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,8 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
 
   const getLocalizedError = (message: string): string => {
     const lower = message.toLowerCase();
@@ -28,6 +31,26 @@ const AuthPage = () => {
       return t("auth.userNotFound");
     }
     return message || t("auth.genericError");
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) {
+        toast({ title: getLocalizedError(error.message), variant: "destructive" });
+      } else {
+        toast({ title: t("auth.resetSent") });
+        setShowForgot(false);
+      }
+    } catch {
+      toast({ title: t("auth.genericError"), variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,60 +90,106 @@ const AuthPage = () => {
 
       {/* Auth Form */}
       <div className="glass rounded-2xl p-6 w-full max-w-sm shadow-gold">
-        <h2 className="font-serif text-xl text-foreground text-center mb-5">
-          {isSignUp ? t("auth.signup") : t("auth.login")}
-        </h2>
+        {showForgot ? (
+          <>
+            <h2 className="font-serif text-xl text-foreground text-center mb-2">{t("auth.forgotTitle")}</h2>
+            <p className="text-sm text-muted-foreground text-center mb-5">{t("auth.forgotDesc")}</p>
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="forgot-email" className="text-muted-foreground text-sm">{t("auth.email")}</Label>
+                <Input
+                  id="forgot-email"
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  required
+                  className="glass border-white/10 focus:border-primary"
+                  placeholder="stars@astrochat.com"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full gradient-gold text-primary-foreground font-semibold h-11 rounded-xl"
+              >
+                {isLoading ? t("auth.loading") : t("auth.sendResetLink")}
+              </Button>
+            </form>
+            <p className="text-center text-sm text-muted-foreground mt-5">
+              <button onClick={() => setShowForgot(false)} className="text-primary hover:underline font-medium">
+                {t("auth.backToLogin")}
+              </button>
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="font-serif text-xl text-foreground text-center mb-5">
+              {isSignUp ? t("auth.signup") : t("auth.login")}
+            </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-muted-foreground text-sm">{t("auth.email")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="glass border-white/10 focus:border-primary"
-              placeholder="stars@astrochat.com"
-            />
-          </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-muted-foreground text-sm">{t("auth.email")}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="glass border-white/10 focus:border-primary"
+                  placeholder="stars@astrochat.com"
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-muted-foreground text-sm">{t("auth.password")}</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="glass border-white/10 focus:border-primary"
-              placeholder="••••••••"
-            />
-          </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-muted-foreground text-sm">{t("auth.password")}</Label>
+                  {!isSignUp && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowForgot(true); setForgotEmail(email); }}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      {t("auth.forgotPassword")}
+                    </button>
+                  )}
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="glass border-white/10 focus:border-primary"
+                  placeholder="••••••••"
+                />
+              </div>
 
-          {isSignUp && (
-            <div className="flex items-start space-x-3 pt-1">
-              <Checkbox
-                id="terms"
-                checked={termsAccepted}
-                onCheckedChange={(checked) => setTermsAccepted(checked === true)}
-                className="mt-0.5 border-primary data-[state=checked]:bg-primary"
-              />
-              <Label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
-                {t("auth.terms")}
-              </Label>
-            </div>
-          )}
+              {isSignUp && (
+                <div className="flex items-start space-x-3 pt-1">
+                  <Checkbox
+                    id="terms"
+                    checked={termsAccepted}
+                    onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                    className="mt-0.5 border-primary data-[state=checked]:bg-primary"
+                  />
+                  <Label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+                    {t("auth.terms")}
+                  </Label>
+                </div>
+              )}
 
-          <Button
-            type="submit"
-            disabled={isLoading || (isSignUp && !termsAccepted)}
-            className="w-full gradient-gold text-primary-foreground font-semibold h-11 rounded-xl"
-          >
-            {isLoading ? t("auth.loading") : isSignUp ? t("auth.signup") : t("auth.login")}
-          </Button>
-        </form>
+              <Button
+                type="submit"
+                disabled={isLoading || (isSignUp && !termsAccepted)}
+                className="w-full gradient-gold text-primary-foreground font-semibold h-11 rounded-xl"
+              >
+                {isLoading ? t("auth.loading") : isSignUp ? t("auth.signup") : t("auth.login")}
+              </Button>
+            </form>
+          </>
+        )}
 
         <p className="text-center text-sm text-muted-foreground mt-5">
           {isSignUp ? t("auth.alreadyHaveAccount") : t("auth.noAccount")}{" "}
