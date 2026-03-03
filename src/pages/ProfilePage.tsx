@@ -80,12 +80,20 @@ const ProfilePage = () => {
         </section>
 
         {/* Legal */}
-        <section className="glass rounded-2xl p-5">
+        <section className="glass rounded-2xl p-5 space-y-3">
           <div className="flex items-start gap-3">
             <Shield className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
             <p className="text-xs text-muted-foreground leading-relaxed">
               {t("profile.legal")}
             </p>
+          </div>
+          <div className="flex gap-4 pl-7">
+            <button onClick={() => navigate("/terms")} className="text-xs text-primary hover:underline">
+              {t("legal.termsLink")}
+            </button>
+            <button onClick={() => navigate("/privacy")} className="text-xs text-primary hover:underline">
+              {t("legal.privacyLink")}
+            </button>
           </div>
         </section>
 

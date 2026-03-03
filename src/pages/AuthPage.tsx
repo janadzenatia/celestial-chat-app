@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 const AuthPage = () => {
   const { t } = useLanguage();
@@ -131,6 +132,14 @@ const AuthPage = () => {
           </button>
         </p>
       </div>
+
+      {/* Legal footer */}
+      <p className="text-xs text-muted-foreground text-center mt-6 px-4 max-w-sm leading-relaxed">
+        {t("auth.legalFooter")}{" "}
+        <Link to="/terms" className="text-primary hover:underline">{t("legal.termsLink")}</Link>
+        {" "}{t("auth.and")}{" "}
+        <Link to="/privacy" className="text-primary hover:underline">{t("legal.privacyLink")}</Link>.
+      </p>
     </div>
   );
 };
