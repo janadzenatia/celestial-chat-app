@@ -5,9 +5,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Star, Shield, LogOut, XCircle } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2 } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { getSunSign } from "@/lib/zodiac";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -27,7 +38,49 @@ const ProfilePage = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
 
+  // Edit profile state
+  const [editOpen, setEditOpen] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editDob, setEditDob] = useState<Date | undefined>();
+  const [editTime, setEditTime] = useState("");
+  const [editTimeUnknown, setEditTimeUnknown] = useState(false);
+  const [editPlace, setEditPlace] = useState("");
+  const [saving, setSaving] = useState(false);
+
   const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+
+  const openEditModal = () => {
+    setEditName(profile?.name || "");
+    setEditDob(profile?.date_of_birth ? new Date(profile.date_of_birth + "T00:00:00") : undefined);
+    setEditTime(profile?.time_of_birth || "");
+    setEditTimeUnknown(!profile?.time_of_birth);
+    setEditPlace(profile?.place_of_birth || "");
+    setEditOpen(true);
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user || !editDob) return;
+    setSaving(true);
+    const dobStr = `${editDob.getFullYear()}-${String(editDob.getMonth() + 1).padStart(2, "0")}-${String(editDob.getDate()).padStart(2, "0")}`;
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        name: editName.trim() || null,
+        date_of_birth: dobStr,
+        time_of_birth: editTimeUnknown ? null : (editTime || null),
+        place_of_birth: editPlace.trim() || null,
+      })
+      .eq("user_id", user.id);
+
+    if (error) {
+      toast({ title: t("profile.updateError"), variant: "destructive" });
+    } else {
+      await refreshProfile();
+      toast({ title: t("profile.updateSuccess") });
+      setEditOpen(false);
+    }
+    setSaving(false);
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -54,11 +107,11 @@ const ProfilePage = () => {
       <AppHeader />
       <div className="px-4 py-6 space-y-5">
         {/* Profile Card */}
-        <section className="glass rounded-2xl p-5 flex items-center gap-4">
+        <section className="glass rounded-2xl p-5 flex items-center gap-4 relative">
           <div className="w-14 h-14 rounded-full gradient-purple flex items-center justify-center">
             <User className="w-6 h-6 text-foreground" />
           </div>
-          <div>
+          <div className="flex-1">
             <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs text-muted-foreground flex items-center gap-1">
@@ -79,6 +132,13 @@ const ProfilePage = () => {
               )}
             </div>
           </div>
+          <button
+            onClick={openEditModal}
+            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/50 transition-colors"
+            aria-label={t("profile.edit")}
+          >
+            <Pencil className="w-4 h-4 text-muted-foreground" />
+          </button>
         </section>
 
         {/* Settings */}
@@ -154,6 +214,85 @@ const ProfilePage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit Profile Modal */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="glass border-border/50 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{t("profile.editTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            {/* Name */}
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.name")}</Label>
+              <Input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder={t("profile.name")}
+                className="bg-background/50"
+              />
+            </div>
+
+            {/* Date of Birth */}
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.dob")}</Label>
+              <BirthDatePicker value={editDob} onChange={setEditDob} />
+            </div>
+
+            {/* Time of Birth */}
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.timeOfBirth")}</Label>
+              <Input
+                type="time"
+                value={editTimeUnknown ? "" : editTime}
+                onChange={(e) => setEditTime(e.target.value)}
+                disabled={editTimeUnknown}
+                className="bg-background/50"
+              />
+              <div className="flex items-center gap-2 mt-1">
+                <Checkbox
+                  id="edit-time-unknown"
+                  checked={editTimeUnknown}
+                  onCheckedChange={(checked) => {
+                    setEditTimeUnknown(!!checked);
+                    if (checked) setEditTime("");
+                  }}
+                />
+                <label htmlFor="edit-time-unknown" className="text-xs text-muted-foreground cursor-pointer">
+                  {t("profile.timeUnknown")}
+                </label>
+              </div>
+            </div>
+
+            {/* Place of Birth */}
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.placeOfBirth")}</Label>
+              <Input
+                value={editPlace}
+                onChange={(e) => setEditPlace(e.target.value)}
+                placeholder={t("profile.placeOfBirthPlaceholder")}
+                className="bg-background/50"
+              />
+            </div>
+
+            {/* Save Button */}
+            <Button
+              onClick={handleSaveProfile}
+              disabled={saving || !editDob}
+              className="w-full gradient-gold text-background font-semibold"
+            >
+              {saving ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("profile.saving")}
+                </span>
+              ) : (
+                t("profile.saveChanges")
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
