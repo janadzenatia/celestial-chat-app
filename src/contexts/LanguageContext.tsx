@@ -171,6 +171,20 @@ const translations: Translations = {
   "element.Air": { en: "Air", ka: "ჰაერი" },
   "element.Water": { en: "Water", ka: "წყალი" },
 
+  // Chinese Zodiac
+  "czodiac.Rat": { en: "Rat", ka: "ვირთხა" },
+  "czodiac.Ox": { en: "Ox", ka: "ხარი" },
+  "czodiac.Tiger": { en: "Tiger", ka: "ვეფხვი" },
+  "czodiac.Rabbit": { en: "Rabbit", ka: "კურდღელი" },
+  "czodiac.Dragon": { en: "Dragon", ka: "დრაკონი" },
+  "czodiac.Snake": { en: "Snake", ka: "გველი" },
+  "czodiac.Horse": { en: "Horse", ka: "ცხენი" },
+  "czodiac.Goat": { en: "Goat", ka: "თხა" },
+  "czodiac.Monkey": { en: "Monkey", ka: "მაიმუნი" },
+  "czodiac.Rooster": { en: "Rooster", ka: "მამალი" },
+  "czodiac.Dog": { en: "Dog", ka: "ძაღლი" },
+  "czodiac.Pig": { en: "Pig", ka: "ღორი" },
+
   // Relationship Forecast
   "forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
   "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღეთ 12-თვიანი ტრანზიტული პროგნოზი თქვენი ურთიერთობისთვის" },

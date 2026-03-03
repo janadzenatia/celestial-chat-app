@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, ZodiacSign } from "@/lib/zodiac";
+import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Input } from "@/components/ui/input";
@@ -190,9 +191,12 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry }: PartnerCardProps) => {
           <div className="flex-1 min-w-0">
             <h3 className="font-serif text-lg text-foreground truncate">{partnerName}</h3>
             {partnerSign && (
-              <p className="text-sm text-muted-foreground">
-                {t(`zodiac.${partnerSign.name}`)} · {t(`element.${partnerSign.element}`)}
-              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm text-muted-foreground">
+                  {t(`zodiac.${partnerSign.name}`)} · {t(`element.${partnerSign.element}`)}
+                </span>
+                {partnerDob && <ChineseZodiacBadge dateOfBirth={partnerDob} />}
+              </div>
             )}
           </div>
           <div className="flex gap-1.5">

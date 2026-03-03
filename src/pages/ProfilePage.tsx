@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Star, Shield, LogOut, XCircle } from "lucide-react";
+import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
+import { getSunSign } from "@/lib/zodiac";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -58,9 +60,24 @@ const ProfilePage = () => {
           </div>
           <div>
             <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Star className="w-3 h-3 text-primary" /> {isPremium ? t("profile.premium") : t("profile.free")}
-            </span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <Star className="w-3 h-3 text-primary" /> {isPremium ? t("profile.premium") : t("profile.free")}
+              </span>
+              {profile?.date_of_birth && (
+                <>
+                  {(() => {
+                    const sun = getSunSign(profile.date_of_birth);
+                    return sun ? (
+                      <span className="text-xs text-muted-foreground">
+                        {sun.emoji} {t(`zodiac.${sun.name}`)}
+                      </span>
+                    ) : null;
+                  })()}
+                  <ChineseZodiacBadge dateOfBirth={profile.date_of_birth} />
+                </>
+              )}
+            </div>
           </div>
         </section>
 
