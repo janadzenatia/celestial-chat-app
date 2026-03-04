@@ -9,11 +9,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const AuthPage = () => {
   const { t } = useLanguage();
-  const { signUp, signIn } = useAuth();
+  const { session, profile, loading, signUp, signIn } = useAuth();
   const { toast } = useToast();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
@@ -22,6 +22,14 @@ const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
+
+  // Redirect authenticated users away from auth page
+  if (!loading && session) {
+    if (profile && !profile.onboarding_completed) {
+      return <Navigate to="/onboarding" replace />;
+    }
+    return <Navigate to="/" replace />;
+  }
 
   const getLocalizedError = (message: string): string => {
     const lower = message.toLowerCase();
