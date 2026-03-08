@@ -23,26 +23,50 @@ const ZODIAC_SIGNS = [
   { name: "Pisces", emoji: "♓", start: "02-19", end: "03-20" },
 ];
 
-function getConceptionWindow(signName: string): { from: string; to: string } {
+function getConceptionWindow(signName: string, language: string): { from: string; to: string } {
   const sign = ZODIAC_SIGNS.find(z => z.name === signName);
   if (!sign) return { from: "", to: "" };
 
-  const year = new Date().getFullYear();
-  // Target birth window: sign start to sign end
-  const birthStart = new Date(`${year}-${sign.start}`);
-  const birthEnd = new Date(`${year}-${sign.end}`);
-  // If Capricorn wraps around
-  if (birthEnd < birthStart) birthEnd.setFullYear(year + 1);
+  const now = new Date();
+  const currentYear = now.getFullYear();
 
-  // Conception = birth date - 280 days (40 weeks)
+  // Try this year and next year to find the NEXT FUTURE birth window
+  for (let yearOffset = 0; yearOffset <= 2; yearOffset++) {
+    const year = currentYear + yearOffset;
+    let birthStart = new Date(`${year}-${sign.start}`);
+    let birthEnd = new Date(`${year}-${sign.end}`);
+    // Capricorn wraps around Dec → Jan
+    if (birthEnd < birthStart) birthEnd.setFullYear(year + 1);
+
+    // Conception = birth date - 280 days (40 weeks)
+    const conceptionStart = new Date(birthStart);
+    conceptionStart.setDate(conceptionStart.getDate() - 280);
+    const conceptionEnd = new Date(birthEnd);
+    conceptionEnd.setDate(conceptionEnd.getDate() - 280);
+
+    // Only return if the conception window end is in the future
+    if (conceptionEnd >= now) {
+      const locale = language === "ka" ? "ka-GE" : "en-US";
+      return {
+        from: conceptionStart.toLocaleDateString(locale, { month: "long", day: "numeric", year: "numeric" }),
+        to: conceptionEnd.toLocaleDateString(locale, { month: "long", day: "numeric", year: "numeric" }),
+      };
+    }
+  }
+
+  // Fallback: next year + 2
+  const year = currentYear + 2;
+  let birthStart = new Date(`${year}-${sign.start}`);
+  let birthEnd = new Date(`${year}-${sign.end}`);
+  if (birthEnd < birthStart) birthEnd.setFullYear(year + 1);
   const conceptionStart = new Date(birthStart);
   conceptionStart.setDate(conceptionStart.getDate() - 280);
   const conceptionEnd = new Date(birthEnd);
   conceptionEnd.setDate(conceptionEnd.getDate() - 280);
-
+  const locale = language === "ka" ? "ka-GE" : "en-US";
   return {
-    from: conceptionStart.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
-    to: conceptionEnd.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+    from: conceptionStart.toLocaleDateString(locale, { month: "long", day: "numeric", year: "numeric" }),
+    to: conceptionEnd.toLocaleDateString(locale, { month: "long", day: "numeric", year: "numeric" }),
   };
 }
 
@@ -59,7 +83,7 @@ export default function ZodiacCalculatorTab() {
   const [babySummary, setBabySummary] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
-  const conceptionWindow = selectedSign ? getConceptionWindow(selectedSign) : null;
+  const conceptionWindow = selectedSign ? getConceptionWindow(selectedSign, language) : null;
   const babySign = dueDate ? getSunSign(dueDate.toISOString().split("T")[0]) : null;
 
   const generateBabySummary = async () => {
