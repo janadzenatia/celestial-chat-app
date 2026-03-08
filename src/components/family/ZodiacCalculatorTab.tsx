@@ -83,7 +83,7 @@ export default function ZodiacCalculatorTab() {
   const [babySummary, setBabySummary] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
-  const conceptionWindow = selectedSign ? getConceptionWindow(selectedSign) : null;
+  const conceptionWindow = selectedSign ? getConceptionWindow(selectedSign, language) : null;
   const babySign = dueDate ? getSunSign(dueDate.toISOString().split("T")[0]) : null;
 
   const generateBabySummary = async () => {
