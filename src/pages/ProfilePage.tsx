@@ -113,6 +113,9 @@ const ProfilePage = () => {
           </div>
           <div className="flex-1">
             <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
+            {user?.email && (
+              <p className="text-xs text-muted-foreground mb-1">{user.email}</p>
+            )}
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs text-muted-foreground flex items-center gap-1">
                 <Star className="w-3 h-3 text-primary" /> {isPremium ? t("profile.premium") : t("profile.free")}
