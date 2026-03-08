@@ -47,7 +47,8 @@ const ProfilePage = () => {
   const [editPlace, setEditPlace] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const effectivePlan = getEffectivePlan(profile);
+  const isPremium = effectivePlan !== "free";
 
   const openEditModal = () => {
     setEditName(profile?.name || "");
