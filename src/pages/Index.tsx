@@ -6,6 +6,7 @@ import SynastryCTABanner from "@/components/SynastryCTABanner";
 import CosmicCalendarCard from "@/components/CosmicCalendarCard";
 import CosmicBlueprintCard from "@/components/CosmicBlueprintCard";
 import PremiumGate from "@/components/PremiumGate";
+import TrialBanner from "@/components/TrialBanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -35,6 +36,9 @@ const Index = () => {
       <AppHeader />
 
       <div className="px-4 py-6 space-y-5">
+        {/* Trial Banner */}
+        <TrialBanner />
+
         {/* Cosmic Hook Notification */}
         {dob && <CosmicHookBanner />}
 

@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
 import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
+import TrialBanner from "@/components/TrialBanner";
 import { getSunSign } from "@/lib/zodiac";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Input } from "@/components/ui/input";
@@ -137,6 +138,9 @@ const ProfilePage = () => {
     <div className="flex flex-col">
       <AppHeader />
       <div className="px-4 py-6 space-y-5">
+        {/* Trial Banner */}
+        <TrialBanner />
+
         {/* Profile Card */}
         <section className="glass rounded-2xl p-5 flex items-center gap-4 relative">
           <div className="w-14 h-14 rounded-full gradient-purple flex items-center justify-center">
