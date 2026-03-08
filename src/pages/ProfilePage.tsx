@@ -264,6 +264,15 @@ const ProfilePage = () => {
           </button>
         )}
 
+        {/* Delete Account */}
+        <button
+          onClick={() => setDeleteOpen(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-colors text-xs"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          {t("profile.deleteAccount")}
+        </button>
+
         {/* Log Out */}
         <button
           onClick={handleLogout}
