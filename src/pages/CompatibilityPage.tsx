@@ -66,24 +66,35 @@ const CompatibilityPage = () => {
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
     if (!report && !reportLoading) {
-      handleSynastryGenerate();
-    }
-  };
-
-  const handleSynastryGenerate = () => {
-    if (partnerHasTime) {
-      generateReport();
-    } else {
+      // Premium user — prompt for time + relationship date
       setTimeModalOpen(true);
     }
   };
 
-  const handleTimeSubmit = (time: string) => {
-    setPartnerTime(time);
+  const saveExtraFields = async (time?: string, relDate?: Date) => {
+    if (!user) return;
+    const updateData: any = {};
+    if (time && time.trim().length >= 4) {
+      updateData.partner_time_of_birth = time.trim();
+      setPartnerTime(time.trim());
+    }
+    if (relDate) {
+      updateData.relationship_start_date = format(relDate, "yyyy-MM-dd");
+    }
+    if (Object.keys(updateData).length > 0) {
+      await supabase.from("profiles").update(updateData).eq("user_id", user.id);
+      await refreshProfile();
+    }
+  };
+
+  const handleTimeSubmit = async (time: string, relDate?: Date) => {
+    await saveExtraFields(time, relDate);
+    setTimeModalOpen(false);
     setTimeout(() => generateReport(), 100);
   };
 
-  const handleTimeSkip = () => {
+  const handleTimeSkip = async (relDate?: Date) => {
+    await saveExtraFields(undefined, relDate);
     setTimeModalOpen(false);
     generateReport();
   };
