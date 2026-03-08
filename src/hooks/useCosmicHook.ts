@@ -41,9 +41,9 @@ export const useCosmicHook = () => {
     setLoading(true);
 
     try {
-      // Fetch family members (children + partner from localStorage)
       const familyMembers: { name: string; dateOfBirth: string; relationship: string }[] = [];
 
+      // Fetch children from database
       const { data: children } = await supabase
         .from("children")
         .select("name, date_of_birth")
@@ -53,15 +53,13 @@ export const useCosmicHook = () => {
         familyMembers.push({ name: c.name, dateOfBirth: c.date_of_birth, relationship: "child" })
       );
 
-      // Check for partner data in localStorage
-      const partnerData = localStorage.getItem("partner_data");
-      if (partnerData) {
-        try {
-          const p = JSON.parse(partnerData);
-          if (p.name && p.dob) {
-            familyMembers.push({ name: p.name, dateOfBirth: p.dob, relationship: "partner" });
-          }
-        } catch { /* ignore */ }
+      // Include partner from profile data
+      if (profile.partner_name && profile.partner_birth_date) {
+        familyMembers.push({
+          name: profile.partner_name,
+          dateOfBirth: profile.partner_birth_date,
+          relationship: "partner",
+        });
       }
 
       const resp = await supabase.functions.invoke("cosmic-hook", {
