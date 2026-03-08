@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
-import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2 } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { getSunSign } from "@/lib/zodiac";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
