@@ -123,9 +123,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_name: name.trim(),
       partner_birth_date: dobStr,
       partner_love_language: null,
-      partner_time_of_birth: timeUnknown ? null : (time.trim() || null),
       partner_place_of_birth: location.trim() || null,
-      relationship_start_date: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
     };
 
     const { error } = await supabase
