@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
