@@ -179,6 +179,15 @@ export default function ZodiacCalculatorTab() {
               onChange={(d) => { setDueDate(d); setBabySummary(null); }}
               placeholder={t("compat.pickDate")}
             />
+            {dueDate && (
+              <button
+                onClick={() => { setDueDate(undefined); setBabySummary(null); }}
+                className="flex items-center gap-1 text-xs text-destructive/70 hover:text-destructive transition-colors mt-1"
+              >
+                <XCircle className="w-3.5 h-3.5" />
+                {language === "ka" ? "გასუფთავება" : "Clear date"}
+              </button>
+            )}
           </div>
 
           {babySign && (
