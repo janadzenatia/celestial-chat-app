@@ -343,6 +343,53 @@ const ProfilePage = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={passwordOpen} onOpenChange={setPasswordOpen}>
+        <DialogContent className="glass border-border/50 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{t("profile.changePassword")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.newPassword")}</Label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                minLength={6}
+                className="bg-background/50"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.confirmNewPassword")}</Label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                minLength={6}
+                className="bg-background/50"
+              />
+            </div>
+            <Button
+              onClick={handleChangePassword}
+              disabled={changingPassword || !newPassword}
+              className="w-full gradient-gold text-background font-semibold"
+            >
+              {changingPassword ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("profile.updatingPassword")}
+                </span>
+              ) : (
+                t("profile.updatePassword")
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
