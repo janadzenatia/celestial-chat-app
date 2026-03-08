@@ -9,6 +9,11 @@ function getCurrentPeriod(): "morning" | "evening" {
   return hour < 14 ? "morning" : "evening";
 }
 
+function getLocalDateString(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
 export function useDailyInsight() {
   const { user, profile } = useAuth();
   const { language } = useLanguage();
