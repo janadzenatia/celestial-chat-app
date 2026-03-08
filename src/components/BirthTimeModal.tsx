@@ -3,6 +3,7 @@ import { Clock, Sparkles, Loader2, Heart } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import {
   Dialog,
@@ -31,11 +32,21 @@ export default function BirthTimeModal({
 }: BirthTimeModalProps) {
   const { t } = useLanguage();
   const [time, setTime] = useState("");
+  const [unknownTime, setUnknownTime] = useState(false);
   const [relationshipDate, setRelationshipDate] = useState<Date | undefined>();
 
   const handleTimeChange = (val: string) => {
     const cleaned = val.replace(/[^\d:]/g, "");
     if (cleaned.length <= 5) setTime(cleaned);
+  };
+
+  const handleSubmit = () => {
+    if (unknownTime || time.trim().length < 4) {
+      // Use noon default — pass "12:00" so the edge function knows
+      onSubmitWithTime("12:00", relationshipDate);
+    } else {
+      onSubmitWithTime(time, relationshipDate);
+    }
   };
 
   return (
@@ -65,8 +76,19 @@ export default function BirthTimeModal({
               onChange={(e) => handleTimeChange(e.target.value)}
               placeholder={t("compat.partnerTimePlaceholder")}
               maxLength={5}
-              className="glass border-primary/20 focus:border-primary text-center text-lg tracking-widest"
+              disabled={unknownTime}
+              className="glass border-primary/20 focus:border-primary text-center text-lg tracking-widest disabled:opacity-50"
             />
+            <div className="flex items-center gap-2 pt-1">
+              <Checkbox
+                id="unknown-time"
+                checked={unknownTime}
+                onCheckedChange={(checked) => setUnknownTime(checked === true)}
+              />
+              <label htmlFor="unknown-time" className="text-sm text-muted-foreground cursor-pointer select-none">
+                {t("timeModal.unknownTime")}
+              </label>
+            </div>
           </div>
 
           {/* Relationship Start Date */}
@@ -85,8 +107,8 @@ export default function BirthTimeModal({
 
           <div className="flex flex-col gap-2">
             <Button
-              onClick={() => onSubmitWithTime(time, relationshipDate)}
-              disabled={generating || time.length < 4}
+              onClick={handleSubmit}
+              disabled={generating || (!unknownTime && time.length < 4)}
               className="gradient-cosmic text-foreground font-medium"
             >
               {generating ? (
@@ -99,21 +121,6 @@ export default function BirthTimeModal({
                   <Sparkles className="w-4 h-4 mr-2" />
                   {t("timeModal.withTime")}
                 </>
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => onSkip(relationshipDate)}
-              disabled={generating}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              {generating ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {t("synastry.generating")}
-                </>
-              ) : (
-                t("timeModal.skip")
               )}
             </Button>
           </div>

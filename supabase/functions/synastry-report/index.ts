@@ -25,7 +25,7 @@ serve(async (req) => {
 
     const timeAckInstruction = partnerHasTime
       ? `IMPORTANT: The partner's exact birth time was provided, so Moon and Rising signs are calculated with higher precision. Begin your analysis by acknowledging this: mention that because the exact birth time was provided, ${partnerName || "the partner"}'s Moon and Rising sign analysis is more precise.`
-      : `Note: The partner's birth time was not provided, so Moon and Rising signs are approximate estimates.`;
+      : `Note: The partner's birth time was not provided. Use 12:00 PM (noon) as the default time for astrological calculations. Moon and Rising signs are approximate estimates based on this default.`;
 
     const prompt = `Generate a deep compatibility analysis for this couple.
 

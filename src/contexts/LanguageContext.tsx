@@ -219,6 +219,7 @@ const translations: Translations = {
   "timeModal.inputLabel": { en: "Birth Time", ka: "დაბადების დრო" },
   "timeModal.withTime": { en: "Analyze with Time", ka: "ანალიზი დროით" },
   "timeModal.skip": { en: "Skip — I don't know", ka: "გამოტოვება — არ ვიცი" },
+  "timeModal.unknownTime": { en: "I don't know the exact time", ka: "ზუსტი დრო არ ვიცი" },
   "timeModal.relationshipDateHint": { en: "Optional — improves timeline accuracy", ka: "არასავალდებულო — აუმჯობესებს პროგნოზის სიზუსტეს" },
 
   // Forecast teaser
