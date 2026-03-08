@@ -46,13 +46,6 @@ const CompatibilityPage = () => {
     setPartnerTime(partnerTimeStr || "");
   }, [partnerTimeStr]);
 
-  // Auto-show deep report if cached report exists
-  useEffect(() => {
-    if (report && !showDeepReport) {
-      setShowDeepReport(true);
-    }
-  }, [report]);
-
   const relationshipDate = relationshipDateStr
     ? parse(relationshipDateStr, "yyyy-MM-dd", new Date())
     : undefined;
@@ -66,6 +59,13 @@ const CompatibilityPage = () => {
 
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined, relationshipDateStr);
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
+
+  // Auto-show deep report if cached report exists
+  useEffect(() => {
+    if (report && !showDeepReport) {
+      setShowDeepReport(true);
+    }
+  }, [report]);
 
   // Deep report is "active" when synastry accordion is visible
   const deepReportReady = showDeepReport && report;
