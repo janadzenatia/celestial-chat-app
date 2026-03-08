@@ -10,7 +10,7 @@ import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import PaywallModal from "@/components/PaywallModal";
 import { SynastryReport, SynastryCategory } from "@/hooks/useSynastryReport";
 import {
