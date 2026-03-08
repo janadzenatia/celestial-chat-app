@@ -6,6 +6,7 @@ import SynastryCTABanner from "@/components/SynastryCTABanner";
 import CosmicCalendarCard from "@/components/CosmicCalendarCard";
 import CosmicBlueprintCard from "@/components/CosmicBlueprintCard";
 import PremiumGate from "@/components/PremiumGate";
+import TrialBanner from "@/components/TrialBanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
