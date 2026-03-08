@@ -95,7 +95,7 @@ const ProfilePage = () => {
     await new Promise((r) => setTimeout(r, 1500));
     await supabase
       .from("profiles")
-      .update({ subscription_status: "free", is_premium: false })
+      .update({ subscription_status: "free", is_premium: false, subscription_plan: "free", trial_end_date: null })
       .eq("user_id", user.id);
     await refreshProfile();
     setCanceling(false);
