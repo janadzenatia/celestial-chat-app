@@ -427,7 +427,4 @@ const ChatPage = () => {
   );
 };
 
-// Need to import MessageCircle
-import { MessageCircle } from "lucide-react";
-
 export default ChatPage;
