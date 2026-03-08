@@ -12,47 +12,47 @@ const PrivacyPage = () => {
         <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="font-serif text-lg text-foreground">{t("legal.privacyTitle")}</h1>
+        <h1 className="font-serif text-lg text-foreground">Privacy Policy</h1>
       </div>
 
       <div className="px-5 py-6 max-w-lg mx-auto space-y-6 text-sm text-muted-foreground leading-relaxed">
+        <p className="text-xs">Effective Date: March 8, 2026</p>
+
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">{t("legal.dataCollectionTitle")}</h2>
+          <h2 className="font-serif text-base text-foreground">1. Data Collection</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
+            We collect your email for account creation and your birth details (date, time, and location) specifically to provide personalized astrological insights and family compatibility analysis.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">{t("legal.dataUseTitle")}</h2>
+          <h2 className="font-serif text-base text-foreground">2. Data Usage</h2>
           <p>
-            Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper nulla non metus auctor fringilla.
-            Maecenas sed diam eget risus varius blandit sit amet non magna.
+            Your data is used solely within the app to generate AI-driven reports. We do not sell or share your personal data with third-party advertisers.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">{t("legal.thirdPartyTitle")}</h2>
+          <h2 className="font-serif text-base text-foreground">3. Data Storage</h2>
           <p>
-            Aenean lacinia bibendum nulla sed consectetur. Nullam id dolor id nibh ultricies vehicula ut id elit.
-            Etiam porta sem malesuada magna mollis euismod.
+            Your information is securely stored via encrypted Authentication and Database services hosted on industry-standard cloud infrastructure.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">{t("legal.securityTitle")}</h2>
+          <h2 className="font-serif text-base text-foreground">4. User Rights</h2>
           <p>
-            Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-            Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
+            You can delete your account and all associated data at any time through the Profile settings within the app.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">{t("legal.contactTitle")}</h2>
+          <h2 className="font-serif text-base text-foreground">5. Contact</h2>
           <p>
-            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-            Donec sed odio dui. Cras justo odio, dapibus ut facilisis in, egestas eget quam.
+            For any privacy-related concerns, contact us at{" "}
+            <a href="mailto:Natia_janadze@yahoo.com" className="text-primary hover:underline">
+              Natia_janadze@yahoo.com
+            </a>
           </p>
         </section>
       </div>
