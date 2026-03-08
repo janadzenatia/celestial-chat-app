@@ -31,7 +31,7 @@ const levelGradients = {
 
 const CompatibilityPage = () => {
   const { t } = useLanguage();
-  const { profile } = useAuth();
+  const { profile, user, refreshProfile } = useAuth();
 
   const partnerName = profile?.partner_name || "";
   const partnerDobStr = profile?.partner_birth_date || undefined;
