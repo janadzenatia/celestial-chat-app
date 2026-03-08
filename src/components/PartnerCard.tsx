@@ -74,10 +74,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const openAddForm = () => {
     setName("");
     setDob(undefined);
-    setTime("");
-    setTimeUnknown(false);
     setLocation("");
-    setRelationshipDate(undefined);
     setEditMode(false);
     setFormOpen(true);
   };
