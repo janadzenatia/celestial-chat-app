@@ -46,6 +46,13 @@ const CompatibilityPage = () => {
     setPartnerTime(partnerTimeStr || "");
   }, [partnerTimeStr]);
 
+  // Auto-show deep report if cached report exists
+  useEffect(() => {
+    if (report && !showDeepReport) {
+      setShowDeepReport(true);
+    }
+  }, [report]);
+
   const relationshipDate = relationshipDateStr
     ? parse(relationshipDateStr, "yyyy-MM-dd", new Date())
     : undefined;
