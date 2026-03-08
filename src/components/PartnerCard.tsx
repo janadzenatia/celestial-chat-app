@@ -82,10 +82,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const openEditForm = () => {
     setName(partnerName || "");
     setDob(partnerDob ? parse(partnerDob, "yyyy-MM-dd", new Date()) : undefined);
-    setTime(profile?.partner_time_of_birth || "");
-    setTimeUnknown(!profile?.partner_time_of_birth);
     setLocation(profile?.partner_place_of_birth || "");
-    setRelationshipDate(profile?.relationship_start_date ? parse(profile.relationship_start_date, "yyyy-MM-dd", new Date()) : undefined);
     setEditMode(true);
     setFormOpen(true);
   };
