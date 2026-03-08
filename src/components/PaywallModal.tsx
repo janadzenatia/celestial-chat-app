@@ -19,7 +19,7 @@ interface PaywallModalProps {
   onSuccess?: () => void;
 }
 
-const PaywallModal = ({ open, onOpenChange }: PaywallModalProps) => {
+const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
   const { t, language } = useLanguage();
   const { user, refreshProfile } = useAuth();
   const { toast } = useToast();
