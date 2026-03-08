@@ -16,9 +16,10 @@ import { cn } from "@/lib/utils";
 interface PaywallModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
-const PaywallModal = ({ open, onOpenChange }: PaywallModalProps) => {
+const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
   const { t, language } = useLanguage();
   const { user, refreshProfile } = useAuth();
   const { toast } = useToast();
@@ -62,6 +63,7 @@ const PaywallModal = ({ open, onOpenChange }: PaywallModalProps) => {
       await refreshProfile();
       toast({ title: t("paywall.success") });
       onOpenChange(false);
+      onSuccess?.();
     }
     setLoading(false);
   };

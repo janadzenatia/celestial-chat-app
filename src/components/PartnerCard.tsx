@@ -38,6 +38,7 @@ interface PartnerCardProps {
   synastryReport?: SynastryReport | null;
   synastryGenerating?: boolean;
   showDeepReport?: boolean;
+  onPaywallSuccess?: () => void;
 }
 
 const synastryCategories = [
@@ -47,7 +48,7 @@ const synastryCategories = [
   { key: "goals" as const, icon: Target, emoji: "💰", translationKey: "synastry.goals", gradient: "from-green-500/20 to-emerald-500/20", border: "border-green-500/30", scoreColor: "text-green-400" },
 ];
 
-const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastryGenerating, showDeepReport }: PartnerCardProps) => {
+const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastryGenerating, showDeepReport, onPaywallSuccess }: PartnerCardProps) => {
   const { t, language } = useLanguage();
   const { user, profile, refreshProfile } = useAuth();
   const { toast } = useToast();
@@ -364,7 +365,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         onSave={handleSave}
         editMode={editMode}
       />
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
     </>
   );
 };
