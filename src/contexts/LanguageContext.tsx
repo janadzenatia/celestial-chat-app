@@ -286,6 +286,14 @@ const translations: Translations = {
   "profile.yesCancel": { en: "Yes, Cancel", ka: "დიახ, გაუქმება" },
   "profile.canceling": { en: "Canceling...", ka: "უქმდება..." },
   "profile.cancelSuccess": { en: "Subscription canceled successfully.", ka: "გამოწერა წარმატებით გაუქმდა." },
+  "profile.changePassword": { en: "Change Password", ka: "პაროლის შეცვლა" },
+  "profile.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
+  "profile.confirmNewPassword": { en: "Confirm New Password", ka: "დაადასტურეთ ახალი პაროლი" },
+  "profile.updatePassword": { en: "Update Password", ka: "პაროლის განახლება" },
+  "profile.updatingPassword": { en: "Updating...", ka: "მიმდინარეობს..." },
+  "profile.passwordSuccess": { en: "Password updated successfully!", ka: "პაროლი წარმატებით განახლდა!" },
+  "profile.passwordMismatch": { en: "Passwords do not match.", ka: "პაროლები არ ემთხვევა." },
+  "profile.passwordTooShort": { en: "Password must be at least 6 characters.", ka: "პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს." },
 
   // Paywall
   "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },

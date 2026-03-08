@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
-import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2 } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { getSunSign } from "@/lib/zodiac";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
@@ -38,6 +38,39 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const [cancelOpen, setCancelOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
+
+  // Change password state
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast({ title: t("profile.passwordTooShort"), variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: t("profile.passwordMismatch"), variant: "destructive" });
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        toast({ title: error.message, variant: "destructive" });
+      } else {
+        toast({ title: t("profile.passwordSuccess") });
+        setPasswordOpen(false);
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch {
+      toast({ title: t("auth.genericError"), variant: "destructive" });
+    } finally {
+      setChangingPassword(false);
+    }
+  };
 
   // Edit profile state
   const [editOpen, setEditOpen] = useState(false);
@@ -139,6 +172,17 @@ const ProfilePage = () => {
             aria-label={t("profile.edit")}
           >
             <Pencil className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </section>
+
+        {/* Change Password */}
+        <section className="glass rounded-2xl p-5">
+          <button
+            onClick={() => setPasswordOpen(true)}
+            className="w-full flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors"
+          >
+            <KeyRound className="w-4 h-4 text-muted-foreground" />
+            <span>{t("profile.changePassword")}</span>
           </button>
         </section>
 
@@ -294,6 +338,53 @@ const ProfilePage = () => {
                 </span>
               ) : (
                 t("profile.saveChanges")
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={passwordOpen} onOpenChange={setPasswordOpen}>
+        <DialogContent className="glass border-border/50 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{t("profile.changePassword")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.newPassword")}</Label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                minLength={6}
+                className="bg-background/50"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm text-muted-foreground">{t("profile.confirmNewPassword")}</Label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                minLength={6}
+                className="bg-background/50"
+              />
+            </div>
+            <Button
+              onClick={handleChangePassword}
+              disabled={changingPassword || !newPassword}
+              className="w-full gradient-gold text-background font-semibold"
+            >
+              {changingPassword ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("profile.updatingPassword")}
+                </span>
+              ) : (
+                t("profile.updatePassword")
               )}
             </Button>
           </div>
