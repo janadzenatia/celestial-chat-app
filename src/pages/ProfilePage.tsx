@@ -155,7 +155,12 @@ const ProfilePage = () => {
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground">{isPremium ? t("profile.premium") : t("profile.free")}</span>
+              <span className="text-foreground capitalize">
+                {effectivePlan === "pro_premium" 
+                  ? (profile?.trial_end_date ? (language === "ka" ? "პრო (საცდელი)" : "Pro (Trial)") : "Pro Premium")
+                  : effectivePlan === "basic_premium" ? "Basic Premium" 
+                  : t("profile.free")}
+              </span>
             </div>
           </div>
         </section>
