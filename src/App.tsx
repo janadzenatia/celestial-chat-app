@@ -37,6 +37,30 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/auth" element={<AuthPage />} />
+    <Route path="/onboarding" element={<OnboardingPage />} />
+    <Route path="/terms" element={<TermsPage />} />
+    <Route path="/privacy" element={<PrivacyPage />} />
+    <Route path="/reset-password" element={<ResetPasswordPage />} />
+    <Route
+      element={
+        <ProtectedRoute>
+          <AppLayout />
+        </ProtectedRoute>
+      }
+    >
+      <Route path="/" element={<Index />} />
+      <Route path="/chat" element={<ChatPage />} />
+      <Route path="/compatibility" element={<CompatibilityPage />} />
+      <Route path="/family" element={<FamilyPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+    </Route>
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
@@ -45,27 +69,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route
-                element={
-                  <ProtectedRoute>
-                    <AppLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route path="/" element={<Index />} />
-                <Route path="/chat" element={<ChatPage />} />
-                <Route path="/compatibility" element={<CompatibilityPage />} />
-                <Route path="/family" element={<FamilyPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
