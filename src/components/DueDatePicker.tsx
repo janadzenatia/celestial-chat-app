@@ -43,6 +43,13 @@ export function DueDatePicker({ value, onChange, placeholder = "Pick a date", cl
     const cleaned = raw.replace(/[^\d/]/g, "");
     setError(null);
 
+    // Allow clearing the field
+    if (cleaned === "") {
+      setTextValue("");
+      onChange(undefined);
+      return;
+    }
+
     let auto = cleaned.replace(/\//g, "");
     if (auto.length >= 4) {
       auto = auto.slice(0, 2) + "/" + auto.slice(2, 4) + "/" + auto.slice(4, 8);

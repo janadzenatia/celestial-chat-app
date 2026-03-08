@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, Loader2, Sparkles, Baby } from "lucide-react";
+import { Calculator, Loader2, Sparkles, Baby, XCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,6 +179,15 @@ export default function ZodiacCalculatorTab() {
               onChange={(d) => { setDueDate(d); setBabySummary(null); }}
               placeholder={t("compat.pickDate")}
             />
+            {dueDate && (
+              <button
+                onClick={() => { setDueDate(undefined); setBabySummary(null); }}
+                className="flex items-center gap-1 text-xs text-destructive/70 hover:text-destructive transition-colors mt-1"
+              >
+                <XCircle className="w-3.5 h-3.5" />
+                {language === "ka" ? "გასუფთავება" : "Clear date"}
+              </button>
+            )}
           </div>
 
           {babySign && (
