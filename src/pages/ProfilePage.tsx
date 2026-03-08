@@ -136,6 +136,29 @@ const ProfilePage = () => {
     toast({ title: t("profile.cancelSuccess") });
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await supabase.functions.invoke("delete-account", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (res.error) {
+        toast({ title: t("profile.deleteError"), variant: "destructive" });
+      } else {
+        toast({ title: t("profile.deleteSuccess") });
+        await signOut();
+        navigate("/auth", { replace: true });
+      }
+    } catch {
+      toast({ title: t("profile.deleteError"), variant: "destructive" });
+    } finally {
+      setDeleting(false);
+      setDeleteOpen(false);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <AppHeader />
