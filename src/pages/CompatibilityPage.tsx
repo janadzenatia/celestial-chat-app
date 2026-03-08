@@ -215,12 +215,10 @@ const CompatibilityPage = () => {
         onOpenChange={setTimeModalOpen}
         partnerName={partnerName}
         generating={reportGenerating}
-        onSubmitWithTime={(time) => {
-          setPartnerTime(time);
-          setTimeModalOpen(false);
-          handleTimeSubmit(time);
+        onSubmitWithTime={(time, relDate) => {
+          handleTimeSubmit(time, relDate);
         }}
-        onSkip={handleTimeSkip}
+        onSkip={(relDate) => handleTimeSkip(relDate)}
       />
     </div>
   );
