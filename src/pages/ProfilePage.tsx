@@ -39,6 +39,8 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const [cancelOpen, setCancelOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Change password state
   const [passwordOpen, setPasswordOpen] = useState(false);
