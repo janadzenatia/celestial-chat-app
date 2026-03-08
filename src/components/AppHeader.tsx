@@ -3,7 +3,7 @@ import LanguageToggle from "./LanguageToggle";
 
 const AppHeader = () => {
   return (
-    <header className="flex items-center justify-between px-4 py-3 sticky top-0 z-40 glass-strong">
+    <header className="flex items-center justify-between px-4 py-3 sticky top-0 z-40 glass-strong" style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}>
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-lg gradient-gold flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-primary-foreground" />
