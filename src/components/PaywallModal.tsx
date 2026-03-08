@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 interface PaywallModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 const PaywallModal = ({ open, onOpenChange }: PaywallModalProps) => {
