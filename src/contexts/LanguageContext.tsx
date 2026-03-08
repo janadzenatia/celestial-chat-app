@@ -301,6 +301,14 @@ const translations: Translations = {
   "profile.passwordSuccess": { en: "Password updated successfully!", ka: "პაროლი წარმატებით განახლდა!" },
   "profile.passwordMismatch": { en: "Passwords do not match.", ka: "პაროლები არ ემთხვევა." },
   "profile.passwordTooShort": { en: "Password must be at least 6 characters.", ka: "პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს." },
+  "profile.deleteAccount": { en: "Delete Account", ka: "ანგარიშის წაშლა" },
+  "profile.deleteTitle": { en: "Delete Account?", ka: "წაიშალოს ანგარიში?" },
+  "profile.deleteDescription": { en: "This will permanently delete your account and all associated data. This action cannot be undone.", ka: "ეს სამუდამოდ წაშლის თქვენს ანგარიშს და ყველა მონაცემს. ეს მოქმედება ვერ გაუქმდება." },
+  "profile.deleteConfirm": { en: "Yes, Delete Everything", ka: "დიახ, ყველაფრის წაშლა" },
+  "profile.deleteCancel": { en: "Keep Account", ka: "ანგარიშის შენარჩუნება" },
+  "profile.deleting": { en: "Deleting...", ka: "იშლება..." },
+  "profile.deleteSuccess": { en: "Account deleted successfully.", ka: "ანგარიში წარმატებით წაიშალა." },
+  "profile.deleteError": { en: "Failed to delete account. Please try again.", ka: "ანგარიშის წაშლა ვერ მოხერხდა. სცადეთ თავიდან." },
 
   // Paywall
   "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },

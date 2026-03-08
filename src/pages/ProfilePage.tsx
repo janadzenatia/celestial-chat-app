@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
-import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2 } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import TrialBanner from "@/components/TrialBanner";
 import { getSunSign } from "@/lib/zodiac";
@@ -39,6 +39,8 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const [cancelOpen, setCancelOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Change password state
   const [passwordOpen, setPasswordOpen] = useState(false);
@@ -132,6 +134,29 @@ const ProfilePage = () => {
     setCanceling(false);
     setCancelOpen(false);
     toast({ title: t("profile.cancelSuccess") });
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await supabase.functions.invoke("delete-account", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (res.error) {
+        toast({ title: t("profile.deleteError"), variant: "destructive" });
+      } else {
+        toast({ title: t("profile.deleteSuccess") });
+        await signOut();
+        navigate("/auth", { replace: true });
+      }
+    } catch {
+      toast({ title: t("profile.deleteError"), variant: "destructive" });
+    } finally {
+      setDeleting(false);
+      setDeleteOpen(false);
+    }
   };
 
   return (
@@ -238,6 +263,15 @@ const ProfilePage = () => {
             {t("profile.cancelSubscription")}
           </button>
         )}
+
+        {/* Delete Account */}
+        <button
+          onClick={() => setDeleteOpen(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-colors text-xs"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          {t("profile.deleteAccount")}
+        </button>
 
         {/* Log Out */}
         <button
@@ -394,6 +428,26 @@ const ProfilePage = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Account Confirmation */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent className="glass border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t("profile.deleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("profile.deleteDescription")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>{t("profile.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? t("profile.deleting") : t("profile.deleteConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
