@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Puzzle, Loader2, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign } from "@/lib/zodiac";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export default function MissingPieceTab() {
   const [result, setResult] = useState<MissingPieceResult | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const isPremium = getEffectivePlan(profile) !== "free";
 
   // Read saved partner data from localStorage
   const getSavedPartner = () => {
