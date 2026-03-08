@@ -36,6 +36,7 @@ const translations: Translations = {
   "family.findMissingPiece": { en: "Find the Missing Piece", ka: "კოსმიური ბალანსის პოვნა" },
   "family.analyzing": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
   "family.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
+  "family.analyzedMembers": { en: "Family analyzed", ka: "გაანალიზებული ოჯახი" },
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
   "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმეთ ბავშვის ნიშანი" },

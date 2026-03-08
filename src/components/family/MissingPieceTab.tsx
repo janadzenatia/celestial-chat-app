@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Puzzle, Loader2, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Puzzle, Loader2, Sparkles, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,32 +20,52 @@ interface MissingPieceResult {
   summary: string;
 }
 
+interface ChildData {
+  name: string;
+  date_of_birth: string;
+  time_of_birth: string | null;
+}
+
 export default function MissingPieceTab() {
   const { t, language } = useLanguage();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<MissingPieceResult | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [children, setChildren] = useState<ChildData[]>([]);
 
   const isPremium = getEffectivePlan(profile) !== "free";
 
-  // Read saved partner data from localStorage
-  const getSavedPartner = () => {
-    try {
-      const raw = localStorage.getItem("astrochat_compat_form");
-      if (!raw) return null;
-      const d = JSON.parse(raw);
-      return d.partnerDate ? { name: d.partnerName, dob: d.partnerDate } : null;
-    } catch { return null; }
-  };
+  // Read partner data from profile (Supabase), not localStorage
+  const partnerName = profile?.partner_name || "";
+  const partnerDob = profile?.partner_birth_date || "";
+  const hasPartner = Boolean(partnerDob);
 
-  const partner = getSavedPartner();
-  const hasPartner = Boolean(partner?.dob);
+  // Load children from database
+  useEffect(() => {
+    if (!user) return;
+    const loadChildren = async () => {
+      const { data } = await supabase
+        .from("children")
+        .select("name, date_of_birth, time_of_birth")
+        .eq("user_id", user.id);
+      if (data) setChildren(data);
+    };
+    loadChildren();
+  }, [user?.id]);
 
   const userSun = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const userMoon = profile?.date_of_birth ? getApproxMoonSign(profile.date_of_birth) : null;
-  const partnerSun = partner?.dob ? getSunSign(partner.dob) : null;
-  const partnerMoon = partner?.dob ? getApproxMoonSign(partner.dob) : null;
+  const partnerSun = partnerDob ? getSunSign(partnerDob) : null;
+  const partnerMoon = partnerDob ? getApproxMoonSign(partnerDob) : null;
+
+  // Build children astro data for the AI
+  const childrenAstroData = children.map((child) => ({
+    name: child.name,
+    sunSign: getSunSign(child.date_of_birth)?.name || "Unknown",
+    moonSign: getApproxMoonSign(child.date_of_birth)?.name || "Unknown",
+    element: getSunSign(child.date_of_birth)?.element || "Unknown",
+  }));
 
   const generate = async () => {
     if (!userSun || !partnerSun) return;
@@ -57,10 +77,11 @@ export default function MissingPieceTab() {
           userSunSign: userSun.name,
           userMoonSign: userMoon?.name,
           userElement: userSun.element,
-          partnerName: partner?.name || "",
+          partnerName: partnerName || "",
           partnerSunSign: partnerSun.name,
           partnerMoonSign: partnerMoon?.name,
           partnerElement: partnerSun.element,
+          children: childrenAstroData,
           language,
         },
       });
@@ -92,6 +113,17 @@ export default function MissingPieceTab() {
           <p className="text-sm text-muted-foreground italic leading-relaxed">{result.summary}</p>
         </div>
 
+        {/* Show family members analyzed */}
+        {children.length > 0 && (
+          <div className="glass rounded-xl p-3 flex items-center gap-2 text-xs text-muted-foreground">
+            <Users className="w-3.5 h-3.5 shrink-0" />
+            <span>
+              {t("family.analyzedMembers")}: {profile?.name}, {partnerName}
+              {children.map((c) => `, ${c.name}`).join("")}
+            </span>
+          </div>
+        )}
+
         {result.signs.map((s, i) => (
           <div key={i} className="glass rounded-2xl p-5 space-y-3 bg-gradient-to-br from-primary/10 to-secondary/10">
             <div className="flex items-center gap-3">
@@ -118,10 +150,18 @@ export default function MissingPieceTab() {
       <Puzzle className="w-8 h-8 text-primary mx-auto" />
       <h3 className="font-serif text-lg text-gradient-gold">{t("family.missingPieceTitle")}</h3>
       <p className="text-sm text-muted-foreground">{t("family.missingPieceDesc")}</p>
-      <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+      <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground flex-wrap">
         <span>{userSun?.emoji} {profile?.name}</span>
         <span>+</span>
-        <span>{partnerSun?.emoji} {partner?.name}</span>
+        <span>{partnerSun?.emoji} {partnerName}</span>
+        {children.map((child, i) => {
+          const childSign = getSunSign(child.date_of_birth);
+          return (
+            <span key={i} className="flex items-center gap-1">
+              + {childSign?.emoji} {child.name}
+            </span>
+          );
+        })}
       </div>
       <Button
         onClick={() => {
