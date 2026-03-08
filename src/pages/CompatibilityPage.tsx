@@ -124,6 +124,7 @@ const CompatibilityPage = () => {
           synastryReport={report}
           synastryGenerating={reportGenerating}
           showDeepReport={showDeepReport}
+          onPaywallSuccess={handlePaywallSuccess}
         />
 
         {/* 2. Basic Compatibility — HIDDEN once deep report is ready */}

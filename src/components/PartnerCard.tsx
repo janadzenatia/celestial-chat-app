@@ -365,7 +365,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         onSave={handleSave}
         editMode={editMode}
       />
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
     </>
   );
 };

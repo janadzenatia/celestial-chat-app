@@ -63,6 +63,7 @@ const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
       await refreshProfile();
       toast({ title: t("paywall.success") });
       onOpenChange(false);
+      onSuccess?.();
     }
     setLoading(false);
   };
