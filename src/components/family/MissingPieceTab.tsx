@@ -27,7 +27,7 @@ export default function MissingPieceTab() {
   const [result, setResult] = useState<MissingPieceResult | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const isPremium = getEffectivePlan(profile) !== "free";
 
   // Read saved partner data from localStorage
   const getSavedPartner = () => {

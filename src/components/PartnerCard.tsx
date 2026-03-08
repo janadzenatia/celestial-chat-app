@@ -161,7 +161,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     onPartnerChange();
   };
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const isPremium = getEffectivePlan(profile) !== "free";
 
   const handleDeepSynastry = () => {
     if (!isPremium) {

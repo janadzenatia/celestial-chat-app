@@ -37,7 +37,7 @@ export default function MyChildrenTab() {
   const [saving, setSaving] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const isPremium = getEffectivePlan(profile) !== "free";
 
   // Reports state keyed by child id
   const [reports, setReports] = useState<Record<string, ChildReport>>({});
