@@ -27,7 +27,7 @@ export function useDailyInsight() {
       return;
     }
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = getLocalDateString();
     const period = getCurrentPeriod();
     const cacheKey = `${today}_${period}`;
     setLoading(true);
