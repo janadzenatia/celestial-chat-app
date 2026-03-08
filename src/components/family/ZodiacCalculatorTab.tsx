@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, Loader2, Sparkles, Baby } from "lucide-react";
+import { Calculator, Loader2, Sparkles, Baby, XCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
