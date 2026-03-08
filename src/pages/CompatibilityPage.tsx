@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { format, parse } from "date-fns";
 import { Heart, Sparkles, Star, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
