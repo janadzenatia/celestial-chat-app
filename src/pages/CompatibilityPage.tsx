@@ -218,7 +218,7 @@ const CompatibilityPage = () => {
         onSubmitWithTime={(time, relDate) => {
           handleTimeSubmit(time, relDate);
         }}
-        onSkip={(relDate) => handleTimeSkip(relDate)}
+        onSkip={() => {}}
       />
     </div>
   );
