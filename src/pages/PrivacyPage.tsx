@@ -12,44 +12,36 @@ const PrivacyPage = () => {
         <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="font-serif text-lg text-foreground">Privacy Policy</h1>
+        <h1 className="font-serif text-lg text-foreground">{t("privacy.title")}</h1>
       </div>
 
       <div className="px-5 py-6 max-w-lg mx-auto space-y-6 text-sm text-muted-foreground leading-relaxed">
-        <p className="text-xs">Effective Date: March 8, 2026</p>
+        <p className="text-xs">{t("privacy.effectiveDate")}</p>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">1. Data Collection</h2>
-          <p>
-            We collect your email for account creation and your birth details (date, time, and location) specifically to provide personalized astrological insights and family compatibility analysis.
-          </p>
+          <h2 className="font-serif text-base text-foreground">{t("privacy.s1.title")}</h2>
+          <p>{t("privacy.s1.text")}</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">2. Data Usage</h2>
-          <p>
-            Your data is used solely within the app to generate AI-driven reports. We do not sell or share your personal data with third-party advertisers.
-          </p>
+          <h2 className="font-serif text-base text-foreground">{t("privacy.s2.title")}</h2>
+          <p>{t("privacy.s2.text")}</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">3. Data Storage</h2>
-          <p>
-            Your information is securely stored via encrypted Authentication and Database services hosted on industry-standard cloud infrastructure.
-          </p>
+          <h2 className="font-serif text-base text-foreground">{t("privacy.s3.title")}</h2>
+          <p>{t("privacy.s3.text")}</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">4. User Rights</h2>
-          <p>
-            You can delete your account and all associated data at any time through the Profile settings within the app.
-          </p>
+          <h2 className="font-serif text-base text-foreground">{t("privacy.s4.title")}</h2>
+          <p>{t("privacy.s4.text")}</p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="font-serif text-base text-foreground">5. Contact</h2>
+          <h2 className="font-serif text-base text-foreground">{t("privacy.s5.title")}</h2>
           <p>
-            For any privacy-related concerns, contact us at{" "}
+            {t("privacy.s5.text")}{" "}
             <a href="mailto:Natia_janadze@yahoo.com" className="text-primary hover:underline">
               Natia_janadze@yahoo.com
             </a>
