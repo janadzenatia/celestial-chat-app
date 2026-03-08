@@ -5,6 +5,7 @@ import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { cancelSubscription } from "@/services/subscriptionService";
 import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2 } from "lucide-react";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { getSunSign } from "@/lib/zodiac";
@@ -92,11 +93,7 @@ const ProfilePage = () => {
   const handleCancelSubscription = async () => {
     if (!user) return;
     setCanceling(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    await supabase
-      .from("profiles")
-      .update({ subscription_status: "free", is_premium: false, subscription_plan: "free", trial_end_date: null })
-      .eq("user_id", user.id);
+    await cancelSubscription(user.id);
     await refreshProfile();
     setCanceling(false);
     setCancelOpen(false);

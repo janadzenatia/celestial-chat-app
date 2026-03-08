@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { purchaseSubscription } from "@/services/subscriptionService";
 import {
   Dialog,
   DialogContent,
@@ -73,20 +73,9 @@ const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallM
     if (!user) return;
     setLoading(true);
 
-    // Mock 2-second payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const result = await purchaseSubscription(user.id, selectedPlan);
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        subscription_plan: selectedPlan,
-        subscription_status: "premium",
-        is_premium: true,
-        trial_end_date: null,
-      })
-      .eq("user_id", user.id);
-
-    if (error) {
+    if (!result.success) {
       toast({ title: t("paywall.error"), variant: "destructive" });
     } else {
       await refreshProfile();
