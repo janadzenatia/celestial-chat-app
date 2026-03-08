@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ProfilePage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { signOut, profile, user, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -47,7 +47,8 @@ const ProfilePage = () => {
   const [editPlace, setEditPlace] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const effectivePlan = getEffectivePlan(profile);
+  const isPremium = effectivePlan !== "free";
 
   const openEditModal = () => {
     setEditName(profile?.name || "");
@@ -94,7 +95,7 @@ const ProfilePage = () => {
     await new Promise((r) => setTimeout(r, 1500));
     await supabase
       .from("profiles")
-      .update({ subscription_status: "free", is_premium: false })
+      .update({ subscription_status: "free", is_premium: false, subscription_plan: "free", trial_end_date: null })
       .eq("user_id", user.id);
     await refreshProfile();
     setCanceling(false);
@@ -154,7 +155,12 @@ const ProfilePage = () => {
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground">{isPremium ? t("profile.premium") : t("profile.free")}</span>
+              <span className="text-foreground capitalize">
+                {effectivePlan === "pro_premium" 
+                  ? (profile?.trial_end_date ? (language === "ka" ? "პრო (საცდელი)" : "Pro (Trial)") : "Pro Premium")
+                  : effectivePlan === "basic_premium" ? "Basic Premium" 
+                  : t("profile.free")}
+              </span>
             </div>
           </div>
         </section>

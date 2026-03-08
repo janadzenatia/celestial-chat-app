@@ -196,10 +196,12 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          daily_chat_count: number
           date_of_birth: string | null
           id: string
           is_premium: boolean
           language_preference: string
+          last_chat_date: string | null
           name: string | null
           onboarding_completed: boolean
           partner_birth_date: string | null
@@ -209,17 +211,21 @@ export type Database = {
           partner_time_of_birth: string | null
           place_of_birth: string | null
           relationship_start_date: string | null
+          subscription_plan: string
           subscription_status: string
           time_of_birth: string | null
+          trial_end_date: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          daily_chat_count?: number
           date_of_birth?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
+          last_chat_date?: string | null
           name?: string | null
           onboarding_completed?: boolean
           partner_birth_date?: string | null
@@ -229,17 +235,21 @@ export type Database = {
           partner_time_of_birth?: string | null
           place_of_birth?: string | null
           relationship_start_date?: string | null
+          subscription_plan?: string
           subscription_status?: string
           time_of_birth?: string | null
+          trial_end_date?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          daily_chat_count?: number
           date_of_birth?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
+          last_chat_date?: string | null
           name?: string | null
           onboarding_completed?: boolean
           partner_birth_date?: string | null
@@ -249,8 +259,10 @@ export type Database = {
           partner_time_of_birth?: string | null
           place_of_birth?: string | null
           relationship_start_date?: string | null
+          subscription_plan?: string
           subscription_status?: string
           time_of_birth?: string | null
+          trial_end_date?: string | null
           updated_at?: string
           user_id?: string
         }

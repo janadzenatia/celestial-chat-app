@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, Trash2 } from "lucide-react";
+import { Send, Trash2, Sparkles, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import PaywallModal from "@/components/PaywallModal";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -13,15 +14,29 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/astro-chat`;
 
 const ChatPage = () => {
   const { t, language } = useLanguage();
-  const { profile, user } = useAuth();
+  const { profile, user, refreshProfile } = useAuth();
   const { toast } = useToast();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Load chat history & handle hook context
+  const plan = getEffectivePlan(profile);
+  const isBasic = plan === "basic_premium";
+  const isPro = plan === "pro_premium";
+  const isFree = plan === "free";
+
+  // Daily message tracking
+  const today = new Date().toISOString().slice(0, 10);
+  const isToday = profile?.last_chat_date === today;
+  const dailyCount = isToday ? (profile?.daily_chat_count ?? 0) : 0;
+  const DAILY_LIMIT = 5;
+  const remaining = isBasic ? Math.max(0, DAILY_LIMIT - dailyCount) : Infinity;
+  const chatDisabled = isBasic && remaining <= 0;
+
+  // Load chat history
   useEffect(() => {
     setMessages([]);
     setLoadingHistory(true);
@@ -29,30 +44,40 @@ const ChatPage = () => {
       setLoadingHistory(false);
       return;
     }
-    supabase
+
+    let query = supabase
       .from("chat_messages")
       .select("role, content")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: true })
-      .then(({ data }) => {
-        if (data) setMessages(data as Msg[]);
-        setLoadingHistory(false);
+      .order("created_at", { ascending: true });
 
-        // Check for hook context from notification banner
-        const hookContextStr = sessionStorage.getItem("chat_hook_context");
-        if (hookContextStr) {
-          sessionStorage.removeItem("chat_hook_context");
-          try {
-            const hookCtx = JSON.parse(hookContextStr);
-            if (hookCtx.hook) {
-              triggerHookChat(hookCtx, data as Msg[] || []);
-            }
-          } catch { /* ignore */ }
-        }
-      });
-  }, [user?.id]);
+    // Basic plan: only last 7 days
+    if (isBasic) {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      query = query.gte("created_at", sevenDaysAgo.toISOString());
+    }
+
+    query.then(({ data }) => {
+      if (data) setMessages(data as Msg[]);
+      setLoadingHistory(false);
+
+      // Check for hook context from notification banner
+      const hookContextStr = sessionStorage.getItem("chat_hook_context");
+      if (hookContextStr) {
+        sessionStorage.removeItem("chat_hook_context");
+        try {
+          const hookCtx = JSON.parse(hookContextStr);
+          if (hookCtx.hook) {
+            triggerHookChat(hookCtx, data as Msg[] || []);
+          }
+        } catch { /* ignore */ }
+      }
+    });
+  }, [user?.id, plan]);
 
   const triggerHookChat = async (hookCtx: { hook: string; subject: string; subjectDob?: string }, existingMsgs: Msg[]) => {
+    if (chatDisabled) return;
     setIsLoading(true);
     const lang = language === "ka" ? "Georgian" : "English";
     const hookPrompt = `The user just tapped a cosmic notification that said: "${hookCtx.hook}". The notification was about ${hookCtx.subject === "self" ? "the user themselves" : `their family member named ${hookCtx.subject}`}. Now elaborate on what's happening astrologically and offer to help. Be warm, specific, and mystical. Respond in ${lang}.`;
@@ -156,6 +181,17 @@ const ChatPage = () => {
     });
   };
 
+  const incrementDailyCount = async () => {
+    if (!user) return;
+    const newCount = (isToday ? dailyCount : 0) + 1;
+    await supabase
+      .from("profiles")
+      .update({ daily_chat_count: newCount, last_chat_date: today })
+      .eq("user_id", user.id);
+    // Refresh profile to update local state
+    await refreshProfile();
+  };
+
   const clearChat = async () => {
     if (!user) return;
     await supabase.from("chat_messages").delete().eq("user_id", user.id);
@@ -166,12 +202,16 @@ const ChatPage = () => {
     const text = input.trim();
     if (!text || isLoading) return;
 
+    // Check limits
+    if (chatDisabled) return;
+
     const userMsg: Msg = { role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
 
     await persistMessage(userMsg);
+    if (isBasic) await incrementDailyCount();
 
     let assistantSoFar = "";
 
@@ -183,7 +223,7 @@ const ChatPage = () => {
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
-          messages: [...messages, userMsg].slice(-20), // last 20 for context window
+          messages: [...messages, userMsg].slice(-20),
           birthData: getBirthData(),
           language,
         }),
@@ -235,7 +275,6 @@ const ChatPage = () => {
         }
       }
 
-      // Persist assistant response
       if (assistantSoFar) {
         await persistMessage({ role: "assistant", content: assistantSoFar });
       }
@@ -250,6 +289,18 @@ const ChatPage = () => {
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)]">
       <AppHeader />
+
+      {/* Trial banner */}
+      {plan === "pro_premium" && profile?.trial_end_date && (
+        <div className="px-4 pt-2">
+          <div className="glass rounded-xl px-3 py-2 text-center text-xs text-primary">
+            <Sparkles className="w-3 h-3 inline mr-1" />
+            {language === "ka"
+              ? `პრო საცდელი პერიოდი მთავრდება: ${new Date(profile.trial_end_date).toLocaleDateString("ka-GE")}`
+              : `Pro trial ends: ${new Date(profile.trial_end_date).toLocaleDateString("en-US")}`}
+          </div>
+        </div>
+      )}
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
@@ -269,6 +320,12 @@ const ChatPage = () => {
           </div>
         ) : (
           <>
+            {/* 7-day history notice for basic */}
+            {isBasic && (
+              <div className="text-center text-[10px] text-muted-foreground pb-1">
+                {language === "ka" ? "ნაჩვენებია ბოლო 7 დღის ისტორია" : "Showing last 7 days of history"}
+              </div>
+            )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
@@ -300,8 +357,40 @@ const ChatPage = () => {
         )}
       </div>
 
+      {/* Limit reached banner */}
+      {chatDisabled && (
+        <div className="px-4 pb-2">
+          <div className="glass rounded-xl p-3 text-center space-y-2">
+            <p className="text-sm text-muted-foreground">
+              {language === "ka"
+                ? "დღის ლიმიტი ამოიწურა. გააუმჯობესე პრო-მდე შეუზღუდავი ჩატისთვის!"
+                : "Daily limit reached. Upgrade to Pro for unlimited chat!"}
+            </p>
+            <button
+              onClick={() => setPaywallOpen(true)}
+              className="px-4 py-2 rounded-xl gradient-gold text-primary-foreground text-sm font-semibold inline-flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              {language === "ka" ? "გააუმჯობესე პრო-მდე" : "Upgrade to Pro"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Input */}
       <div className="px-4 pb-4 space-y-2">
+        {/* Daily counter for basic */}
+        {isBasic && !chatDisabled && (
+          <div className="text-center">
+            <span className="text-[11px] text-muted-foreground glass px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+              <MessageCircle className="w-3 h-3" />
+              {language === "ka"
+                ? `${remaining}/${DAILY_LIMIT} შეტყობინება დარჩა დღეს`
+                : `${remaining}/${DAILY_LIMIT} messages remaining today`}
+            </span>
+          </div>
+        )}
+
         <div className="flex gap-2">
           {messages.length > 0 && (
             <button
@@ -316,13 +405,15 @@ const ChatPage = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            className="flex-1 glass rounded-full px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder={t("chat.placeholder")}
-            disabled={isLoading}
+            className="flex-1 glass rounded-full px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
+            placeholder={chatDisabled
+              ? (language === "ka" ? "დღის ლიმიტი ამოწურულია" : "Daily limit reached")
+              : t("chat.placeholder")}
+            disabled={isLoading || chatDisabled}
           />
           <button
             onClick={send}
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !input.trim() || chatDisabled}
             className="w-11 h-11 rounded-full gradient-gold flex items-center justify-center shrink-0 disabled:opacity-50 transition-opacity"
           >
             <Send className="w-4 h-4 text-primary-foreground" />
@@ -330,6 +421,8 @@ const ChatPage = () => {
         </div>
         <p className="text-[10px] text-muted-foreground text-center">{t("chat.disclaimer")}</p>
       </div>
+
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan="pro_premium" />
     </div>
   );
 };
