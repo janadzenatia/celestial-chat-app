@@ -72,13 +72,20 @@ const CompatibilityPage = () => {
 
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
-    // Always prompt for time + relationship date before generating
+    // If partner time already saved, skip modal and generate directly
+    if (partnerTimeStr) {
+      if (!report) generateReport();
+      return;
+    }
     setTimeModalOpen(true);
   };
 
   const handlePaywallSuccess = () => {
-    // After successful premium upgrade, open the data-entry modal
     setShowDeepReport(true);
+    if (partnerTimeStr) {
+      if (!report) generateReport();
+      return;
+    }
     setTimeModalOpen(true);
   };
 
