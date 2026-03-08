@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Heart, Pencil, Trash2, Sparkles, Loader2, Lock, Plus, Star, Flame, MessageCircle, Target, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, ZodiacSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
