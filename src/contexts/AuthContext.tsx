@@ -103,11 +103,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { emailRedirectTo: window.location.origin },
       });
+      if (!error && data.user) {
+        // Fire welcome email (placeholder)
+        import("@/services/authService").then(({ sendWelcomeEmail }) => {
+          sendWelcomeEmail(email);
+        });
+      }
       return { error };
     } catch (err: any) {
       return { error: err };

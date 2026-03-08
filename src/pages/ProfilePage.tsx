@@ -138,6 +138,9 @@ const ProfilePage = () => {
     <div className="flex flex-col">
       <AppHeader />
       <div className="px-4 py-6 space-y-5">
+        {/* Trial Banner */}
+        <TrialBanner />
+
         {/* Profile Card */}
         <section className="glass rounded-2xl p-5 flex items-center gap-4 relative">
           <div className="w-14 h-14 rounded-full gradient-purple flex items-center justify-center">

@@ -37,6 +37,12 @@ const translations: Translations = {
   "family.analyzing": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
   "family.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
   "family.analyzedMembers": { en: "Family analyzed", ka: "გაანალიზებული ოჯახი" },
+
+  // Trial
+  "trial.days": { en: "d", ka: "დ" },
+  "trial.hours": { en: "h", ka: "სთ" },
+  "trial.notice": { en: "Your free trial ends in {time}. You will be charged on day 4. Cancel anytime in App Store / Play Store settings.", ka: "თქვენი უფასო საცდელი პერიოდი მთავრდება {time}-ში. გადახდა მოხდება მე-4 დღეს. გაუქმება ნებისმიერ დროს შეგიძლიათ App Store / Play Store-ის პარამეტრებში." },
+
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
   "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმეთ ბავშვის ნიშანი" },
