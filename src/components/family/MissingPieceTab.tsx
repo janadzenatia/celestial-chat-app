@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Puzzle, Loader2, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign } from "@/lib/zodiac";
 import { Button } from "@/components/ui/button";
