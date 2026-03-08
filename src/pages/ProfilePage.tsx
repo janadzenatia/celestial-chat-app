@@ -175,6 +175,15 @@ const ProfilePage = () => {
           </button>
         </section>
 
+        {/* Change Password */}
+        <section className="glass rounded-2xl p-5">
+          <button
+            onClick={() => setPasswordOpen(true)}
+            className="w-full flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors"
+          >
+            <KeyRound className="w-4 h-4 text-muted-foreground" />
+            <span>{t("profile.changePassword")}</span>
+          </button>
         {/* Settings */}
         <section className="glass rounded-2xl p-5 space-y-4">
           <h3 className="font-serif text-gradient-gold">{t("profile.settings")}</h3>
