@@ -377,14 +377,8 @@ interface PartnerFormDialogProps {
   setName: (n: string) => void;
   dob: Date | undefined;
   setDob: (d: Date | undefined) => void;
-  time: string;
-  setTime: (t: string) => void;
-  timeUnknown: boolean;
-  setTimeUnknown: (v: boolean) => void;
   location: string;
   setLocation: (l: string) => void;
-  relationshipDate: Date | undefined;
-  setRelationshipDate: (d: Date | undefined) => void;
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
@@ -392,8 +386,7 @@ interface PartnerFormDialogProps {
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
-  time, setTime, timeUnknown, setTimeUnknown,
-  location, setLocation, relationshipDate, setRelationshipDate,
+  location, setLocation,
   saving, onSave, editMode,
 }: PartnerFormDialogProps) => {
   const { t } = useLanguage();
@@ -424,31 +417,6 @@ const PartnerFormDialog = ({
             <BirthDatePicker value={dob} onChange={setDob} placeholder={t("compat.pickDate")} />
           </div>
 
-          {/* Time of Birth */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.partnerTime")}</label>
-            <Input
-              value={timeUnknown ? "" : time}
-              onChange={(e) => setTime(e.target.value.replace(/[^\d:]/g, "").slice(0, 5))}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              className="glass border-white/10 focus:border-primary"
-              disabled={timeUnknown}
-            />
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="timeUnknown"
-                checked={timeUnknown}
-                onCheckedChange={(checked) => {
-                  setTimeUnknown(!!checked);
-                  if (checked) setTime("");
-                }}
-              />
-              <label htmlFor="timeUnknown" className="text-xs text-muted-foreground cursor-pointer">
-                {t("partner.timeUnknown")}
-              </label>
-            </div>
-          </div>
-
           {/* Place of Birth */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("partner.placeOfBirth")}</label>
@@ -458,12 +426,6 @@ const PartnerFormDialog = ({
               placeholder={t("partner.placeOfBirthPlaceholder")}
               className="glass border-white/10 focus:border-primary"
             />
-          </div>
-
-          {/* Relationship Start Date */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-            <BirthDatePicker value={relationshipDate} onChange={setRelationshipDate} placeholder={t("compat.pickDate")} />
           </div>
 
           <div className="flex gap-2 pt-2">
