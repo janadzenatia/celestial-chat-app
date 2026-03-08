@@ -428,6 +428,26 @@ const ProfilePage = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Account Confirmation */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent className="glass border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t("profile.deleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("profile.deleteDescription")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>{t("profile.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? t("profile.deleting") : t("profile.deleteConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
