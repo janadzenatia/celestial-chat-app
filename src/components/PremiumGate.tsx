@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { Lock } from "lucide-react";
 import PaywallModal from "./PaywallModal";
 
@@ -7,15 +7,19 @@ interface PremiumGateProps {
   children: React.ReactNode;
   /** If true, shows a lock overlay on the content instead of replacing it */
   overlay?: boolean;
+  /** Minimum plan required. Defaults to basic_premium */
+  minPlan?: "basic_premium" | "pro_premium";
 }
 
-const PremiumGate = ({ children, overlay = false }: PremiumGateProps) => {
+const PremiumGate = ({ children, overlay = false, minPlan = "basic_premium" }: PremiumGateProps) => {
   const { profile } = useAuth();
   const [paywallOpen, setPaywallOpen] = useState(false);
 
-  const isPremium = profile?.subscription_status === "premium" || profile?.is_premium;
+  const plan = getEffectivePlan(profile);
+  const planLevel = { free: 0, basic_premium: 1, pro_premium: 2 };
+  const hasAccess = planLevel[plan] >= planLevel[minPlan];
 
-  if (isPremium) return <>{children}</>;
+  if (hasAccess) return <>{children}</>;
 
   if (overlay) {
     return (
@@ -31,7 +35,7 @@ const PremiumGate = ({ children, overlay = false }: PremiumGateProps) => {
             </span>
           </div>
         </div>
-        <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
+        <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan={minPlan} />
       </>
     );
   }
@@ -41,7 +45,7 @@ const PremiumGate = ({ children, overlay = false }: PremiumGateProps) => {
       <div onClick={() => setPaywallOpen(true)} className="cursor-pointer">
         {children}
       </div>
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan={minPlan} />
     </>
   );
 };

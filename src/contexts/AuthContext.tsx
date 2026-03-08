@@ -13,12 +13,30 @@ interface Profile {
   is_premium: boolean;
   onboarding_completed: boolean;
   subscription_status: string;
+  subscription_plan: string;
+  trial_end_date: string | null;
+  daily_chat_count: number;
+  last_chat_date: string | null;
   partner_name: string | null;
   partner_birth_date: string | null;
   partner_love_language: string | null;
   partner_time_of_birth: string | null;
   partner_place_of_birth: string | null;
   relationship_start_date: string | null;
+}
+
+/** Derive the effective plan considering trial expiry */
+export function getEffectivePlan(profile: Profile | null): "free" | "basic_premium" | "pro_premium" {
+  if (!profile) return "free";
+  const plan = profile.subscription_plan;
+  if (plan === "pro_premium" && profile.trial_end_date) {
+    // Check if trial expired
+    if (new Date(profile.trial_end_date) < new Date()) {
+      return "free";
+    }
+  }
+  if (plan === "basic_premium" || plan === "pro_premium") return plan as any;
+  return "free";
 }
 
 interface AuthContextType {
