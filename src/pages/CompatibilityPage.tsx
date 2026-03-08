@@ -60,18 +60,32 @@ const CompatibilityPage = () => {
   const { report, loading: reportLoading, generating: reportGenerating, generate: generateReport } = useSynastryReport(partnerDobStr, partnerName, partnerTime || undefined, relationshipDateStr);
   const { forecast, loading: forecastLoading, generating: forecastGenerating, generate: generateForecast } = useRelationshipForecast(partnerDate, relationshipDate, partnerName, partnerTime || undefined);
 
+  // Auto-show deep report if cached report exists
+  useEffect(() => {
+    if (report && !showDeepReport) {
+      setShowDeepReport(true);
+    }
+  }, [report]);
+
   // Deep report is "active" when synastry accordion is visible
   const deepReportReady = showDeepReport && report;
 
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
-    // Always prompt for time + relationship date before generating
+    // If partner time already saved, skip modal and generate directly
+    if (partnerTimeStr) {
+      if (!report) generateReport();
+      return;
+    }
     setTimeModalOpen(true);
   };
 
   const handlePaywallSuccess = () => {
-    // After successful premium upgrade, open the data-entry modal
     setShowDeepReport(true);
+    if (partnerTimeStr) {
+      if (!report) generateReport();
+      return;
+    }
     setTimeModalOpen(true);
   };
 

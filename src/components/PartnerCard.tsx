@@ -122,6 +122,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_birth_date: dobStr,
       partner_love_language: null,
       partner_place_of_birth: location.trim() || null,
+      partner_time_of_birth: null,
+      relationship_start_date: null,
     };
 
     const { error } = await supabase
