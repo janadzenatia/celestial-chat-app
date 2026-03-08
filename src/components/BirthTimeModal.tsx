@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Clock, Sparkles, Loader2 } from "lucide-react";
+import { Clock, Sparkles, Loader2, Heart } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BirthDatePicker } from "@/components/BirthDatePicker";
 import {
   Dialog,
   DialogContent,
@@ -16,8 +17,8 @@ interface BirthTimeModalProps {
   onOpenChange: (open: boolean) => void;
   partnerName: string;
   generating: boolean;
-  onSubmitWithTime: (time: string) => void;
-  onSkip: () => void;
+  onSubmitWithTime: (time: string, relationshipDate?: Date) => void;
+  onSkip: (relationshipDate?: Date) => void;
 }
 
 export default function BirthTimeModal({
@@ -30,6 +31,7 @@ export default function BirthTimeModal({
 }: BirthTimeModalProps) {
   const { t } = useLanguage();
   const [time, setTime] = useState("");
+  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>();
 
   const handleTimeChange = (val: string) => {
     const cleaned = val.replace(/[^\d:]/g, "");
@@ -38,7 +40,7 @@ export default function BirthTimeModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass border-primary/20 sm:max-w-md">
+      <DialogContent className="glass border-primary/20 sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-center space-y-3">
           <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border border-primary/30 flex items-center justify-center">
             <Clock className="w-7 h-7 text-primary" />
@@ -52,6 +54,7 @@ export default function BirthTimeModal({
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
+          {/* Birth Time */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-2">
               <Clock className="w-3.5 h-3.5 text-muted-foreground" />
@@ -66,9 +69,23 @@ export default function BirthTimeModal({
             />
           </div>
 
+          {/* Relationship Start Date */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground flex items-center gap-2">
+              <Heart className="w-3.5 h-3.5 text-muted-foreground" />
+              {t("compat.relationshipDate")}
+            </label>
+            <BirthDatePicker
+              value={relationshipDate}
+              onChange={setRelationshipDate}
+              placeholder={t("compat.pickDate")}
+            />
+            <p className="text-xs text-muted-foreground">{t("timeModal.relationshipDateHint")}</p>
+          </div>
+
           <div className="flex flex-col gap-2">
             <Button
-              onClick={() => onSubmitWithTime(time)}
+              onClick={() => onSubmitWithTime(time, relationshipDate)}
               disabled={generating || time.length < 4}
               className="gradient-cosmic text-foreground font-medium"
             >
@@ -86,7 +103,7 @@ export default function BirthTimeModal({
             </Button>
             <Button
               variant="ghost"
-              onClick={onSkip}
+              onClick={() => onSkip(relationshipDate)}
               disabled={generating}
               className="text-muted-foreground hover:text-foreground"
             >

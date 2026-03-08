@@ -10,7 +10,7 @@ import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import PaywallModal from "@/components/PaywallModal";
 import { SynastryReport, SynastryCategory } from "@/hooks/useSynastryReport";
 import {
@@ -56,10 +56,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState("");
   const [dob, setDob] = useState<Date | undefined>();
-  const [time, setTime] = useState("");
-  const [timeUnknown, setTimeUnknown] = useState(false);
   const [location, setLocation] = useState("");
-  const [relationshipDate, setRelationshipDate] = useState<Date | undefined>();
   const [saving, setSaving] = useState(false);
   const [generatingLove, setGeneratingLove] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -74,10 +71,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const openAddForm = () => {
     setName("");
     setDob(undefined);
-    setTime("");
-    setTimeUnknown(false);
     setLocation("");
-    setRelationshipDate(undefined);
     setEditMode(false);
     setFormOpen(true);
   };
@@ -85,10 +79,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const openEditForm = () => {
     setName(partnerName || "");
     setDob(partnerDob ? parse(partnerDob, "yyyy-MM-dd", new Date()) : undefined);
-    setTime(profile?.partner_time_of_birth || "");
-    setTimeUnknown(!profile?.partner_time_of_birth);
     setLocation(profile?.partner_place_of_birth || "");
-    setRelationshipDate(profile?.relationship_start_date ? parse(profile.relationship_start_date, "yyyy-MM-dd", new Date()) : undefined);
     setEditMode(true);
     setFormOpen(true);
   };
@@ -129,9 +120,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_name: name.trim(),
       partner_birth_date: dobStr,
       partner_love_language: null,
-      partner_time_of_birth: timeUnknown ? null : (time.trim() || null),
       partner_place_of_birth: location.trim() || null,
-      relationship_start_date: relationshipDate ? format(relationshipDate, "yyyy-MM-dd") : null,
     };
 
     const { error } = await supabase
@@ -207,14 +196,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
           setName={setName}
           dob={dob}
           setDob={setDob}
-          time={time}
-          setTime={setTime}
-          timeUnknown={timeUnknown}
-          setTimeUnknown={setTimeUnknown}
           location={location}
           setLocation={setLocation}
-          relationshipDate={relationshipDate}
-          setRelationshipDate={setRelationshipDate}
           saving={saving}
           onSave={handleSave}
           editMode={editMode}
@@ -375,14 +358,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         setName={setName}
         dob={dob}
         setDob={setDob}
-        time={time}
-        setTime={setTime}
-        timeUnknown={timeUnknown}
-        setTimeUnknown={setTimeUnknown}
         location={location}
         setLocation={setLocation}
-        relationshipDate={relationshipDate}
-        setRelationshipDate={setRelationshipDate}
         saving={saving}
         onSave={handleSave}
         editMode={editMode}
@@ -400,14 +377,8 @@ interface PartnerFormDialogProps {
   setName: (n: string) => void;
   dob: Date | undefined;
   setDob: (d: Date | undefined) => void;
-  time: string;
-  setTime: (t: string) => void;
-  timeUnknown: boolean;
-  setTimeUnknown: (v: boolean) => void;
   location: string;
   setLocation: (l: string) => void;
-  relationshipDate: Date | undefined;
-  setRelationshipDate: (d: Date | undefined) => void;
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
@@ -415,8 +386,7 @@ interface PartnerFormDialogProps {
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
-  time, setTime, timeUnknown, setTimeUnknown,
-  location, setLocation, relationshipDate, setRelationshipDate,
+  location, setLocation,
   saving, onSave, editMode,
 }: PartnerFormDialogProps) => {
   const { t } = useLanguage();
@@ -447,31 +417,6 @@ const PartnerFormDialog = ({
             <BirthDatePicker value={dob} onChange={setDob} placeholder={t("compat.pickDate")} />
           </div>
 
-          {/* Time of Birth */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.partnerTime")}</label>
-            <Input
-              value={timeUnknown ? "" : time}
-              onChange={(e) => setTime(e.target.value.replace(/[^\d:]/g, "").slice(0, 5))}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              className="glass border-white/10 focus:border-primary"
-              disabled={timeUnknown}
-            />
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="timeUnknown"
-                checked={timeUnknown}
-                onCheckedChange={(checked) => {
-                  setTimeUnknown(!!checked);
-                  if (checked) setTime("");
-                }}
-              />
-              <label htmlFor="timeUnknown" className="text-xs text-muted-foreground cursor-pointer">
-                {t("partner.timeUnknown")}
-              </label>
-            </div>
-          </div>
-
           {/* Place of Birth */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("partner.placeOfBirth")}</label>
@@ -481,12 +426,6 @@ const PartnerFormDialog = ({
               placeholder={t("partner.placeOfBirthPlaceholder")}
               className="glass border-white/10 focus:border-primary"
             />
-          </div>
-
-          {/* Relationship Start Date */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-            <BirthDatePicker value={relationshipDate} onChange={setRelationshipDate} placeholder={t("compat.pickDate")} />
           </div>
 
           <div className="flex gap-2 pt-2">
