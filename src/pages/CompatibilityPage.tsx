@@ -97,11 +97,6 @@ const CompatibilityPage = () => {
     setTimeout(() => generateReport(), 100);
   };
 
-  const handleTimeSkip = async (relDate?: Date) => {
-    await saveExtraFields(undefined, relDate);
-    setTimeModalOpen(false);
-    generateReport();
-  };
 
   return (
     <div className="flex flex-col">
