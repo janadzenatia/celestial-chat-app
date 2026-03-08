@@ -39,6 +39,39 @@ const ProfilePage = () => {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
 
+  // Change password state
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast({ title: t("profile.passwordTooShort"), variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: t("profile.passwordMismatch"), variant: "destructive" });
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        toast({ title: error.message, variant: "destructive" });
+      } else {
+        toast({ title: t("profile.passwordSuccess") });
+        setPasswordOpen(false);
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch {
+      toast({ title: t("auth.genericError"), variant: "destructive" });
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   // Edit profile state
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState("");
