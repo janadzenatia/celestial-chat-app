@@ -38,6 +38,7 @@ interface PartnerCardProps {
   synastryReport?: SynastryReport | null;
   synastryGenerating?: boolean;
   showDeepReport?: boolean;
+  onPaywallSuccess?: () => void;
 }
 
 const synastryCategories = [
