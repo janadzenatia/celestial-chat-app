@@ -65,10 +65,14 @@ const CompatibilityPage = () => {
 
   const handleDeepSynastry = (_pName: string, _pDob: string) => {
     setShowDeepReport(true);
-    if (!report && !reportLoading) {
-      // Premium user — prompt for time + relationship date
-      setTimeModalOpen(true);
-    }
+    // Always prompt for time + relationship date before generating
+    setTimeModalOpen(true);
+  };
+
+  const handlePaywallSuccess = () => {
+    // After successful premium upgrade, open the data-entry modal
+    setShowDeepReport(true);
+    setTimeModalOpen(true);
   };
 
   const saveExtraFields = async (time?: string, relDate?: Date) => {
