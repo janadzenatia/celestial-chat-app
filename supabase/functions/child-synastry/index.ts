@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt, FAMILY_PERSONA_EXTRA } from "../_shared/persona.ts";
+import { validateAuth, requirePremium } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,10 +12,16 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const auth = await validateAuth(req);
+    if (auth.error) return auth.error;
+
+    const premiumCheck = await requirePremium(auth.userId);
+    if (premiumCheck) return premiumCheck;
+
     const { parentName, parentDob, parentSunSign, parentMoonSign, parentRisingSign, childName, childDob, childSunSign, childMoonSign, childRisingSign, childHasTime, language } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const today = new Date().toISOString().split("T")[0];
@@ -72,18 +79,17 @@ Rules:
     });
 
     if (!response.ok) {
-      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
-      console.error("AI error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI service error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      console.error("AI gateway error:", response.status, t);
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
-    // Robust JSON parsing with fallback
     content = content
       .replace(/,\s*([}\]])/g, "$1")
       .replace(/[\x00-\x1F\x7F]/g, " ");
@@ -93,7 +99,10 @@ Rules:
       parsed = JSON.parse(content);
     } catch {
       const match = content.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error("Could not parse AI response as JSON");
+      if (!match) {
+        console.error("Could not extract JSON from AI response");
+        return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
       const cleaned = match[0].replace(/,\s*([}\]])/g, "$1");
       parsed = JSON.parse(cleaned);
     }
@@ -101,6 +110,6 @@ Rules:
     return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("child-synastry error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
