@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
+import { validateAuth, requirePremium } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,9 +12,15 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const auth = await validateAuth(req);
+    if (auth.error) return auth.error;
+
+    const premiumCheck = await requirePremium(auth.userId);
+    if (premiumCheck) return premiumCheck;
+
     const { name, dateOfBirth, sunSign, moonSign, risingSign, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const userName = name || "Star Seeker";
@@ -65,18 +72,18 @@ Rules:
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted." }), {
+        return new Response(JSON.stringify({ error: "AI credits exhausted" }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI service error" }), {
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -91,14 +98,14 @@ Rules:
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch {
-      console.error("Failed to parse AI response as JSON:", content);
-      return new Response(JSON.stringify({ error: "Invalid AI response format" }), {
+      console.error("Failed to parse AI response");
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
   } catch (e) {
     console.error("cosmic-match error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

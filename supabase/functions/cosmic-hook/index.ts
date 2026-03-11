@@ -13,7 +13,7 @@ serve(async (req) => {
   try {
     const { userName, dateOfBirth, timeOfBirth, familyMembers, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const today = new Date().toISOString().split("T")[0];
@@ -110,7 +110,7 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI service error" }), {
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -132,7 +132,7 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
     });
   } catch (e) {
     console.error("cosmic-hook error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

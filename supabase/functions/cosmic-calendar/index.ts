@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
+import { validateAuth, requirePremium } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,9 +12,15 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const auth = await validateAuth(req);
+    if (auth.error) return auth.error;
+
+    const premiumCheck = await requirePremium(auth.userId);
+    if (premiumCheck) return premiumCheck;
+
     const { dateOfBirth, timeOfBirth, sunSign, moonSign, risingSign, month, year, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -99,7 +106,7 @@ Rules:
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI service error" }), {
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -121,7 +128,7 @@ Rules:
     });
   } catch (e) {
     console.error("cosmic-calendar error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
