@@ -435,31 +435,49 @@ const translations: Translations = {
   },
 
   // Terms of Service Page
-  "terms.title": { en: "Terms of Service & EULA", ka: "მომსახურების პირობები და EULA" },
-  "terms.s1.title": { en: "1. Nature of Service", ka: "1. სერვისის ბუნება" },
+  "terms.title": { en: "Terms and Conditions", ka: "წესები და პირობები (Terms and Conditions)" },
+  "terms.intro": {
+    en: "Welcome to Astrochat. By using our application, you agree to follow and be bound by the following terms and conditions. Please read them carefully.",
+    ka: "მოგესალმებით Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას თქვენ ეთანხმებით ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვთ, ყურადღებით გაეცნოთ მათ."
+  },
+  "terms.s1.title": { en: "1. Disclaimer", ka: "1. პასუხისმგებლობის შეზღუდვა (Disclaimer)" },
   "terms.s1.text": {
-    en: "AstroChat provides astrological insights based on AI algorithms. These insights are for entertainment purposes only and should not be used as professional financial, legal, or medical advice.",
-    ka: "AstroChat უზრუნველყოფს ასტროლოგიურ ინსაიტებს AI ალგორითმებზე დაფუძნებით. ეს ინსაიტები მხოლოდ გასართობი მიზნებისთვისაა და არ უნდა იქნას გამოყენებული როგორც პროფესიონალური ფინანსური, იურიდიული ან სამედიცინო რჩევა."
+    en: "Astrochat is designed strictly for entertainment purposes only. The astrological predictions, chats, and advice provided by the app do not constitute and are not a substitute for professional medical, psychological, legal, or financial advice. Any decisions you make based on information obtained through the app are your sole responsibility.",
+    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის. აპლიკაციის მიერ მოწოდებული ასტროლოგიური პროგნოზები, ჩატები თუ რჩევები არ წარმოადგენს და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ, იურიდიულ ან ფინანსურ კონსულტაციას. ნებისმიერი გადაწყვეტილება, რომელსაც მიიღებთ აპლიკაციაში მიღებული ინფორმაციის საფუძველზე, არის თქვენი პირადი პასუხისმგებლობა."
   },
-  "terms.s2.title": { en: "2. Subscriptions", ka: "2. გამოწერები" },
+  "terms.s2.title": { en: "2. Payments and Refund Policy", ka: "2. გადახდები და თანხის დაბრუნების პოლიტიკა" },
   "terms.s2.text": {
-    en: "AstroChat offers a 3-day Free Trial. After the trial ends, a recurring subscription fee will be charged via your App Store / Google Play account.",
-    ka: "AstroChat გთავაზობთ 3-დღიან უფასო საცდელ პერიოდს. საცდელი პერიოდის დასრულების შემდეგ, განმეორებადი გამოწერის საფასური ჩამოიჭრება თქვენი App Store / Google Play ანგარიშიდან."
+    en: "Transactions: All paid services (In-App Purchases) are processed through the Apple App Store or Google Play Store.\n\nRefunds: All transactions are final, and Astrochat does not issue refunds. Since payments are processed by third-party platforms (Apple/Google), their respective internal policies apply to all refund requests. Users must contact the relevant platform directly for any payment disputes.",
+    ka: "ტრანზაქციები: ყველა ფასიანი სერვისი (In-App Purchases) ხორციელდება Apple App Store-ის ან Google Play Store-ის მეშვეობით.\n\nრეფანდი (Refund): ყველა ტრანზაქცია საბოლოოა და Astrochat-ის მიერ თანხის დაბრუნება არ ხდება. ვინაიდან გადახდები მუშავდება მესამე მხარის (Apple/Google) მიერ, თანხის დაბრუნების საკითხებზე ვრცელდება მათი შიდა წესები და მომხმარებელმა უნდა მიმართოს შესაბამის პლატფორმას."
   },
-  "terms.s3.title": { en: "3. Cancellation", ka: "3. გაუქმება" },
+  "terms.s3.title": { en: "3. Use of Service", ka: "3. სერვისის გამოყენება" },
   "terms.s3.text": {
-    en: "You may cancel your subscription at any time through your device's subscription settings (App Store or Google Play Store).",
-    ka: "თქვენ შეგიძლიათ გააუქმოთ გამოწერა ნებისმიერ დროს თქვენი მოწყობილობის გამოწერის პარამეტრებიდან (App Store ან Google Play Store)."
+    en: "Users agree to use the application for lawful purposes only. The following actions are strictly prohibited:",
+    ka: "მომხმარებელი ვალდებულია გამოიყენოს აპლიკაცია მხოლოდ კანონიერი მიზნებისთვის. აკრძალულია:"
   },
-  "terms.s4.title": { en: "4. User Conduct", ka: "4. მომხმარებლის ქცევა" },
+  "terms.s3.bullets": {
+    en: "Interfering with the app's operation or exploiting system vulnerabilities.|Creating accounts under another person's identity or providing false information.|Copying, distributing, or using the app's content for commercial purposes without our prior written consent.",
+    ka: "აპლიკაციის მუშაობისთვის ხელის შეშლა ან სისტემური ხარვეზების ბოროტად გამოყენება.|სხვისი სახელით ანგარიშის შექმნა ან ყალბი მონაცემების მითითება.|აპლიკაციის შინაარსის კოპირება ან კომერციული მიზნებისთვის გამოყენება ჩვენი თანხმობის გარეშე."
+  },
+  "terms.s4.title": { en: "4. Intellectual Property", ka: "4. ინტელექტუალური საკუთრება" },
   "terms.s4.text": {
-    en: "Users must provide accurate birth data for the best experience. Misuse of the platform or abusive behaviour may result in account termination.",
-    ka: "მომხმარებლებმა უნდა მიუთითონ ზუსტი დაბადების მონაცემები საუკეთესო გამოცდილებისთვის. პლატფორმის ბოროტად გამოყენება ან შეურაცხმყოფელი ქცევა შეიძლება გამოიწვიოს ანგარიშის გაუქმება."
+    en: "The design, logo, source code, text, and algorithms of Astrochat are the intellectual property of the company. Their use, distribution, or reproduction is strictly prohibited without explicit written permission from the copyright holder.",
+    ka: "Astrochat-ის დიზაინი, ლოგო, პროგრამული კოდი, ტექსტები და ალგორითმები წარმოადგენს კომპანიის ინტელექტუალურ საკუთრებას. მათი გამოყენება, გავრცელება ან რეპროდუქცია აკრძალულია საავტორო უფლებების მფლობელის წერილობითი ნებართვის გარეშე."
   },
-  "terms.s5.title": { en: "5. Limitation of Liability", ka: "5. პასუხისმგებლობის შეზღუდვა" },
+  "terms.s5.title": { en: "5. Data Protection", ka: "5. მონაცემთა დაცვა" },
   "terms.s5.text": {
-    en: "AstroChat is not responsible for decisions made based on the app's content. All astrological readings are generated by AI and are intended purely for entertainment and self-reflection.",
-    ka: "AstroChat არ არის პასუხისმგებელი აპლიკაციის შინაარსზე დაფუძნებულ გადაწყვეტილებებზე. ყველა ასტროლოგიური ანალიზი გენერირდება AI-ის მიერ და განკუთვნილია მხოლოდ გასართობი და თვითრეფლექსიის მიზნებისთვის."
+    en: "Your data security is our priority. We utilize encrypted systems to protect your authentication and personal information. For detailed information on how we handle your data, please refer to our Privacy Policy.",
+    ka: "თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას\"."
+  },
+  "terms.s6.title": { en: "6. Changes to Terms", ka: "6. წესების ცვლილებები" },
+  "terms.s6.text": {
+    en: "We reserve the right to modify these terms at any time. Information regarding changes will be updated within the app or sent via email. Continued use of the application following such changes constitutes your agreement to the updated terms.",
+    ka: "ჩვენ ვიტოვებთ უფლებას, ნებისმიერ დროს შევიტანოთ ცვლილებები წინამდებარე წესებში. ცვლილებების შესახებ ინფორმაცია გამოქვეყნდება აპლიკაციაში ან გეცნობებათ იმეილის მეშვეობით. აპლიკაციის გამოყენების გაგრძელება ნიშნავს თქვენს თანხმობას განახლებულ პირობებზე."
+  },
+  "terms.s7.title": { en: "7. Contact Information", ka: "7. საკონტაქტო ინფორმაცია" },
+  "terms.s7.text": {
+    en: "If you have any questions regarding these terms, please contact us at:",
+    ka: "კითხვების შემთხვევაში შეგიძლიათ დაგვიკავშირდეთ:"
   },
 };
 
