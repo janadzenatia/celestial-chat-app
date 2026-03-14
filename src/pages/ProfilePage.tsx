@@ -160,25 +160,25 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-0">
       <AppHeader />
-      <div className="px-4 py-6 space-y-5">
+      <div className="px-4 py-6 space-y-4 overflow-y-auto">
         {/* Trial Banner */}
         <TrialBanner />
 
         {/* Profile Card */}
-        <section className="glass rounded-2xl p-5 flex items-center gap-4 relative">
-          <div className="w-14 h-14 rounded-full gradient-purple flex items-center justify-center">
-            <User className="w-6 h-6 text-foreground" />
+        <section className="glass rounded-2xl p-4 flex items-center gap-3 relative min-h-[80px]">
+          <div className="w-12 h-12 rounded-full gradient-purple flex items-center justify-center shrink-0">
+            <User className="w-5 h-5 text-foreground" />
           </div>
-          <div className="flex-1">
-            <h2 className="font-serif text-lg text-foreground">{profile?.name || "Stargazer"}</h2>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-serif text-base text-foreground truncate pr-8">{profile?.name || "Stargazer"}</h2>
             {user?.email && (
-              <p className="text-xs text-muted-foreground mb-1">{user.email}</p>
+              <p className="text-xs text-muted-foreground mb-1 truncate">{user.email}</p>
             )}
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Star className="w-3 h-3 text-primary" /> {isPremium ? t("profile.premium") : t("profile.free")}
+                <Star className="w-3 h-3 text-primary shrink-0" /> {isPremium ? t("profile.premium") : t("profile.free")}
               </span>
               {profile?.date_of_birth && (
                 <>
@@ -197,7 +197,7 @@ const ProfilePage = () => {
           </div>
           <button
             onClick={openEditModal}
-            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent/50 transition-colors"
+            className="absolute top-3 right-3 p-2 rounded-lg hover:bg-accent/50 transition-colors"
             aria-label={t("profile.edit")}
           >
             <Pencil className="w-4 h-4 text-muted-foreground" />
@@ -205,20 +205,20 @@ const ProfilePage = () => {
         </section>
 
         {/* Change Password */}
-        <section className="glass rounded-2xl p-5">
+        <section className="glass rounded-2xl p-4">
           <button
             onClick={() => setPasswordOpen(true)}
             className="w-full flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors"
           >
-            <KeyRound className="w-4 h-4 text-muted-foreground" />
+            <KeyRound className="w-4 h-4 text-muted-foreground shrink-0" />
             <span>{t("profile.changePassword")}</span>
           </button>
         </section>
 
         {/* Settings */}
-        <section className="glass rounded-2xl p-5 space-y-4">
+        <section className="glass rounded-2xl p-4 space-y-3">
           <h3 className="font-serif text-gradient-gold">{t("profile.settings")}</h3>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.language")}</span>
               <span className="text-foreground">English</span>
@@ -236,10 +236,10 @@ const ProfilePage = () => {
         </section>
 
         {/* Legal */}
-        <section className="glass rounded-2xl p-5 space-y-3">
+        <section className="glass rounded-2xl p-4 space-y-3 min-h-[80px]">
           <div className="flex items-start gap-3">
             <Shield className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed break-words">
               {t("profile.legal")}
             </p>
           </div>
@@ -253,34 +253,37 @@ const ProfilePage = () => {
           </div>
         </section>
 
-        {/* Cancel Subscription - only for premium */}
-        {isPremium && (
+        {/* Action Buttons */}
+        <div className="space-y-3 pb-4">
+          {/* Cancel Subscription - only for premium */}
+          {isPremium && (
+            <button
+              onClick={() => setCancelOpen(true)}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/70 hover:text-destructive hover:bg-destructive/5 transition-colors text-sm"
+            >
+              <XCircle className="w-4 h-4 shrink-0" />
+              {t("profile.cancelSubscription")}
+            </button>
+          )}
+
+          {/* Delete Account */}
           <button
-            onClick={() => setCancelOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/70 hover:text-destructive hover:bg-destructive/5 transition-colors text-sm"
+            onClick={() => setDeleteOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-colors text-xs"
           >
-            <XCircle className="w-4 h-4" />
-            {t("profile.cancelSubscription")}
+            <Trash2 className="w-3.5 h-3.5 shrink-0" />
+            {t("profile.deleteAccount")}
           </button>
-        )}
 
-        {/* Delete Account */}
-        <button
-          onClick={() => setDeleteOpen(true)}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/20 text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-colors text-xs"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          {t("profile.deleteAccount")}
-        </button>
-
-        {/* Log Out */}
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors text-sm font-medium"
-        >
-          <LogOut className="w-4 h-4" />
-          {t("profile.logout")}
-        </button>
+          {/* Log Out */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors text-sm font-medium"
+          >
+            <LogOut className="w-4 h-4 shrink-0" />
+            {t("profile.logout")}
+          </button>
+        </div>
       </div>
 
       {/* Cancel Confirmation Dialog */}
