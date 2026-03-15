@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
-import { Lock } from "lucide-react";
 import PaywallModal from "./PaywallModal";
+import PremiumBadge from "./PremiumBadge";
 
 interface PremiumGateProps {
   children: React.ReactNode;
