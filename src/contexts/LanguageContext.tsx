@@ -84,7 +84,7 @@ const translations: Translations = {
   "dashboard.rising": { en: "Rising", ka: "ასცენდენტი" },
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
   "dashboard.phrase": { en: "Phrase of the Day", ka: "დღის ფრაზა" },
-  "dashboard.greeting": { en: "Welcome", ka: "მოგესალმებით" },
+  "dashboard.greeting": { en: "Welcome", ka: "მოგესალმები" },
 
   // Synastry CTA
   "synastry.cta.message": {
