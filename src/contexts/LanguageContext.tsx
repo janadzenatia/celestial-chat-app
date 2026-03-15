@@ -407,7 +407,7 @@ const translations: Translations = {
   "profile.discardDescription": { en: "Changes will not be saved. Close?", ka: "ცვლილებები არ შეინახება. დახურვა?" },
   "profile.discardClose": { en: "Close", ka: "დახურვა" },
   "profile.discardContinue": { en: "Continue Editing", ka: "გაგრძელება" },
-  "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადეთ თავიდან." },
+  "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადე თავიდან." },
 
   // Privacy Policy Page
   "privacy.title": { en: "Privacy Policy", ka: "კონფიდენციალურობის პოლიტიკა (Privacy Policy)" },
