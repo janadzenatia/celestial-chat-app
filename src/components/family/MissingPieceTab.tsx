@@ -28,13 +28,18 @@ interface ChildData {
 
 export default function MissingPieceTab() {
   const { t, language } = useLanguage();
-  const { profile, user } = useAuth();
+  const { profile, user, refreshProfile } = useAuth();
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<MissingPieceResult | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [children, setChildren] = useState<ChildData[]>([]);
 
   const isPremium = getEffectivePlan(profile) !== "free";
+
+  // Refresh profile on mount to get latest partner data from DB
+  useEffect(() => {
+    refreshProfile();
+  }, []);
 
   // Read partner data from profile (Supabase), not localStorage
   const partnerName = profile?.partner_name || "";
