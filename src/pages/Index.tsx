@@ -90,7 +90,7 @@ const Index = () => {
           {insightLoading ? (
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Reading the stars...</span>
+              <span>{t("dashboard.readingStars")}</span>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground leading-relaxed">
