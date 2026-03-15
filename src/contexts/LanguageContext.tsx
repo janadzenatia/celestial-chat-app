@@ -221,7 +221,7 @@ const translations: Translations = {
   "timeModal.title": { en: "Unlock Deeper Analysis", ka: "ღრმა ანალიზის გახსნა" },
   "timeModal.description": {
     en: "Do you know {name}'s exact birth time? It unlocks deeper Moon & Rising sign analysis for maximum precision.",
-    ka: "იცით {name}-ის ზუსტი დაბადების დრო? ეს ხსნის მთვარისა და ასცენდენტის ღრმა ანალიზს მაქსიმალური სიზუსტისთვის."
+    ka: "იცი {name}-ის ზუსტი დაბადების დრო? ეს ხსნის მთვარისა და ასცენდენტის ღრმა ანალიზს მაქსიმალური სიზუსტისთვის."
   },
   "timeModal.inputLabel": { en: "Birth Time", ka: "დაბადების დრო" },
   "timeModal.withTime": { en: "Analyze with Time", ka: "ანალიზი დროით" },
