@@ -250,7 +250,7 @@ const ProfilePage = () => {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.language")}</span>
-              <span className="text-foreground">English</span>
+              <span className="text-foreground">{t("profile.languageValue")}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>

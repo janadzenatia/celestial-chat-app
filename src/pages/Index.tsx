@@ -94,7 +94,7 @@ const Index = () => {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ✨ {insight || "Add your birth date to receive personalized insights."}
+              ✨ {insight || t("dashboard.noInsight")}
             </p>
           )}
         </section>

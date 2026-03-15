@@ -313,11 +313,9 @@ const ChatPage = () => {
         ) : messages.length === 0 ? (
           <div className="text-center space-y-3 pt-12">
             <div className="text-5xl">✨</div>
-            <h2 className="font-serif text-xl text-gradient-gold">Ask the Stars</h2>
+            <h2 className="font-serif text-xl text-gradient-gold">{t("chat.askTitle")}</h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              {language === "ka"
-                ? "ჰკითხე ვარსკვლავებს ყველაფერი რაც გაინტერესებს..."
-                : "Ask me anything about your horoscope, love life, career, or cosmic destiny..."}
+              {t("chat.askDesc")}
             </p>
           </div>
         ) : (
