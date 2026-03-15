@@ -506,7 +506,7 @@ const translations: Translations = {
   "terms.s7.title": { en: "7. Contact Information", ka: "7. საკონტაქტო ინფორმაცია" },
   "terms.s7.text": {
     en: "If you have any questions regarding these terms, please contact us at:",
-    ka: "კითხვების შემთხვევაში შეგიძლიათ დაგვიკავშირდეთ:"
+    ka: "კითხვების შემთხვევაში შეგიძლია დაგვიკავშირდე:"
   },
 };
 
