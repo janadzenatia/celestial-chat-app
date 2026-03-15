@@ -64,7 +64,7 @@ const Index = () => {
           </div>
           {!tob && dob && (
             <p className="text-xs text-muted-foreground mt-3 text-center opacity-70">
-              ℹ️ Moon & Rising are approximate. Add your birth time in Profile for better accuracy.
+              {t("dashboard.approxNote")}
             </p>
           )}
         </section>
