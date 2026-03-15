@@ -446,7 +446,7 @@ const translations: Translations = {
   "privacy.s4.title": { en: "4. Data Security", ka: "4. მონაცემთა უსაფრთხოება" },
   "privacy.s4.text": {
     en: "We implement industry-standard encryption and security measures to protect your data. Our infrastructure, powered by Supabase, follows strict security protocols. However, please be aware that no method of electronic transmission or storage is 100% secure.",
-    ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს თქვენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეთ, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
+    ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს შენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეს, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
   },
   "privacy.s5.title": { en: "5. Your Rights", ka: "5. თქვენი უფლებები" },
   "privacy.s5.text": {
