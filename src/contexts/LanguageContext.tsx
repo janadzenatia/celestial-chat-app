@@ -95,7 +95,7 @@ const translations: Translations = {
 
   // Cosmic Calendar
   "calendar.title": { en: "Cosmic Traffic Light", ka: "კოსმიური შუქნიშანი" },
-  "calendar.description": { en: "Reveal your green and red days this month — know when to act and when to pause.", ka: "აღმოაჩინეთ თქვენი მწვანე და წითელი დღეები ამ თვეში — იცოდეთ როდის იმოქმედოთ და როდის შეჩერდეთ." },
+  "calendar.description": { en: "Reveal your green and red days this month — know when to act and when to pause.", ka: "აღმოაჩინე შენი მწვანე და წითელი დღეები ამ თვეში — იცოდე როდის იმოქმედო და როდის შეჩერდე." },
   "calendar.generate": { en: "Reveal My Calendar", ka: "ჩემი კალენდრის ნახვა" },
   "calendar.generating": { en: "Mapping the stars...", ka: "ვარსკვლავების რუქის შედგენა..." },
   "calendar.favorable": { en: "Favorable", ka: "ხელსაყრელი" },
