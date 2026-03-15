@@ -213,7 +213,7 @@ const translations: Translations = {
   "synastry.goals": { en: "Shared Goals & Finances", ka: "საერთო მიზნები და ფინანსები" },
   "synastry.timeBanner": {
     en: "Because you provided the exact birth time, we analyzed {name}'s Moon and Rising signs for maximum precision.",
-    ka: "რადგან თქვენ მიუთითეთ ზუსტი დაბადების დრო, ჩვენ გავაანალიზეთ {name}-ის მთვარისა და ასცენდენტის ნიშნები მაქსიმალური სიზუსტისთვის."
+    ka: "რადგან შენ მიუთითე ზუსტი დაბადების დრო, ჩვენ გავაანალიზეთ {name}-ის მთვარისა და ასცენდენტის ნიშნები მაქსიმალური სიზუსტისთვის."
   },
   "synastry.partner": { en: "the partner", ka: "პარტნიორის" },
 
