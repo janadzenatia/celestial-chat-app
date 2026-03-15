@@ -335,7 +335,7 @@ const ProfilePage = () => {
       </AlertDialog>
 
       {/* Edit Profile Modal */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+      <Dialog open={editOpen} onOpenChange={handleEditClose}>
         <DialogContent className="glass border-border/50 max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif">{t("profile.editTitle")}</DialogTitle>
