@@ -273,6 +273,8 @@ const translations: Translations = {
   "cosmic.generating": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
 
   // Onboarding
+  "onboarding.title": { en: "Tell Us About You", ka: "მოგვიყევი შენს შესახებ" },
+  "onboarding.subtitle": { en: "So the stars can guide you ✨", ka: "რომ ვარსკვლავებმა გიმძღვანელონ ✨" },
   "onboarding.name": { en: "Your Name", ka: "შენი სახელი" },
   "onboarding.dob": { en: "Date of Birth", ka: "დაბადების თარიღი" },
   "onboarding.time": { en: "Exact Time of Birth", ka: "ზუსტი დაბადების დრო" },
