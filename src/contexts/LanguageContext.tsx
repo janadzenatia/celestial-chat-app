@@ -55,7 +55,7 @@ const translations: Translations = {
   "family.revealPersonality": { en: "Reveal Baby's Personality", ka: "ბავშვის პიროვნების გამოვლენა" },
 
   // Common
-  "app.tagline": { en: "Your Personal AI Astrologer", ka: "თქვენი პირადი AI ასტროლოგი" },
+  "app.tagline": { en: "Your Personal AI Astrologer", ka: "შენი პირადი AI ასტროლოგი" },
   "app.name": { en: "Astrochat", ka: "Astrochat" },
 
   // Auth
