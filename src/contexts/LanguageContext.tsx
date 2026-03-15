@@ -308,7 +308,7 @@ const translations: Translations = {
   "profile.deleteCancel": { en: "Cancel", ka: "გაუქმება" },
   "profile.deleting": { en: "Deleting...", ka: "იშლება..." },
   "profile.deleteSuccess": { en: "Your account has been deleted.", ka: "შენი ანგარიში წაიშალა." },
-  "profile.deleteError": { en: "Failed to delete account. Please try again.", ka: "ანგარიშის წაშლა ვერ მოხერხდა. სცადეთ თავიდან." },
+  "profile.deleteError": { en: "Failed to delete account. Please try again.", ka: "ანგარიშის წაშლა ვერ მოხერხდა. სცადე თავიდან." },
 
   // Paywall
   "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
