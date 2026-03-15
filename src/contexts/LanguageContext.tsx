@@ -287,7 +287,7 @@ const translations: Translations = {
   "profile.cancelTitle": { en: "Cancel Premium?", ka: "გაუქმდეს პრემიუმი?" },
   "profile.cancelDescription": {
     en: "Are you sure you want to cancel? You will lose access to the Cosmic Calendar, Deep Synastry, and other advanced features.",
-    ka: "ნამდვილად გსურთ გაუქმება? თქვენ დაკარგავთ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
+    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
   },
   "profile.keepPremium": { en: "Keep Premium", ka: "პრემიუმის დატოვება" },
   "profile.yesCancel": { en: "Yes, Cancel", ka: "დიახ, გაუქმება" },
