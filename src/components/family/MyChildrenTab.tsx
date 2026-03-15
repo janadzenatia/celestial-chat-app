@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";

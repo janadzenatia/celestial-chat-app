@@ -11,6 +11,7 @@ import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import TrialBanner from "@/components/TrialBanner";
 import { getSunSign } from "@/lib/zodiac";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
