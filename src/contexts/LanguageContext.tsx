@@ -255,7 +255,7 @@ const translations: Translations = {
   "premium.bestValue": { en: "Best Value", ka: "საუკეთესო შეთავაზება" },
 
   // Cosmic Match
-  "cosmic.title": { en: "Your Ideal Cosmic Match", ka: "თქვენი იდეალური კოსმიური წყვილი" },
+  "cosmic.title": { en: "Your Ideal Cosmic Match", ka: "შენი იდეალური კოსმიური წყვილი" },
   "cosmic.badge": { en: "Premium", ka: "პრემიუმ" },
   "cosmic.generate": { en: "Reveal My Match", ka: "გამოავლინე ჩემი წყვილი" },
   "cosmic.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
