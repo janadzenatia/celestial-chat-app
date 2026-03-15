@@ -52,13 +52,18 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative">
+      {/* Language toggle — top right */}
+      <div className="absolute top-4 right-4 z-10">
+        <LanguageToggle />
+      </div>
+
       <div className="flex flex-col items-center mb-8">
         <div className="w-16 h-16 rounded-2xl gradient-cosmic flex items-center justify-center shadow-gold mb-4">
           <Sparkles className="w-8 h-8 text-primary-foreground" />
         </div>
-        <h1 className="font-serif text-2xl text-gradient-gold">Tell Us About You</h1>
-        <p className="text-muted-foreground text-sm mt-1">So the stars can guide you ✨</p>
+        <h1 className="font-serif text-2xl text-gradient-gold">{t("onboarding.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("onboarding.subtitle")}</p>
       </div>
 
       <div className="glass rounded-2xl p-6 w-full max-w-sm shadow-purple">
