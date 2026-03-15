@@ -492,7 +492,7 @@ const translations: Translations = {
   "terms.s5.title": { en: "5. Data Protection", ka: "5. მონაცემთა დაცვა" },
   "terms.s5.text": {
     en: "Your data security is our priority. We utilize Supabase's encrypted systems to protect your authentication and personal information. For detailed information on how we handle your data, please refer to our Privacy Policy.",
-    ka: "თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ Supabase-ის დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას\"."
+    ka: `თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ Supabase-ის დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას".`
   },
   "terms.s6.title": { en: "6. Changes to Terms", ka: "6. წესების ცვლილებები" },
   "terms.s6.text": {
