@@ -368,7 +368,7 @@ const translations: Translations = {
   "reset.tooShort": { en: "Password must be at least 6 characters", ka: "პაროლი მინიმუმ 6 სიმბოლო უნდა იყოს" },
   "reset.success": { en: "Password updated successfully! ✨", ka: "პაროლი წარმატებით განახლდა! ✨" },
   "reset.invalidLink": { en: "Invalid Reset Link", ka: "არასწორი ლინკი" },
-  "reset.invalidLinkDesc": { en: "This link is invalid or has expired. Please request a new one.", ka: "ეს ლინკი არასწორია ან ვადაგასულია. გთხოვთ მოითხოვოთ ახალი." },
+  "reset.invalidLinkDesc": { en: "This link is invalid or has expired. Please request a new one.", ka: "ეს ლინკი არასწორია ან ვადაგასულია. გთხოვ მოითხოვო ახალი." },
 
   // Cosmic Blueprint
   "blueprint.title": { en: "My Cosmic Blueprint", ka: "ჩემი კოსმიური გეგმა" },
