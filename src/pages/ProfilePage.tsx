@@ -83,17 +83,45 @@ const ProfilePage = () => {
   const [editTimeUnknown, setEditTimeUnknown] = useState(false);
   const [editPlace, setEditPlace] = useState("");
   const [saving, setSaving] = useState(false);
+  const [discardOpen, setDiscardOpen] = useState(false);
+
+  // Track original values for dirty check
+  const [origValues, setOrigValues] = useState({ name: "", dob: "", time: "", timeUnknown: false, place: "" });
 
   const effectivePlan = getEffectivePlan(profile);
   const isPremium = effectivePlan !== "free";
 
   const openEditModal = () => {
-    setEditName(profile?.name || "");
-    setEditDob(profile?.date_of_birth ? new Date(profile.date_of_birth + "T00:00:00") : undefined);
-    setEditTime(profile?.time_of_birth || "");
-    setEditTimeUnknown(!profile?.time_of_birth);
-    setEditPlace(profile?.place_of_birth || "");
+    const name = profile?.name || "";
+    const dob = profile?.date_of_birth ? new Date(profile.date_of_birth + "T00:00:00") : undefined;
+    const time = profile?.time_of_birth || "";
+    const timeUnknown = !profile?.time_of_birth;
+    const place = profile?.place_of_birth || "";
+    setEditName(name);
+    setEditDob(dob);
+    setEditTime(time);
+    setEditTimeUnknown(timeUnknown);
+    setEditPlace(place);
+    setOrigValues({ name, dob: dob?.toISOString() || "", time, timeUnknown, place });
     setEditOpen(true);
+  };
+
+  const hasUnsavedChanges = () => {
+    return (
+      editName !== origValues.name ||
+      (editDob?.toISOString() || "") !== origValues.dob ||
+      editTime !== origValues.time ||
+      editTimeUnknown !== origValues.timeUnknown ||
+      editPlace !== origValues.place
+    );
+  };
+
+  const handleEditClose = (open: boolean) => {
+    if (!open && hasUnsavedChanges()) {
+      setDiscardOpen(true);
+      return;
+    }
+    setEditOpen(open);
   };
 
   const handleSaveProfile = async () => {
@@ -307,7 +335,7 @@ const ProfilePage = () => {
       </AlertDialog>
 
       {/* Edit Profile Modal */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+      <Dialog open={editOpen} onOpenChange={handleEditClose}>
         <DialogContent className="glass border-border/50 max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif">{t("profile.editTitle")}</DialogTitle>
@@ -447,6 +475,28 @@ const ProfilePage = () => {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? t("profile.deleting") : t("profile.deleteConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Discard Changes Confirmation */}
+      <AlertDialog open={discardOpen} onOpenChange={setDiscardOpen}>
+        <AlertDialogContent className="glass border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t("profile.discardTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("profile.discardDescription")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("profile.discardContinue")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setDiscardOpen(false);
+                setEditOpen(false);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t("profile.discardClose")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
