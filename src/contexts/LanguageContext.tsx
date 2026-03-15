@@ -354,7 +354,7 @@ const translations: Translations = {
     ka: "რეგისტრაციით შენ ეთანხმები ჩვენს"
   },
   "auth.and": { en: "and", ka: "და" },
-  "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდათ პაროლი?" },
+  "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდა პაროლი?" },
   "auth.forgotTitle": { en: "Reset Password", ka: "პაროლის აღდგენა" },
   "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანეთ ელ.ფოსტა და გამოგიგზავნით აღდგენის ლინკს." },
   "auth.sendResetLink": { en: "Send Reset Link", ka: "აღდგენის ლინკის გაგზავნა" },
