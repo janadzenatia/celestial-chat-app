@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { CalendarDays, Loader2, Lock, RefreshCw, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CalendarDays, Loader2, RefreshCw, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCosmicCalendar, CalendarDay } from "@/hooks/useCosmicCalendar";
 import { cn } from "@/lib/utils";
+import PremiumBadge from "@/components/PremiumBadge";
 
 const WEEKDAYS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEKDAYS_KA = ["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვი"];
