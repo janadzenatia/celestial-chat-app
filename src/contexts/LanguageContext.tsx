@@ -425,7 +425,7 @@ const translations: Translations = {
     en: "Account Data: Email address (for authentication purposes).|Astrological Data: Date of birth, exact time, and place of birth (required for generating personalized charts and forecasts).|Technical Data: IP address, device type, and operating system information.",
     ka: "ანგარიშის მონაცემები: ელექტრონული ფოსტა (ავტორიზაციისთვის).|ასტროლოგიური მონაცემები: დაბადების თარიღი, ზუსტი დრო და ადგილი (პირადი პროგნოზების შესადგენად).|ტექნიკური მონაცემები: IP მისამართი, მოწყობილობის ტიპი და ოპერაციული სისტემა."
   },
-  "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ თქვენს მონაცემებს" },
+  "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ შენს მონაცემებს" },
   "privacy.s2.text": {
     en: "We use the collected information solely for the following purposes:",
     ka: "თქვენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
