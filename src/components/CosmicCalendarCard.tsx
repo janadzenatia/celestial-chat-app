@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { CalendarDays, Loader2, Lock, RefreshCw, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CalendarDays, Loader2, RefreshCw, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCosmicCalendar, CalendarDay } from "@/hooks/useCosmicCalendar";
 import { cn } from "@/lib/utils";
+import PremiumBadge from "@/components/PremiumBadge";
 
 const WEEKDAYS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WEEKDAYS_KA = ["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვი"];
@@ -13,6 +14,14 @@ const CosmicCalendarCard = () => {
   const { t, language } = useLanguage();
   const { days, loading, generating, generate, month, year } = useCosmicCalendar();
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null);
+  const [showSlowMsg, setShowSlowMsg] = useState(false);
+
+  // Show "still working" message after 8 seconds of generating
+  useEffect(() => {
+    if (!generating) { setShowSlowMsg(false); return; }
+    const timer = setTimeout(() => setShowSlowMsg(true), 8000);
+    return () => clearTimeout(timer);
+  }, [generating]);
 
   const isWorking = loading || generating;
   const weekdays = language === "ka" ? WEEKDAYS_KA : WEEKDAYS_EN;
@@ -64,10 +73,7 @@ const CosmicCalendarCard = () => {
               <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
             </button>
           )}
-          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full gradient-cosmic text-foreground flex items-center gap-1">
-            <Lock className="w-3 h-3" />
-            {t("cosmic.badge")}
-          </span>
+          <PremiumBadge />
         </div>
       </div>
 
@@ -85,9 +91,26 @@ const CosmicCalendarCard = () => {
           </button>
         </div>
       ) : isWorking && days.length === 0 ? (
-        <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground text-sm">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span>{t("calendar.generating")}</span>
+        <div className="flex flex-col items-center gap-3 py-6">
+          {/* Skeleton calendar grid */}
+          <div className="w-full space-y-2">
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="h-3 rounded bg-muted animate-pulse" />
+              ))}
+            </div>
+            {Array.from({ length: 5 }).map((_, row) => (
+              <div key={row} className="grid grid-cols-7 gap-1">
+                {Array.from({ length: 7 }).map((_, col) => (
+                  <div key={col} className="aspect-square rounded-lg bg-muted/60 animate-pulse" style={{ animationDelay: `${(row * 7 + col) * 40}ms` }} />
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>{showSlowMsg ? (language === "ka" ? "ჯერ კიდევ ვამუშავებ..." : "Still working on it...") : t("calendar.generating")}</span>
+          </div>
         </div>
       ) : (
         <div className="space-y-3">
