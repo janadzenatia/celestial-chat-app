@@ -456,7 +456,7 @@ const translations: Translations = {
   "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდი" },
   "privacy.s6.text": {
     en: "If you have any questions or concerns regarding this Privacy Policy, please contact us at:",
-    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერეთ:"
+    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერე:"
   },
 
   // Terms of Service Page
