@@ -50,7 +50,7 @@ const translations: Translations = {
   "family.conceptionWindow": { en: "Ideal Conception Window", ka: "იდეალური ჩასახვის პერიოდი" },
   "family.conceptionNote": { en: "Based on approximately 40 weeks (280 days) of pregnancy", ka: "დაფუძნებულია ორსულობის დაახლოებით 40 კვირაზე (280 დღე)" },
   "family.expectingTitle": { en: "I'm Expecting!", ka: "ველოდები ბავშვს!" },
-  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანეთ მშობიარობის სავარაუდო თარიღი ბავშვის ნიშნის გასაგებად" },
+  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანე მშობიარობის სავარაუდო თარიღი ბავშვის ნიშნის გასაგებად" },
   "family.dueDate": { en: "Estimated Due Date", ka: "დაბადების თარიღი" },
   "family.revealPersonality": { en: "Reveal Baby's Personality", ka: "ბავშვის პიროვნების გამოვლენა" },
 
