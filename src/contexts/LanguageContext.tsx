@@ -195,7 +195,7 @@ const translations: Translations = {
 
   // Relationship Forecast
   "forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
-  "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღეთ 12-თვიანი ტრანზიტული პროგნოზი თქვენი ურთიერთობისთვის" },
+  "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღე 12-თვიანი ტრანზიტული პროგნოზი შენი ურთიერთობისთვის" },
   "forecast.generate": { en: "Reveal Forecast", ka: "პროგნოზის ნახვა" },
   "forecast.generating": { en: "Reading the transits...", ka: "ტრანზიტების წაკითხვა..." },
   "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
