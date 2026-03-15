@@ -351,7 +351,7 @@ const translations: Translations = {
   "legal.privacyLink": { en: "Privacy Policy", ka: "კონფიდენციალურობა" },
   "auth.legalFooter": {
     en: "By signing up, you agree to our",
-    ka: "რეგისტრაციით თქვენ ეთანხმებით ჩვენს"
+    ka: "რეგისტრაციით შენ ეთანხმები ჩვენს"
   },
   "auth.and": { en: "and", ka: "და" },
   "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდათ პაროლი?" },
