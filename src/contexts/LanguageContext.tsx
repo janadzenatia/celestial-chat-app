@@ -16,7 +16,7 @@ const translations: Translations = {
 
   // Family Planning Hub
   "family.title": { en: "Family & Cosmic Planning", ka: "ოჯახი და კოსმიური დაგეგმვა" },
-  "family.subtitle": { en: "Discover the cosmic blueprint of your family", ka: "აღმოაჩინეთ თქვენი ოჯახის კოსმიური გეგმა" },
+  "family.subtitle": { en: "Discover the cosmic blueprint of your family", ka: "აღმოაჩინე შენი ოჯახის კოსმიური გეგმა" },
   "family.myChildren": { en: "My Children", ka: "ჩემი შვილები" },
   "family.missingPiece": { en: "Missing Piece", ka: "კოსმიური ბალანსი" },
   "family.calculator": { en: "Calculator", ka: "კალკულატორი" },
@@ -31,8 +31,8 @@ const translations: Translations = {
   "family.emotionalBond": { en: "Emotional Bond", ka: "ემოციური კავშირი" },
   "family.parentingAdvice": { en: "Parenting Advice", ka: "აღზრდის რჩევები" },
   "family.missingPieceTitle": { en: "The Missing Cosmic Piece", ka: "კოსმიური ბალანსი" },
-  "family.missingPieceDesc": { en: "Discover which Zodiac sign would bring ultimate balance to your family", ka: "აღმოაჩინეთ რომელი ზოდიაქოს ნიშანი მოიტანს სრულ ბალანსს თქვენს ოჯახში" },
-  "family.needPartnerData": { en: "Please add your partner's data on the Compatibility page first", ka: "გთხოვთ ჯერ დაამატოთ პარტნიორის მონაცემები თავსებადობის გვერდზე" },
+  "family.missingPieceDesc": { en: "Discover which Zodiac sign would bring ultimate balance to your family", ka: "აღმოაჩინე რომელი ზოდიაქოს ნიშანი მოიტანს სრულ ბალანსს შენს ოჯახში" },
+  "family.needPartnerData": { en: "Please add your partner's data on the Compatibility page first", ka: "გთხოვ ჯერ დაამატო პარტნიორის მონაცემები თავსებადობის გვერდზე" },
   "family.findMissingPiece": { en: "Find the Missing Piece", ka: "კოსმიური ბალანსის პოვნა" },
   "family.analyzing": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
   "family.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
@@ -41,21 +41,21 @@ const translations: Translations = {
   // Trial
   "trial.days": { en: "d", ka: "დ" },
   "trial.hours": { en: "h", ka: "სთ" },
-  "trial.notice": { en: "Your free trial ends in {time}. You will be charged on day 4. Cancel anytime in App Store / Play Store settings.", ka: "თქვენი უფასო საცდელი პერიოდი მთავრდება {time}-ში. გადახდა მოხდება მე-4 დღეს. გაუქმება ნებისმიერ დროს შეგიძლიათ App Store / Play Store-ის პარამეტრებში." },
+  "trial.notice": { en: "Your free trial ends in {time}. You will be charged on day 4. Cancel anytime in App Store / Play Store settings.", ka: "შენი უფასო საცდელი პერიოდი მთავრდება {time}-ში. გადახდა მოხდება მე-4 დღეს. გაუქმება ნებისმიერ დროს შეგიძლია App Store / Play Store-ის პარამეტრებში." },
 
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
-  "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმეთ ბავშვის ნიშანი" },
-  "family.planSignDesc": { en: "Select a Zodiac sign to see the ideal conception window", ka: "აირჩიეთ ზოდიაქოს ნიშანი იდეალური ჩასახვის ფანჯრის სანახავად" },
+  "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმე ბავშვის ნიშანი" },
+  "family.planSignDesc": { en: "Select a Zodiac sign to see the ideal conception window", ka: "აირჩიე ზოდიაქოს ნიშანი იდეალური ჩასახვის ფანჯრის სანახავად" },
   "family.conceptionWindow": { en: "Ideal Conception Window", ka: "იდეალური ჩასახვის პერიოდი" },
   "family.conceptionNote": { en: "Based on approximately 40 weeks (280 days) of pregnancy", ka: "დაფუძნებულია ორსულობის დაახლოებით 40 კვირაზე (280 დღე)" },
   "family.expectingTitle": { en: "I'm Expecting!", ka: "ველოდები ბავშვს!" },
-  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანეთ მშობიარობის სავარაუდო თარიღი ბავშვის ნიშნის გასაგებად" },
+  "family.expectingDesc": { en: "Enter your estimated due date to discover your baby's sign", ka: "შეიყვანე მშობიარობის სავარაუდო თარიღი ბავშვის ნიშნის გასაგებად" },
   "family.dueDate": { en: "Estimated Due Date", ka: "დაბადების თარიღი" },
   "family.revealPersonality": { en: "Reveal Baby's Personality", ka: "ბავშვის პიროვნების გამოვლენა" },
 
   // Common
-  "app.tagline": { en: "Your Personal AI Astrologer", ka: "თქვენი პირადი AI ასტროლოგი" },
+  "app.tagline": { en: "Your Personal AI Astrologer", ka: "შენი პირადი AI ასტროლოგი" },
   "app.name": { en: "Astrochat", ka: "Astrochat" },
 
   // Auth
@@ -67,24 +67,24 @@ const translations: Translations = {
     en: "I agree to the Terms & Conditions and understand that this app is for entertainment purposes only.",
     ka: "ვეთანხმები წესებსა და პირობებს და ვაცნობიერებ, რომ ეს აპლიკაცია მხოლოდ გასართობი მიზნებისთვისაა."
   },
-  "auth.acceptTerms": { en: "Please accept the Terms & Conditions", ka: "გთხოვთ დაეთანხმოთ წესებსა და პირობებს" },
-  "auth.checkEmail": { en: "Check your email to verify your account! ✨", ka: "შეამოწმეთ ელ.ფოსტა ანგარიშის დასადასტურებლად! ✨" },
+  "auth.acceptTerms": { en: "Please accept the Terms & Conditions", ka: "გთხოვ დაეთანხმო წესებსა და პირობებს" },
+  "auth.checkEmail": { en: "Check your email to verify your account! ✨", ka: "შეამოწმე ელ.ფოსტა ანგარიშის დასადასტურებლად! ✨" },
   "auth.invalidCredentials": { en: "Invalid login credentials", ka: "არასწორი ელ.ფოსტა ან პაროლი" },
   "auth.userNotFound": { en: "User not found", ka: "მომხმარებელი ვერ მოიძებნა" },
-  "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
-  "auth.loading": { en: "Please wait...", ka: "გთხოვთ მოიცადოთ..." },
-  "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვთ ანგარიში?" },
-  "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვთ ანგარიში?" },
-  "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელეთ" },
+  "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
+  "auth.loading": { en: "Please wait...", ka: "გთხოვ მოიცადო..." },
+  "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვს ანგარიში?" },
+  "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვს ანგარიში?" },
+  "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელე" },
 
   // Dashboard
-  "dashboard.big3": { en: "Your Big 3", ka: "თქვენი დიდი 3" },
+  "dashboard.big3": { en: "Your Big 3", ka: "შენი დიდი 3" },
   "dashboard.sun": { en: "Sun", ka: "მზე" },
   "dashboard.moon": { en: "Moon", ka: "მთვარე" },
   "dashboard.rising": { en: "Rising", ka: "ასცენდენტი" },
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
   "dashboard.phrase": { en: "Phrase of the Day", ka: "დღის ფრაზა" },
-  "dashboard.greeting": { en: "Welcome", ka: "მოგესალმებით" },
+  "dashboard.greeting": { en: "Welcome", ka: "მოგესალმები" },
 
   // Synastry CTA
   "synastry.cta.message": {
@@ -95,7 +95,7 @@ const translations: Translations = {
 
   // Cosmic Calendar
   "calendar.title": { en: "Cosmic Traffic Light", ka: "კოსმიური შუქნიშანი" },
-  "calendar.description": { en: "Reveal your green and red days this month — know when to act and when to pause.", ka: "აღმოაჩინეთ თქვენი მწვანე და წითელი დღეები ამ თვეში — იცოდეთ როდის იმოქმედოთ და როდის შეჩერდეთ." },
+  "calendar.description": { en: "Reveal your green and red days this month — know when to act and when to pause.", ka: "აღმოაჩინე შენი მწვანე და წითელი დღეები ამ თვეში — იცოდე როდის იმოქმედო და როდის შეჩერდე." },
   "calendar.generate": { en: "Reveal My Calendar", ka: "ჩემი კალენდრის ნახვა" },
   "calendar.generating": { en: "Mapping the stars...", ka: "ვარსკვლავების რუქის შედგენა..." },
   "calendar.favorable": { en: "Favorable", ka: "ხელსაყრელი" },
@@ -127,7 +127,7 @@ const translations: Translations = {
   // Compatibility
   "compat.title": { en: "Zodiac Compatibility", ka: "ზოდიაქოს თავსებადობა" },
   "compat.partnerName": { en: "Partner's Name", ka: "პარტნიორის სახელი" },
-  "compat.partnerNamePlaceholder": { en: "Enter name...", ka: "შეიყვანეთ სახელი..." },
+  "compat.partnerNamePlaceholder": { en: "Enter name...", ka: "შეიყვანე სახელი..." },
   "compat.partnerTime": { en: "Partner's Birth Time (optional)", ka: "პარტნიორის დაბადების დრო (არასავალდებულო)" },
   "compat.partnerTimePlaceholder": { en: "HH:MM (e.g. 14:30)", ka: "სთ:წთ (მაგ. 14:30)" },
   "compat.partnerDob": { en: "Partner's Date of Birth", ka: "პარტნიორის დაბადების თარიღი" },
@@ -139,7 +139,7 @@ const translations: Translations = {
   "compat.great": { en: "Great Match", ka: "შესანიშნავი წყვილი" },
   "compat.good": { en: "Good Match", ka: "კარგი წყვილი" },
   "compat.challenging": { en: "Challenging", ka: "რთული" },
-  "compat.pickDate": { en: "Pick a date", ka: "აირჩიეთ თარიღი" },
+  "compat.pickDate": { en: "Pick a date", ka: "აირჩიე თარიღი" },
   "compat.relationshipDate": { en: "Marriage / Relationship Start Date", ka: "ქორწინების / ურთიერთობის დაწყების თარიღი" },
 
   // Compatibility summaries
@@ -195,14 +195,14 @@ const translations: Translations = {
 
   // Relationship Forecast
   "forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
-  "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღეთ 12-თვიანი ტრანზიტული პროგნოზი თქვენი ურთიერთობისთვის" },
+  "forecast.description": { en: "Get a 12-month transit forecast for your relationship", ka: "მიიღე 12-თვიანი ტრანზიტული პროგნოზი შენი ურთიერთობისთვის" },
   "forecast.generate": { en: "Reveal Forecast", ka: "პროგნოზის ნახვა" },
   "forecast.generating": { en: "Reading the transits...", ka: "ტრანზიტების წაკითხვა..." },
   "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
 
   // Synastry Report
   "synastry.title": { en: "Deep Synastry Report", ka: "ღრმა სინასტრიის ანალიზი" },
-  "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღეთ დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
+  "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღე დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
   "synastry.generate": { en: "Generate Deep Report", ka: "ღრმა ანალიზის გენერაცია" },
   "synastry.generating": { en: "Analyzing charts...", ka: "რუქების ანალიზი..." },
   "synastry.loading": { en: "Loading report...", ka: "ანალიზის ჩატვირთვა..." },
@@ -213,7 +213,7 @@ const translations: Translations = {
   "synastry.goals": { en: "Shared Goals & Finances", ka: "საერთო მიზნები და ფინანსები" },
   "synastry.timeBanner": {
     en: "Because you provided the exact birth time, we analyzed {name}'s Moon and Rising signs for maximum precision.",
-    ka: "რადგან თქვენ მიუთითეთ ზუსტი დაბადების დრო, ჩვენ გავაანალიზეთ {name}-ის მთვარისა და ასცენდენტის ნიშნები მაქსიმალური სიზუსტისთვის."
+    ka: "რადგან შენ მიუთითე ზუსტი დაბადების დრო, ჩვენ გავაანალიზეთ {name}-ის მთვარისა და ასცენდენტის ნიშნები მაქსიმალური სიზუსტისთვის."
   },
   "synastry.partner": { en: "the partner", ka: "პარტნიორის" },
 
@@ -221,25 +221,25 @@ const translations: Translations = {
   "timeModal.title": { en: "Unlock Deeper Analysis", ka: "ღრმა ანალიზის გახსნა" },
   "timeModal.description": {
     en: "Do you know {name}'s exact birth time? It unlocks deeper Moon & Rising sign analysis for maximum precision.",
-    ka: "იცით {name}-ის ზუსტი დაბადების დრო? ეს ხსნის მთვარისა და ასცენდენტის ღრმა ანალიზს მაქსიმალური სიზუსტისთვის."
+    ka: "იცი {name}-ის ზუსტი დაბადების დრო? ეს ხსნის მთვარისა და ასცენდენტის ღრმა ანალიზს მაქსიმალური სიზუსტისთვის."
   },
   "timeModal.inputLabel": { en: "Birth Time", ka: "დაბადების დრო" },
   "timeModal.withTime": { en: "Analyze with Time", ka: "ანალიზი დროით" },
   "timeModal.skip": { en: "Skip — I don't know", ka: "გამოტოვება — არ ვიცი" },
   "timeModal.unknownTime": { en: "I don't know the exact time", ka: "ზუსტი დრო არ ვიცი" },
-  "timeModal.relationshipDateHint": { en: "If married, enter your wedding date. Otherwise, enter the date your relationship started.", ka: "თუ ქორწინებაში ხართ, შეიყვანეთ ქორწინების თარიღი. თუ არა — ურთიერთობის დაწყების თარიღი." },
+  "timeModal.relationshipDateHint": { en: "If married, enter your wedding date. Otherwise, enter the date your relationship started.", ka: "თუ ქორწინებაში ხარ, შეიყვანე ქორწინების თარიღი. თუ არა — ურთიერთობის დაწყების თარიღი." },
 
   // Forecast teaser
   "forecast.unlock": { en: "Unlock Forecast", ka: "პროგნოზის გახსნა" },
 
   // Validation
-  "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვთ შეიყვანოთ ვალიდური თარიღი (წელი 1920–დღემდე)" },
+  "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვ შეიყვანო ვალიდური თარიღი (წელი 1920–დღემდე)" },
   "validation.futureDate": { en: "Date cannot be in the future", ka: "თარიღი არ შეიძლება იყოს მომავალში" },
-  "validation.invalidDueDate": { en: "Please enter a valid pregnancy due date.", ka: "გთხოვთ, შეიყვანოთ მშობიარობის რეალური თარიღი." },
+  "validation.invalidDueDate": { en: "Please enter a valid pregnancy due date.", ka: "გთხოვ, შეიყვანო მშობიარობის რეალური თარიღი." },
 
   // Wealth & Career
   "wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },
-  "wealth.description": { en: "Discover your cosmic career path, financial potential, and lifelong professional timeline based on your birth chart.", ka: "აღმოაჩინეთ თქვენი კოსმიური კარიერის გზა, ფინანსური პოტენციალი და მთელი ცხოვრების პროფესიული ქრონოლოგია თქვენი დაბადების რუქის საფუძველზე." },
+  "wealth.description": { en: "Discover your cosmic career path, financial potential, and lifelong professional timeline based on your birth chart.", ka: "აღმოაჩინე შენი კოსმიური კარიერის გზა, ფინანსური პოტენციალი და მთელი ცხოვრების პროფესიული ქრონოლოგია შენი დაბადების რუქის საფუძველზე." },
   "wealth.unlock": { en: "Unlock Financial Destiny", ka: "ფინანსური ბედისწერის გახსნა" },
   "wealth.generating": { en: "Mapping your destiny...", ka: "ბედისწერის რუქის შედგენა..." },
   "wealth.calling": { en: "Cosmic Calling — Ideal Professions", ka: "კოსმიური მოწოდება — იდეალური პროფესიები" },
@@ -255,7 +255,7 @@ const translations: Translations = {
   "premium.bestValue": { en: "Best Value", ka: "საუკეთესო შეთავაზება" },
 
   // Cosmic Match
-  "cosmic.title": { en: "Your Ideal Cosmic Match", ka: "თქვენი იდეალური კოსმიური წყვილი" },
+  "cosmic.title": { en: "Your Ideal Cosmic Match", ka: "შენი იდეალური კოსმიური წყვილი" },
   "cosmic.badge": { en: "Premium", ka: "პრემიუმ" },
   "cosmic.generate": { en: "Reveal My Match", ka: "გამოავლინე ჩემი წყვილი" },
   "cosmic.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
@@ -265,7 +265,7 @@ const translations: Translations = {
   "cosmic.generating": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
 
   // Onboarding
-  "onboarding.name": { en: "Your Name", ka: "თქვენი სახელი" },
+  "onboarding.name": { en: "Your Name", ka: "შენი სახელი" },
   "onboarding.dob": { en: "Date of Birth", ka: "დაბადების თარიღი" },
   "onboarding.time": { en: "Exact Time of Birth", ka: "ზუსტი დაბადების დრო" },
   "onboarding.place": { en: "Place of Birth", ka: "დაბადების ადგილი" },
@@ -287,7 +287,7 @@ const translations: Translations = {
   "profile.cancelTitle": { en: "Cancel Premium?", ka: "გაუქმდეს პრემიუმი?" },
   "profile.cancelDescription": {
     en: "Are you sure you want to cancel? You will lose access to the Cosmic Calendar, Deep Synastry, and other advanced features.",
-    ka: "ნამდვილად გსურთ გაუქმება? თქვენ დაკარგავთ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
+    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
   },
   "profile.keepPremium": { en: "Keep Premium", ka: "პრემიუმის დატოვება" },
   "profile.yesCancel": { en: "Yes, Cancel", ka: "დიახ, გაუქმება" },
@@ -295,7 +295,7 @@ const translations: Translations = {
   "profile.cancelSuccess": { en: "Subscription canceled successfully.", ka: "გამოწერა წარმატებით გაუქმდა." },
   "profile.changePassword": { en: "Change Password", ka: "პაროლის შეცვლა" },
   "profile.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
-  "profile.confirmNewPassword": { en: "Confirm New Password", ka: "დაადასტურეთ ახალი პაროლი" },
+  "profile.confirmNewPassword": { en: "Confirm New Password", ka: "დაადასტურე ახალი პაროლი" },
   "profile.updatePassword": { en: "Update Password", ka: "პაროლის განახლება" },
   "profile.updatingPassword": { en: "Updating...", ka: "მიმდინარეობს..." },
   "profile.passwordSuccess": { en: "Password updated successfully!", ka: "პაროლი წარმატებით განახლდა!" },
@@ -308,7 +308,7 @@ const translations: Translations = {
   "profile.deleteCancel": { en: "Cancel", ka: "გაუქმება" },
   "profile.deleting": { en: "Deleting...", ka: "იშლება..." },
   "profile.deleteSuccess": { en: "Your account has been deleted.", ka: "შენი ანგარიში წაიშალა." },
-  "profile.deleteError": { en: "Failed to delete account. Please try again.", ka: "ანგარიშის წაშლა ვერ მოხერხდა. სცადეთ თავიდან." },
+  "profile.deleteError": { en: "Failed to delete account. Please try again.", ka: "ანგარიშის წაშლა ვერ მოხერხდა. სცადე თავიდან." },
 
   // Paywall
   "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
@@ -316,7 +316,7 @@ const translations: Translations = {
   "paywall.unlock": { en: "Unlock Premium", ka: "პრემიუმის გააქტიურება" },
   "paywall.processing": { en: "Processing...", ka: "მიმდინარეობს..." },
   "paywall.success": { en: "Premium Activated! ✨", ka: "პრემიუმი გააქტიურებულია! ✨" },
-  "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
+  "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
   "paywall.bestValue": { en: "Best Value", ka: "საუკეთესო არჩევანი" },
   "paywall.disclaimer": { en: "Cancel anytime. Entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნით." },
   "paywall.premiumContent": { en: "Premium Content", ka: "პრემიუმ კონტენტი" },
@@ -343,42 +343,42 @@ const translations: Translations = {
   "legal.liabilityTitle": { en: "Limitation of Liability", ka: "პასუხისმგებლობის შეზღუდვა" },
   "legal.changesTitle": { en: "Changes to Terms", ka: "წესების ცვლილებები" },
   "legal.dataCollectionTitle": { en: "Data Collection", ka: "მონაცემების შეგროვება" },
-  "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ თქვენს მონაცემებს" },
+  "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ შენს მონაცემებს" },
   "legal.thirdPartyTitle": { en: "Third-Party Services", ka: "მესამე მხარის სერვისები" },
   "legal.securityTitle": { en: "Data Security", ka: "მონაცემთა უსაფრთხოება" },
-  "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდით" },
+  "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდი" },
   "legal.termsLink": { en: "Terms & Conditions", ka: "წესები და პირობები" },
   "legal.privacyLink": { en: "Privacy Policy", ka: "კონფიდენციალურობა" },
   "auth.legalFooter": {
     en: "By signing up, you agree to our",
-    ka: "რეგისტრაციით თქვენ ეთანხმებით ჩვენს"
+    ka: "რეგისტრაციით შენ ეთანხმები ჩვენს"
   },
   "auth.and": { en: "and", ka: "და" },
-  "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდათ პაროლი?" },
+  "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდა პაროლი?" },
   "auth.forgotTitle": { en: "Reset Password", ka: "პაროლის აღდგენა" },
-  "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანეთ ელ.ფოსტა და გამოგიგზავნით აღდგენის ლინკს." },
+  "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანე ელ.ფოსტა და გამოგიგზავნი აღდგენის ლინკს." },
   "auth.sendResetLink": { en: "Send Reset Link", ka: "აღდგენის ლინკის გაგზავნა" },
-  "auth.resetSent": { en: "Password reset link sent! Check your email. ✨", ka: "პაროლის აღდგენის ლინკი გაიგზავნა! შეამოწმეთ ელ.ფოსტა. ✨" },
+  "auth.resetSent": { en: "Password reset link sent! Check your email. ✨", ka: "პაროლის აღდგენის ლინკი გაიგზავნა! შეამოწმე ელ.ფოსტა. ✨" },
   "auth.backToLogin": { en: "Back to login", ka: "შესვლაზე დაბრუნება" },
   "reset.title": { en: "Set New Password", ka: "ახალი პაროლის დაყენება" },
   "reset.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
-  "reset.confirmPassword": { en: "Confirm Password", ka: "გაიმეორეთ პაროლი" },
+  "reset.confirmPassword": { en: "Confirm Password", ka: "გაიმეორე პაროლი" },
   "reset.submit": { en: "Update Password", ka: "პაროლის განახლება" },
   "reset.mismatch": { en: "Passwords do not match", ka: "პაროლები არ ემთხვევა" },
   "reset.tooShort": { en: "Password must be at least 6 characters", ka: "პაროლი მინიმუმ 6 სიმბოლო უნდა იყოს" },
   "reset.success": { en: "Password updated successfully! ✨", ka: "პაროლი წარმატებით განახლდა! ✨" },
   "reset.invalidLink": { en: "Invalid Reset Link", ka: "არასწორი ლინკი" },
-  "reset.invalidLinkDesc": { en: "This link is invalid or has expired. Please request a new one.", ka: "ეს ლინკი არასწორია ან ვადაგასულია. გთხოვთ მოითხოვოთ ახალი." },
+  "reset.invalidLinkDesc": { en: "This link is invalid or has expired. Please request a new one.", ka: "ეს ლინკი არასწორია ან ვადაგასულია. გთხოვ მოითხოვო ახალი." },
 
   // Cosmic Blueprint
   "blueprint.title": { en: "My Cosmic Blueprint", ka: "ჩემი კოსმიური გეგმა" },
-  "blueprint.description": { en: "Discover your core personality, karmic path, and hidden strengths", ka: "აღმოაჩინეთ თქვენი ბირთვული პიროვნება, კარმული გზა და ფარული ძლიერი მხარეები" },
+  "blueprint.description": { en: "Discover your core personality, karmic path, and hidden strengths", ka: "აღმოაჩინე შენი ბირთვული პიროვნება, კარმული გზა და ფარული ძლიერი მხარეები" },
   "blueprint.generate": { en: "Reveal My Blueprint", ka: "ჩემი გეგმის გამოვლენა" },
   "blueprint.generating": { en: "Mapping your cosmic DNA...", ka: "კოსმიური DNA-ის რუქის შედგენა..." },
 
   // Partner Card
   "partner.add": { en: "Add Partner", ka: "პარტნიორის დამატება" },
-  "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახეთ პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },
+  "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახე პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },
   "partner.edit": { en: "Edit Partner", ka: "პარტნიორის რედაქტირება" },
   "partner.deleteTitle": { en: "Remove Partner?", ka: "პარტნიორის წაშლა?" },
   "partner.deleteDesc": { en: "This will remove the saved partner profile and all related data.", ka: "ეს წაშლის შენახულ პარტნიორის პროფილს და ყველა დაკავშირებულ მონაცემს." },
@@ -407,14 +407,14 @@ const translations: Translations = {
   "profile.discardDescription": { en: "Changes will not be saved. Close?", ka: "ცვლილებები არ შეინახება. დახურვა?" },
   "profile.discardClose": { en: "Close", ka: "დახურვა" },
   "profile.discardContinue": { en: "Continue Editing", ka: "გაგრძელება" },
-  "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადეთ თავიდან." },
+  "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადე თავიდან." },
 
   // Privacy Policy Page
   "privacy.title": { en: "Privacy Policy", ka: "კონფიდენციალურობის პოლიტიკა (Privacy Policy)" },
   "privacy.effectiveDate": { en: "Last Updated: March 14, 2026", ka: "ბოლოს განახლდა: 14 მარტი, 2026" },
   "privacy.intro": {
     en: "Thank you for choosing Astrochat. Your privacy is important to us. This policy explains what information we collect, how we use it, and how we protect it.",
-    ka: "მადლობას გიხდით, რომ იყენებთ Astrochat-ს. ჩვენთვის მნიშვნელოვანია თქვენი პირადი მონაცემების დაცვა. ეს დოკუმენტი განმარტავს, თუ რა ინფორმაციას ვაგროვებთ და როგორ ვიყენებთ მას."
+    ka: "მადლობა, რომ იყენებ Astrochat-ს. ჩვენთვის მნიშვნელოვანია შენი პირადი მონაცემების დაცვა. ეს დოკუმენტი განმარტავს, თუ რა ინფორმაციას ვაგროვებთ და როგორ ვიყენებთ მას."
   },
   "privacy.s1.title": { en: "1. Data Collection", ka: "1. მონაცემების შეგროვება" },
   "privacy.s1.text": {
@@ -425,10 +425,10 @@ const translations: Translations = {
     en: "Account Data: Email address (for authentication purposes).|Astrological Data: Date of birth, exact time, and place of birth (required for generating personalized charts and forecasts).|Technical Data: IP address, device type, and operating system information.",
     ka: "ანგარიშის მონაცემები: ელექტრონული ფოსტა (ავტორიზაციისთვის).|ასტროლოგიური მონაცემები: დაბადების თარიღი, ზუსტი დრო და ადგილი (პირადი პროგნოზების შესადგენად).|ტექნიკური მონაცემები: IP მისამართი, მოწყობილობის ტიპი და ოპერაციული სისტემა."
   },
-  "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ თქვენს მონაცემებს" },
+  "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ შენს მონაცემებს" },
   "privacy.s2.text": {
     en: "We use the collected information solely for the following purposes:",
-    ka: "თქვენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
+    ka: "შენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
   },
   "privacy.s2.bullets": {
     en: "To provide accurate astrological calculations and personalized content.|To manage your account and ensure security via email verification.|To improve our services and provide customer support.|To send essential service-related communications (e.g., password resets).",
@@ -437,38 +437,38 @@ const translations: Translations = {
   "privacy.s3.title": { en: "3. Third-Party Services", ka: "3. მესამე მხარის სერვისები" },
   "privacy.s3.text": {
     en: "We do not sell your personal data. To provide our services, we use trusted third-party providers:",
-    ka: "ჩვენ არ ვყიდით თქვენს მონაცემებს. თუმცა, სერვისის სრულყოფილად მუშაობისთვის ვიყენებთ სანდო პარტნიორებს:"
+    ka: "ჩვენ არ ვყიდით შენს მონაცემებს. თუმცა, სერვისის სრულყოფილად მუშაობისთვის ვიყენებთ სანდო პარტნიორებს:"
   },
   "privacy.s3.bullets": {
     en: "Supabase: For database management and secure user authentication.|Resend.com: For delivering transactional and verification emails.|Apple App Store / Google Play Store: For processing In-App Purchases. We do not store or have access to your credit card information.",
-    ka: "Supabase: მონაცემთა ბაზისა და ავტორიზაციის მართვისთვის.|Resend.com: სერვისული იმეილების გამოსაგზავნად.|Apple App Store / Google Play Store: გადახდების (In-App Purchases) დასამუშავებლად. ჩვენ არ გვაქვს წვდომა თქვენს საბანკო ბარათის მონაცემებზე."
+    ka: "Supabase: მონაცემთა ბაზისა და ავტორიზაციის მართვისთვის.|Resend.com: სერვისული იმეილების გამოსაგზავნად.|Apple App Store / Google Play Store: გადახდების (In-App Purchases) დასამუშავებლად. ჩვენ არ გვაქვს წვდომა შენს საბანკო ბარათის მონაცემებზე."
   },
   "privacy.s4.title": { en: "4. Data Security", ka: "4. მონაცემთა უსაფრთხოება" },
   "privacy.s4.text": {
     en: "We implement industry-standard encryption and security measures to protect your data. Our infrastructure, powered by Supabase, follows strict security protocols. However, please be aware that no method of electronic transmission or storage is 100% secure.",
-    ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს თქვენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეთ, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
+    ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს შენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეს, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
   },
-  "privacy.s5.title": { en: "5. Your Rights", ka: "5. თქვენი უფლებები" },
+  "privacy.s5.title": { en: "5. Your Rights", ka: "5. შენი უფლებები" },
   "privacy.s5.text": {
     en: "You have the right to access, update, or request the deletion of your personal data at any time. Upon account deletion, all your personal astrological information will be permanently removed from our databases.",
-    ka: "თქვენ გაქვთ უფლება მოითხოვოთ თქვენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, თქვენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
+    ka: "შენ გაქვს უფლება მოითხოვო შენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, შენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
   },
-  "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდით" },
+  "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდი" },
   "privacy.s6.text": {
     en: "If you have any questions or concerns regarding this Privacy Policy, please contact us at:",
-    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერეთ:"
+    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერე:"
   },
 
   // Terms of Service Page
   "terms.title": { en: "Terms and Conditions", ka: "წესები და პირობები" },
   "terms.intro": {
     en: "Welcome to Astrochat. By using our application, you agree to follow and be bound by the following terms and conditions. Please read them carefully.",
-    ka: "მოგესალმებით Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას თქვენ ეთანხმებით ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვთ, ყურადღებით გაეცნოთ მათ."
+    ka: "მოგესალმები Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას შენ ეთანხმები ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვ, ყურადღებით გაეცანი მათ."
   },
   "terms.s1.title": { en: "1. Disclaimer", ka: "1. პასუხისმგებლობის შეზღუდვა (Disclaimer)" },
   "terms.s1.text": {
     en: "Astrochat is designed strictly for entertainment purposes only. The astrological predictions, chats, and advice provided by the app do not constitute and are not a substitute for professional medical, psychological, legal, or financial advice. Any decisions you make based on information obtained through the app are your sole responsibility.",
-    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის. აპლიკაციის მიერ მოწოდებული ასტროლოგიური პროგნოზები, ჩატები თუ რჩევები არ წარმოადგენს და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ, იურიდიულ ან ფინანსურ კონსულტაციას. ნებისმიერი გადაწყვეტილება, რომელსაც მიიღებთ აპლიკაციაში მიღებული ინფორმაციის საფუძველზე, არის თქვენი პირადი პასუხისმგებლობა."
+    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის. აპლიკაციის მიერ მოწოდებული ასტროლოგიური პროგნოზები, ჩატები თუ რჩევები არ წარმოადგენს და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ, იურიდიულ ან ფინანსურ კონსულტაციას. ნებისმიერი გადაწყვეტილება, რომელსაც მიიღებ აპლიკაციაში მიღებული ინფორმაციის საფუძველზე, არის შენი პირადი პასუხისმგებლობა."
   },
   "terms.s2.title": { en: "2. Payments and Refund Policy", ka: "2. გადახდები და თანხის დაბრუნების პოლიტიკა" },
   "terms.s2.text": {
@@ -496,17 +496,17 @@ const translations: Translations = {
   "terms.s5.title": { en: "5. Data Protection", ka: "5. მონაცემთა დაცვა" },
   "terms.s5.text": {
     en: "Your data security is our priority. We utilize Supabase's encrypted systems to protect your authentication and personal information. For detailed information on how we handle your data, please refer to our Privacy Policy.",
-    ka: `თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ Supabase-ის დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას".`
+    ka: `შენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ Supabase-ის დაშიფრულ სისტემებს შენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლია გაეცანო ჩვენს „კონფიდენციალურობის პოლიტიკას".`
   },
   "terms.s6.title": { en: "6. Changes to Terms", ka: "6. წესების ცვლილებები" },
   "terms.s6.text": {
     en: "We reserve the right to modify these terms at any time. Information regarding changes will be updated within the app or sent via email. Continued use of the application following such changes constitutes your agreement to the updated terms.",
-    ka: "ჩვენ ვიტოვებთ უფლებას, ნებისმიერ დროს შევიტანოთ ცვლილებები წინამდებარე წესებში. ცვლილებების შესახებ ინფორმაცია გამოქვეყნდება აპლიკაციაში ან გეცნობებათ იმეილის მეშვეობით. აპლიკაციის გამოყენების გაგრძელება ნიშნავს თქვენს თანხმობას განახლებულ პირობებზე."
+    ka: "ჩვენ ვიტოვებთ უფლებას, ნებისმიერ დროს შევიტანოთ ცვლილებები წინამდებარე წესებში. ცვლილებების შესახებ ინფორმაცია გამოქვეყნდება აპლიკაციაში ან გეცნობება იმეილის მეშვეობით. აპლიკაციის გამოყენების გაგრძელება ნიშნავს შენს თანხმობას განახლებულ პირობებზე."
   },
   "terms.s7.title": { en: "7. Contact Information", ka: "7. საკონტაქტო ინფორმაცია" },
   "terms.s7.text": {
     en: "If you have any questions regarding these terms, please contact us at:",
-    ka: "კითხვების შემთხვევაში შეგიძლიათ დაგვიკავშირდეთ:"
+    ka: "კითხვების შემთხვევაში შეგიძლია დაგვიკავშირდე:"
   },
 };
 
