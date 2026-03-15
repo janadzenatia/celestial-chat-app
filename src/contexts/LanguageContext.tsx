@@ -239,7 +239,7 @@ const translations: Translations = {
 
   // Wealth & Career
   "wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },
-  "wealth.description": { en: "Discover your cosmic career path, financial potential, and lifelong professional timeline based on your birth chart.", ka: "აღმოაჩინეთ თქვენი კოსმიური კარიერის გზა, ფინანსური პოტენციალი და მთელი ცხოვრების პროფესიული ქრონოლოგია თქვენი დაბადების რუქის საფუძველზე." },
+  "wealth.description": { en: "Discover your cosmic career path, financial potential, and lifelong professional timeline based on your birth chart.", ka: "აღმოაჩინე შენი კოსმიური კარიერის გზა, ფინანსური პოტენციალი და მთელი ცხოვრების პროფესიული ქრონოლოგია შენი დაბადების რუქის საფუძველზე." },
   "wealth.unlock": { en: "Unlock Financial Destiny", ka: "ფინანსური ბედისწერის გახსნა" },
   "wealth.generating": { en: "Mapping your destiny...", ka: "ბედისწერის რუქის შედგენა..." },
   "wealth.calling": { en: "Cosmic Calling — Ideal Professions", ka: "კოსმიური მოწოდება — იდეალური პროფესიები" },
