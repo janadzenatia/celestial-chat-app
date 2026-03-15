@@ -233,9 +233,9 @@ const translations: Translations = {
   "forecast.unlock": { en: "Unlock Forecast", ka: "პროგნოზის გახსნა" },
 
   // Validation
-  "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვთ შეიყვანოთ ვალიდური თარიღი (წელი 1920–დღემდე)" },
+  "validation.invalidDate": { en: "Please enter a valid date (year 1920–present)", ka: "გთხოვ შეიყვანო ვალიდური თარიღი (წელი 1920–დღემდე)" },
   "validation.futureDate": { en: "Date cannot be in the future", ka: "თარიღი არ შეიძლება იყოს მომავალში" },
-  "validation.invalidDueDate": { en: "Please enter a valid pregnancy due date.", ka: "გთხოვთ, შეიყვანოთ მშობიარობის რეალური თარიღი." },
+  "validation.invalidDueDate": { en: "Please enter a valid pregnancy due date.", ka: "გთხოვ, შეიყვანო მშობიარობის რეალური თარიღი." },
 
   // Wealth & Career
   "wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },
