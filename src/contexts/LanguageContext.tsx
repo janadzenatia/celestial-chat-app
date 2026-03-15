@@ -356,7 +356,7 @@ const translations: Translations = {
   "auth.and": { en: "and", ka: "და" },
   "auth.forgotPassword": { en: "Forgot password?", ka: "დაგავიწყდა პაროლი?" },
   "auth.forgotTitle": { en: "Reset Password", ka: "პაროლის აღდგენა" },
-  "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანეთ ელ.ფოსტა და გამოგიგზავნით აღდგენის ლინკს." },
+  "auth.forgotDesc": { en: "Enter your email and we'll send you a reset link.", ka: "შეიყვანე ელ.ფოსტა და გამოგიგზავნი აღდგენის ლინკს." },
   "auth.sendResetLink": { en: "Send Reset Link", ka: "აღდგენის ლინკის გაგზავნა" },
   "auth.resetSent": { en: "Password reset link sent! Check your email. ✨", ka: "პაროლის აღდგენის ლინკი გაიგზავნა! შეამოწმეთ ელ.ფოსტა. ✨" },
   "auth.backToLogin": { en: "Back to login", ka: "შესვლაზე დაბრუნება" },
