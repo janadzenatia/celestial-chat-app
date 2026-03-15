@@ -233,7 +233,7 @@ const ChatPage = () => {
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: "Request failed" }));
-        toast({ title: "Error", description: err.error, variant: "destructive" });
+        toast({ title: t("chat.error"), description: err.error, variant: "destructive" });
         setIsLoading(false);
         return;
       }
