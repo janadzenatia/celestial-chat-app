@@ -14,6 +14,14 @@ const CosmicCalendarCard = () => {
   const { t, language } = useLanguage();
   const { days, loading, generating, generate, month, year } = useCosmicCalendar();
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null);
+  const [showSlowMsg, setShowSlowMsg] = useState(false);
+
+  // Show "still working" message after 8 seconds of generating
+  useEffect(() => {
+    if (!generating) { setShowSlowMsg(false); return; }
+    const timer = setTimeout(() => setShowSlowMsg(true), 8000);
+    return () => clearTimeout(timer);
+  }, [generating]);
 
   const isWorking = loading || generating;
   const weekdays = language === "ka" ? WEEKDAYS_KA : WEEKDAYS_EN;
