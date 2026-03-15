@@ -16,7 +16,7 @@ const translations: Translations = {
 
   // Family Planning Hub
   "family.title": { en: "Family & Cosmic Planning", ka: "ოჯახი და კოსმიური დაგეგმვა" },
-  "family.subtitle": { en: "Discover the cosmic blueprint of your family", ka: "აღმოაჩინეთ თქვენი ოჯახის კოსმიური გეგმა" },
+  "family.subtitle": { en: "Discover the cosmic blueprint of your family", ka: "აღმოაჩინე შენი ოჯახის კოსმიური გეგმა" },
   "family.myChildren": { en: "My Children", ka: "ჩემი შვილები" },
   "family.missingPiece": { en: "Missing Piece", ka: "კოსმიური ბალანსი" },
   "family.calculator": { en: "Calculator", ka: "კალკულატორი" },
