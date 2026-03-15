@@ -282,7 +282,7 @@ const ChatPage = () => {
       }
     } catch (e) {
       console.error(e);
-      toast({ title: "Error", description: "Failed to reach the stars. Try again.", variant: "destructive" });
+      toast({ title: t("chat.error"), description: t("chat.errorDesc"), variant: "destructive" });
     }
 
     setIsLoading(false);
