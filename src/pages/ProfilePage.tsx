@@ -11,6 +11,7 @@ import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import TrialBanner from "@/components/TrialBanner";
 import { getSunSign } from "@/lib/zodiac";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -361,12 +362,10 @@ const ProfilePage = () => {
             {/* Time of Birth */}
             <div className="space-y-1.5">
               <Label className="text-sm text-muted-foreground">{t("profile.timeOfBirth")}</Label>
-              <Input
-                type="time"
+              <BirthTimePicker
                 value={editTimeUnknown ? "" : editTime}
-                onChange={(e) => setEditTime(e.target.value)}
+                onChange={setEditTime}
                 disabled={editTimeUnknown}
-                className="bg-background/50"
               />
               <div className="flex items-center gap-2 mt-1">
                 <Checkbox

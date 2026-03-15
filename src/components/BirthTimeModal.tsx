@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Clock, Sparkles, Loader2, Heart } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import {
   Dialog,
   DialogContent,
@@ -35,10 +35,6 @@ export default function BirthTimeModal({
   const [unknownTime, setUnknownTime] = useState(false);
   const [relationshipDate, setRelationshipDate] = useState<Date | undefined>();
 
-  const handleTimeChange = (val: string) => {
-    const cleaned = val.replace(/[^\d:]/g, "");
-    if (cleaned.length <= 5) setTime(cleaned);
-  };
 
   const handleSubmit = () => {
     if (unknownTime || time.trim().length < 4) {
@@ -71,13 +67,10 @@ export default function BirthTimeModal({
               <Clock className="w-3.5 h-3.5 text-muted-foreground" />
               {t("timeModal.inputLabel")}
             </label>
-            <Input
+            <BirthTimePicker
               value={time}
-              onChange={(e) => handleTimeChange(e.target.value)}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              maxLength={5}
+              onChange={setTime}
               disabled={unknownTime}
-              className="glass border-primary/20 focus:border-primary text-center text-lg tracking-widest disabled:opacity-50"
             />
             <div className="flex items-center gap-2 pt-1">
               <Checkbox

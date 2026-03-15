@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { useToast } from "@/hooks/use-toast";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 
@@ -79,11 +80,9 @@ const OnboardingPage = () => {
 
           <div className="space-y-2">
             <Label className="text-muted-foreground text-sm">{t("onboarding.time")}</Label>
-            <Input
-              type="time"
+            <BirthTimePicker
               value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="glass border-white/10 focus:border-primary"
+              onChange={setTime}
             />
           </div>
 
