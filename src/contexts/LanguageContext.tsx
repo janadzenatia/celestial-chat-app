@@ -441,7 +441,7 @@ const translations: Translations = {
   },
   "privacy.s3.bullets": {
     en: "Supabase: For database management and secure user authentication.|Resend.com: For delivering transactional and verification emails.|Apple App Store / Google Play Store: For processing In-App Purchases. We do not store or have access to your credit card information.",
-    ka: "Supabase: მონაცემთა ბაზისა და ავტორიზაციის მართვისთვის.|Resend.com: სერვისული იმეილების გამოსაგზავნად.|Apple App Store / Google Play Store: გადახდების (In-App Purchases) დასამუშავებლად. ჩვენ არ გვაქვს წვდომა თქვენს საბანკო ბარათის მონაცემებზე."
+    ka: "Supabase: მონაცემთა ბაზისა და ავტორიზაციის მართვისთვის.|Resend.com: სერვისული იმეილების გამოსაგზავნად.|Apple App Store / Google Play Store: გადახდების (In-App Purchases) დასამუშავებლად. ჩვენ არ გვაქვს წვდომა შენს საბანკო ბარათის მონაცემებზე."
   },
   "privacy.s4.title": { en: "4. Data Security", ka: "4. მონაცემთა უსაფრთხოება" },
   "privacy.s4.text": {
