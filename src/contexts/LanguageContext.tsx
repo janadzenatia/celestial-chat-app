@@ -378,7 +378,7 @@ const translations: Translations = {
 
   // Partner Card
   "partner.add": { en: "Add Partner", ka: "პარტნიორის დამატება" },
-  "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახეთ პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },
+  "partner.addDesc": { en: "Save your partner's profile for compatibility insights", ka: "შეინახე პარტნიორის პროფილი თავსებადობის ანალიზისთვის" },
   "partner.edit": { en: "Edit Partner", ka: "პარტნიორის რედაქტირება" },
   "partner.deleteTitle": { en: "Remove Partner?", ka: "პარტნიორის წაშლა?" },
   "partner.deleteDesc": { en: "This will remove the saved partner profile and all related data.", ka: "ეს წაშლის შენახულ პარტნიორის პროფილს და ყველა დაკავშირებულ მონაცემს." },
