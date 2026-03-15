@@ -45,8 +45,8 @@ const translations: Translations = {
 
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
-  "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმეთ ბავშვის ნიშანი" },
-  "family.planSignDesc": { en: "Select a Zodiac sign to see the ideal conception window", ka: "აირჩიეთ ზოდიაქოს ნიშანი იდეალური ჩასახვის ფანჯრის სანახავად" },
+  "family.planSignTitle": { en: "Plan Your Baby's Sign", ka: "დაგეგმე ბავშვის ნიშანი" },
+  "family.planSignDesc": { en: "Select a Zodiac sign to see the ideal conception window", ka: "აირჩიე ზოდიაქოს ნიშანი იდეალური ჩასახვის ფანჯრის სანახავად" },
   "family.conceptionWindow": { en: "Ideal Conception Window", ka: "იდეალური ჩასახვის პერიოდი" },
   "family.conceptionNote": { en: "Based on approximately 40 weeks (280 days) of pregnancy", ka: "დაფუძნებულია ორსულობის დაახლოებით 40 კვირაზე (280 დღე)" },
   "family.expectingTitle": { en: "I'm Expecting!", ka: "ველოდები ბავშვს!" },
