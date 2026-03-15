@@ -346,7 +346,7 @@ const translations: Translations = {
   "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ შენს მონაცემებს" },
   "legal.thirdPartyTitle": { en: "Third-Party Services", ka: "მესამე მხარის სერვისები" },
   "legal.securityTitle": { en: "Data Security", ka: "მონაცემთა უსაფრთხოება" },
-  "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდით" },
+  "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდი" },
   "legal.termsLink": { en: "Terms & Conditions", ka: "წესები და პირობები" },
   "legal.privacyLink": { en: "Privacy Policy", ka: "კონფიდენციალურობა" },
   "auth.legalFooter": {
