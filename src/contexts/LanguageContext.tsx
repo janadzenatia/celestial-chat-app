@@ -343,7 +343,7 @@ const translations: Translations = {
   "legal.liabilityTitle": { en: "Limitation of Liability", ka: "პასუხისმგებლობის შეზღუდვა" },
   "legal.changesTitle": { en: "Changes to Terms", ka: "წესების ცვლილებები" },
   "legal.dataCollectionTitle": { en: "Data Collection", ka: "მონაცემების შეგროვება" },
-  "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ თქვენს მონაცემებს" },
+  "legal.dataUseTitle": { en: "How We Use Your Data", ka: "როგორ ვიყენებთ შენს მონაცემებს" },
   "legal.thirdPartyTitle": { en: "Third-Party Services", ka: "მესამე მხარის სერვისები" },
   "legal.securityTitle": { en: "Data Security", ka: "მონაცემთა უსაფრთხოება" },
   "legal.contactTitle": { en: "Contact Us", ka: "დაგვიკავშირდით" },
