@@ -428,7 +428,7 @@ const translations: Translations = {
   "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ შენს მონაცემებს" },
   "privacy.s2.text": {
     en: "We use the collected information solely for the following purposes:",
-    ka: "თქვენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
+    ka: "შენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
   },
   "privacy.s2.bullets": {
     en: "To provide accurate astrological calculations and personalized content.|To manage your account and ensure security via email verification.|To improve our services and provide customer support.|To send essential service-related communications (e.g., password resets).",
