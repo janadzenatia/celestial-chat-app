@@ -127,7 +127,7 @@ const translations: Translations = {
   // Compatibility
   "compat.title": { en: "Zodiac Compatibility", ka: "ზოდიაქოს თავსებადობა" },
   "compat.partnerName": { en: "Partner's Name", ka: "პარტნიორის სახელი" },
-  "compat.partnerNamePlaceholder": { en: "Enter name...", ka: "შეიყვანეთ სახელი..." },
+  "compat.partnerNamePlaceholder": { en: "Enter name...", ka: "შეიყვანე სახელი..." },
   "compat.partnerTime": { en: "Partner's Birth Time (optional)", ka: "პარტნიორის დაბადების დრო (არასავალდებულო)" },
   "compat.partnerTimePlaceholder": { en: "HH:MM (e.g. 14:30)", ka: "სთ:წთ (მაგ. 14:30)" },
   "compat.partnerDob": { en: "Partner's Date of Birth", ka: "პარტნიორის დაბადების თარიღი" },
