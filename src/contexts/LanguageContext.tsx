@@ -295,7 +295,7 @@ const translations: Translations = {
   "profile.cancelSuccess": { en: "Subscription canceled successfully.", ka: "გამოწერა წარმატებით გაუქმდა." },
   "profile.changePassword": { en: "Change Password", ka: "პაროლის შეცვლა" },
   "profile.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
-  "profile.confirmNewPassword": { en: "Confirm New Password", ka: "დაადასტურეთ ახალი პაროლი" },
+  "profile.confirmNewPassword": { en: "Confirm New Password", ka: "დაადასტურე ახალი პაროლი" },
   "profile.updatePassword": { en: "Update Password", ka: "პაროლის განახლება" },
   "profile.updatingPassword": { en: "Updating...", ka: "მიმდინარეობს..." },
   "profile.passwordSuccess": { en: "Password updated successfully!", ka: "პაროლი წარმატებით განახლდა!" },
