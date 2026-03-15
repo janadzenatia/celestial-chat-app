@@ -468,7 +468,7 @@ const translations: Translations = {
   "terms.s1.title": { en: "1. Disclaimer", ka: "1. პასუხისმგებლობის შეზღუდვა (Disclaimer)" },
   "terms.s1.text": {
     en: "Astrochat is designed strictly for entertainment purposes only. The astrological predictions, chats, and advice provided by the app do not constitute and are not a substitute for professional medical, psychological, legal, or financial advice. Any decisions you make based on information obtained through the app are your sole responsibility.",
-    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის. აპლიკაციის მიერ მოწოდებული ასტროლოგიური პროგნოზები, ჩატები თუ რჩევები არ წარმოადგენს და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ, იურიდიულ ან ფინანსურ კონსულტაციას. ნებისმიერი გადაწყვეტილება, რომელსაც მიიღებთ აპლიკაციაში მიღებული ინფორმაციის საფუძველზე, არის თქვენი პირადი პასუხისმგებლობა."
+    ka: "Astrochat შექმნილია მხოლოდ გასართობი მიზნებისთვის. აპლიკაციის მიერ მოწოდებული ასტროლოგიური პროგნოზები, ჩატები თუ რჩევები არ წარმოადგენს და არ ანაცვლებს პროფესიონალურ სამედიცინო, ფსიქოლოგიურ, იურიდიულ ან ფინანსურ კონსულტაციას. ნებისმიერი გადაწყვეტილება, რომელსაც მიიღებ აპლიკაციაში მიღებული ინფორმაციის საფუძველზე, არის შენი პირადი პასუხისმგებლობა."
   },
   "terms.s2.title": { en: "2. Payments and Refund Policy", ka: "2. გადახდები და თანხის დაბრუნების პოლიტიკა" },
   "terms.s2.text": {
