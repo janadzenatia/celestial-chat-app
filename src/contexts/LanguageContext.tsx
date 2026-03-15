@@ -139,7 +139,7 @@ const translations: Translations = {
   "compat.great": { en: "Great Match", ka: "შესანიშნავი წყვილი" },
   "compat.good": { en: "Good Match", ka: "კარგი წყვილი" },
   "compat.challenging": { en: "Challenging", ka: "რთული" },
-  "compat.pickDate": { en: "Pick a date", ka: "აირჩიეთ თარიღი" },
+  "compat.pickDate": { en: "Pick a date", ka: "აირჩიე თარიღი" },
   "compat.relationshipDate": { en: "Marriage / Relationship Start Date", ka: "ქორწინების / ურთიერთობის დაწყების თარიღი" },
 
   // Compatibility summaries
