@@ -448,10 +448,10 @@ const translations: Translations = {
     en: "We implement industry-standard encryption and security measures to protect your data. Our infrastructure, powered by Supabase, follows strict security protocols. However, please be aware that no method of electronic transmission or storage is 100% secure.",
     ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს შენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეს, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
   },
-  "privacy.s5.title": { en: "5. Your Rights", ka: "5. თქვენი უფლებები" },
+  "privacy.s5.title": { en: "5. Your Rights", ka: "5. შენი უფლებები" },
   "privacy.s5.text": {
     en: "You have the right to access, update, or request the deletion of your personal data at any time. Upon account deletion, all your personal astrological information will be permanently removed from our databases.",
-    ka: "თქვენ გაქვთ უფლება მოითხოვოთ თქვენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, თქვენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
+    ka: "შენ გაქვს უფლება მოითხოვო შენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, შენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
   },
   "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდით" },
   "privacy.s6.text": {
