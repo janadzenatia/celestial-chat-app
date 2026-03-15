@@ -362,7 +362,7 @@ const translations: Translations = {
   "auth.backToLogin": { en: "Back to login", ka: "შესვლაზე დაბრუნება" },
   "reset.title": { en: "Set New Password", ka: "ახალი პაროლის დაყენება" },
   "reset.newPassword": { en: "New Password", ka: "ახალი პაროლი" },
-  "reset.confirmPassword": { en: "Confirm Password", ka: "გაიმეორეთ პაროლი" },
+  "reset.confirmPassword": { en: "Confirm Password", ka: "გაიმეორე პაროლი" },
   "reset.submit": { en: "Update Password", ka: "პაროლის განახლება" },
   "reset.mismatch": { en: "Passwords do not match", ka: "პაროლები არ ემთხვევა" },
   "reset.tooShort": { en: "Password must be at least 6 characters", ka: "პაროლი მინიმუმ 6 სიმბოლო უნდა იყოს" },
