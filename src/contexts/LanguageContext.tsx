@@ -453,7 +453,7 @@ const translations: Translations = {
     en: "You have the right to access, update, or request the deletion of your personal data at any time. Upon account deletion, all your personal astrological information will be permanently removed from our databases.",
     ka: "შენ გაქვს უფლება მოითხოვო შენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, შენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
   },
-  "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდით" },
+  "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდი" },
   "privacy.s6.text": {
     en: "If you have any questions or concerns regarding this Privacy Policy, please contact us at:",
     ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერეთ:"
