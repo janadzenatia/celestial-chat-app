@@ -67,15 +67,15 @@ const translations: Translations = {
     en: "I agree to the Terms & Conditions and understand that this app is for entertainment purposes only.",
     ka: "ვეთანხმები წესებსა და პირობებს და ვაცნობიერებ, რომ ეს აპლიკაცია მხოლოდ გასართობი მიზნებისთვისაა."
   },
-  "auth.acceptTerms": { en: "Please accept the Terms & Conditions", ka: "გთხოვთ დაეთანხმოთ წესებსა და პირობებს" },
-  "auth.checkEmail": { en: "Check your email to verify your account! ✨", ka: "შეამოწმეთ ელ.ფოსტა ანგარიშის დასადასტურებლად! ✨" },
+  "auth.acceptTerms": { en: "Please accept the Terms & Conditions", ka: "გთხოვ დაეთანხმო წესებსა და პირობებს" },
+  "auth.checkEmail": { en: "Check your email to verify your account! ✨", ka: "შეამოწმე ელ.ფოსტა ანგარიშის დასადასტურებლად! ✨" },
   "auth.invalidCredentials": { en: "Invalid login credentials", ka: "არასწორი ელ.ფოსტა ან პაროლი" },
   "auth.userNotFound": { en: "User not found", ka: "მომხმარებელი ვერ მოიძებნა" },
-  "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
-  "auth.loading": { en: "Please wait...", ka: "გთხოვთ მოიცადოთ..." },
-  "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვთ ანგარიში?" },
-  "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვთ ანგარიში?" },
-  "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელეთ" },
+  "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
+  "auth.loading": { en: "Please wait...", ka: "გთხოვ მოიცადო..." },
+  "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვს ანგარიში?" },
+  "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვს ანგარიში?" },
+  "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელე" },
 
   // Dashboard
   "dashboard.big3": { en: "Your Big 3", ka: "თქვენი დიდი 3" },
