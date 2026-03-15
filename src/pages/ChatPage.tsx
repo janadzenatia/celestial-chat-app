@@ -233,7 +233,7 @@ const ChatPage = () => {
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({ error: "Request failed" }));
-        toast({ title: "Error", description: err.error, variant: "destructive" });
+        toast({ title: t("chat.error"), description: err.error, variant: "destructive" });
         setIsLoading(false);
         return;
       }
@@ -282,7 +282,7 @@ const ChatPage = () => {
       }
     } catch (e) {
       console.error(e);
-      toast({ title: "Error", description: "Failed to reach the stars. Try again.", variant: "destructive" });
+      toast({ title: t("chat.error"), description: t("chat.errorDesc"), variant: "destructive" });
     }
 
     setIsLoading(false);
@@ -313,11 +313,9 @@ const ChatPage = () => {
         ) : messages.length === 0 ? (
           <div className="text-center space-y-3 pt-12">
             <div className="text-5xl">✨</div>
-            <h2 className="font-serif text-xl text-gradient-gold">Ask the Stars</h2>
+            <h2 className="font-serif text-xl text-gradient-gold">{t("chat.askTitle")}</h2>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              {language === "ka"
-                ? "ჰკითხე ვარსკვლავებს ყველაფერი რაც გაინტერესებს..."
-                : "Ask me anything about your horoscope, love life, career, or cosmic destiny..."}
+              {t("chat.askDesc")}
             </p>
           </div>
         ) : (

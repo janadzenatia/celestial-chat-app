@@ -64,7 +64,7 @@ const Index = () => {
           </div>
           {!tob && dob && (
             <p className="text-xs text-muted-foreground mt-3 text-center opacity-70">
-              ℹ️ Moon & Rising are approximate. Add your birth time in Profile for better accuracy.
+              {t("dashboard.approxNote")}
             </p>
           )}
         </section>
@@ -90,11 +90,11 @@ const Index = () => {
           {insightLoading ? (
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Reading the stars...</span>
+              <span>{t("dashboard.readingStars")}</span>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ✨ {insight || "Add your birth date to receive personalized insights."}
+              ✨ {insight || t("dashboard.noInsight")}
             </p>
           )}
         </section>

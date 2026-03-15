@@ -201,7 +201,7 @@ const ProfilePage = () => {
             <User className="w-5 h-5 text-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="font-serif text-base text-foreground truncate pr-8">{profile?.name || "Stargazer"}</h2>
+            <h2 className="font-serif text-base text-foreground truncate pr-8">{profile?.name || t("profile.defaultName")}</h2>
             {user?.email && (
               <p className="text-xs text-muted-foreground mb-1 truncate">{user.email}</p>
             )}
@@ -250,7 +250,7 @@ const ProfilePage = () => {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.language")}</span>
-              <span className="text-foreground">English</span>
+              <span className="text-foreground">{t("profile.languageValue")}</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-white/5">
               <span className="text-muted-foreground">{t("profile.subscription")}</span>

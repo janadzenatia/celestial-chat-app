@@ -44,7 +44,7 @@ const OnboardingPage = () => {
     setIsLoading(false);
 
     if (error) {
-      toast({ title: "Something went wrong", description: error.message, variant: "destructive" });
+      toast({ title: t("onboarding.error"), description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
       navigate("/");

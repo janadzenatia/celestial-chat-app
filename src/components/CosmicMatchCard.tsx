@@ -90,7 +90,7 @@ const CosmicMatchCard = () => {
         ) : (
           <div className="flex flex-col items-center py-6 gap-3">
             <p className="text-sm text-muted-foreground text-center">
-              💫 Discover your ideal cosmic partner based on your unique birth chart.
+              💫 {t("cosmic.emptyDesc")}
             </p>
             <button
               onClick={generate}
