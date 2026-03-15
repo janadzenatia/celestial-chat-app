@@ -1,9 +1,9 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWealthReport } from "@/hooks/useWealthReport";
-import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Loader2, Briefcase, Gem, TrendingUp, RefreshCw } from "lucide-react";
+import PremiumBadge from "@/components/PremiumBadge";
 
 const WealthCareerCard = () => {
   const { t } = useLanguage();
