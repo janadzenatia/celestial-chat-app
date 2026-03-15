@@ -437,7 +437,7 @@ const translations: Translations = {
   "privacy.s3.title": { en: "3. Third-Party Services", ka: "3. მესამე მხარის სერვისები" },
   "privacy.s3.text": {
     en: "We do not sell your personal data. To provide our services, we use trusted third-party providers:",
-    ka: "ჩვენ არ ვყიდით თქვენს მონაცემებს. თუმცა, სერვისის სრულყოფილად მუშაობისთვის ვიყენებთ სანდო პარტნიორებს:"
+    ka: "ჩვენ არ ვყიდით შენს მონაცემებს. თუმცა, სერვისის სრულყოფილად მუშაობისთვის ვიყენებთ სანდო პარტნიორებს:"
   },
   "privacy.s3.bullets": {
     en: "Supabase: For database management and secure user authentication.|Resend.com: For delivering transactional and verification emails.|Apple App Store / Google Play Store: For processing In-App Purchases. We do not store or have access to your credit card information.",
