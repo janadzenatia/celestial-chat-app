@@ -463,7 +463,7 @@ const translations: Translations = {
   "terms.title": { en: "Terms and Conditions", ka: "წესები და პირობები" },
   "terms.intro": {
     en: "Welcome to Astrochat. By using our application, you agree to follow and be bound by the following terms and conditions. Please read them carefully.",
-    ka: "მოგესალმებით Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას თქვენ ეთანხმებით ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვთ, ყურადღებით გაეცნოთ მათ."
+    ka: "მოგესალმები Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას შენ ეთანხმები ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვ, ყურადღებით გაეცანი მათ."
   },
   "terms.s1.title": { en: "1. Disclaimer", ka: "1. პასუხისმგებლობის შეზღუდვა (Disclaimer)" },
   "terms.s1.text": {
