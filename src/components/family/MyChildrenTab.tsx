@@ -251,11 +251,9 @@ export default function MyChildrenTab() {
               onChange={setChildDate}
               placeholder={t("compat.pickDate")}
             />
-            <Input
+            <BirthTimePicker
               value={childTime}
-              onChange={e => setChildTime(e.target.value.replace(/[^\d:]/g, "").slice(0, 5))}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              className="glass border-white/10 focus:border-primary"
+              onChange={setChildTime}
             />
           </div>
           <div className="flex gap-2">

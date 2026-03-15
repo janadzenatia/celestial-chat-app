@@ -79,11 +79,9 @@ const OnboardingPage = () => {
 
           <div className="space-y-2">
             <Label className="text-muted-foreground text-sm">{t("onboarding.time")}</Label>
-            <Input
-              type="time"
+            <BirthTimePicker
               value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="glass border-white/10 focus:border-primary"
+              onChange={setTime}
             />
           </div>
 

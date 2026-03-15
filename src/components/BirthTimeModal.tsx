@@ -71,13 +71,10 @@ export default function BirthTimeModal({
               <Clock className="w-3.5 h-3.5 text-muted-foreground" />
               {t("timeModal.inputLabel")}
             </label>
-            <Input
+            <BirthTimePicker
               value={time}
-              onChange={(e) => handleTimeChange(e.target.value)}
-              placeholder={t("compat.partnerTimePlaceholder")}
-              maxLength={5}
+              onChange={setTime}
               disabled={unknownTime}
-              className="glass border-primary/20 focus:border-primary text-center text-lg tracking-widest disabled:opacity-50"
             />
             <div className="flex items-center gap-2 pt-1">
               <Checkbox

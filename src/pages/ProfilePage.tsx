@@ -361,12 +361,10 @@ const ProfilePage = () => {
             {/* Time of Birth */}
             <div className="space-y-1.5">
               <Label className="text-sm text-muted-foreground">{t("profile.timeOfBirth")}</Label>
-              <Input
-                type="time"
+              <BirthTimePicker
                 value={editTimeUnknown ? "" : editTime}
-                onChange={(e) => setEditTime(e.target.value)}
+                onChange={setEditTime}
                 disabled={editTimeUnknown}
-                className="bg-background/50"
               />
               <div className="flex items-center gap-2 mt-1">
                 <Checkbox
