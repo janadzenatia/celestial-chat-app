@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { BirthTimePicker } from "@/components/BirthTimePicker";
-import { BirthDatePicker } from "@/components/BirthDatePicker";
 import {
   Dialog,
   DialogContent,
