@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen } from "lucide-react";
+import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen, Baby, Users, UserRound } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,11 +12,14 @@ import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
-interface Child {
+type RelationshipType = "child" | "partner" | "father" | "mother";
+
+interface FamilyMember {
   id: string;
   name: string;
   date_of_birth: string;
   time_of_birth: string | null;
+  relationship_type: RelationshipType;
 }
 
 interface ChildReport {
@@ -25,27 +28,33 @@ interface ChildReport {
   parenting_advice: string;
 }
 
+const RELATIONSHIP_TYPES: { key: RelationshipType; icon: typeof Baby; translationKey: string }[] = [
+  { key: "child", icon: Baby, translationKey: "family.type.child" },
+  { key: "partner", icon: Heart, translationKey: "family.type.partner" },
+  { key: "father", icon: UserRound, translationKey: "family.type.father" },
+  { key: "mother", icon: UserRound, translationKey: "family.type.mother" },
+];
+
 export default function MyChildrenTab() {
-  const { t } = useLanguage();
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, profile } = useAuth();
-  const [children, setChildren] = useState<Child[]>([]);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [childName, setChildName] = useState("");
-  const [childDate, setChildDate] = useState<Date | undefined>();
-  const [childTime, setChildTime] = useState("");
+  const [formStep, setFormStep] = useState<"closed" | "selectType" | "enterData">("closed");
+  const [selectedType, setSelectedType] = useState<RelationshipType | null>(null);
+  const [memberName, setMemberName] = useState("");
+  const [memberDate, setMemberDate] = useState<Date | undefined>();
+  const [memberTime, setMemberTime] = useState("");
   const [saving, setSaving] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   const isPremium = getEffectivePlan(profile) !== "free";
 
-  // Reports state keyed by child id
   const [reports, setReports] = useState<Record<string, ChildReport>>({});
   const [generating, setGenerating] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, string | null>>({});
 
-  const loadChildren = useCallback(async () => {
+  const loadMembers = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     const { data } = await supabase
@@ -53,16 +62,20 @@ export default function MyChildrenTab() {
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: true });
-    setChildren((data as Child[]) || []);
 
-    // Load reports
+    const mapped = (data || []).map((d: any) => ({
+      ...d,
+      relationship_type: d.relationship_type || "child",
+    })) as FamilyMember[];
+    setMembers(mapped);
+
     if (data && data.length > 0) {
       const { data: reps } = await supabase
         .from("child_reports")
         .select("child_id, blueprint, emotional_connection, parenting_advice")
         .eq("user_id", user.id)
         .eq("language", language)
-        .in("child_id", data.map((c: Child) => c.id));
+        .in("child_id", data.map((c: any) => c.id));
       const repMap: Record<string, ChildReport> = {};
       (reps || []).forEach((r: any) => {
         repMap[r.child_id] = { blueprint: r.blueprint, emotional_connection: r.emotional_connection, parenting_advice: r.parenting_advice };
@@ -72,43 +85,52 @@ export default function MyChildrenTab() {
     setLoading(false);
   }, [user?.id, language]);
 
-  useEffect(() => { loadChildren(); }, [loadChildren]);
+  useEffect(() => { loadMembers(); }, [loadMembers]);
 
-  const addChild = async () => {
-    if (!user || !childName.trim() || !childDate) return;
+  const addMember = async () => {
+    if (!user || !memberName.trim() || !memberDate || !selectedType) return;
     setSaving(true);
-    const dob = childDate.toISOString().split("T")[0];
+    const dob = memberDate.toISOString().split("T")[0];
     const { error } = await supabase.from("children").insert({
       user_id: user.id,
-      name: childName.trim(),
+      name: memberName.trim(),
       date_of_birth: dob,
-      time_of_birth: childTime.trim() || null,
-    });
+      time_of_birth: memberTime.trim() || null,
+      relationship_type: selectedType,
+    } as any);
     if (!error) {
-      setChildName(""); setChildDate(undefined); setChildTime(""); setShowForm(false);
-      await loadChildren();
+      resetForm();
+      await loadMembers();
     }
     setSaving(false);
   };
 
-  const deleteChild = async (id: string) => {
+  const resetForm = () => {
+    setMemberName("");
+    setMemberDate(undefined);
+    setMemberTime("");
+    setSelectedType(null);
+    setFormStep("closed");
+  };
+
+  const deleteMember = async (id: string) => {
     await supabase.from("children").delete().eq("id", id);
-    setChildren(prev => prev.filter(c => c.id !== id));
+    setMembers(prev => prev.filter(c => c.id !== id));
     setReports(prev => { const n = { ...prev }; delete n[id]; return n; });
   };
 
-  const generateReport = async (child: Child) => {
+  const generateReport = async (member: FamilyMember) => {
     if (!user || !profile?.date_of_birth) return;
-    setGenerating(child.id);
+    setGenerating(member.id);
     try {
-      await supabase.from("child_reports").delete().eq("child_id", child.id).eq("language", language);
+      await supabase.from("child_reports").delete().eq("child_id", member.id).eq("language", language);
 
       const parentSun = getSunSign(profile.date_of_birth);
       const parentMoon = getApproxMoonSign(profile.date_of_birth);
       const parentRising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth);
-      const childSun = getSunSign(child.date_of_birth);
-      const childMoon = getApproxMoonSign(child.date_of_birth);
-      const childRising = getApproxRisingSign(child.date_of_birth, child.time_of_birth);
+      const memberSun = getSunSign(member.date_of_birth);
+      const memberMoon = getApproxMoonSign(member.date_of_birth);
+      const memberRising = getApproxRisingSign(member.date_of_birth, member.time_of_birth);
 
       const resp = await supabase.functions.invoke("child-synastry", {
         body: {
@@ -117,24 +139,25 @@ export default function MyChildrenTab() {
           parentSunSign: parentSun?.name,
           parentMoonSign: parentMoon?.name,
           parentRisingSign: parentRising?.name,
-          childName: child.name,
-          childDob: child.date_of_birth,
-          childSunSign: childSun?.name,
-          childMoonSign: childMoon?.name,
-          childRisingSign: childRising?.name,
-          childHasTime: Boolean(child.time_of_birth),
+          childName: member.name,
+          childDob: member.date_of_birth,
+          childSunSign: memberSun?.name,
+          childMoonSign: memberMoon?.name,
+          childRisingSign: memberRising?.name,
+          childHasTime: Boolean(member.time_of_birth),
+          relationshipType: member.relationship_type,
           language,
         },
       });
 
       if (resp.error) throw resp.error;
       const result = resp.data as ChildReport;
-      setReports(prev => ({ ...prev, [child.id]: result }));
-      setExpanded(prev => ({ ...prev, [child.id]: "blueprint" }));
+      setReports(prev => ({ ...prev, [member.id]: result }));
+      setExpanded(prev => ({ ...prev, [member.id]: "blueprint" }));
 
       await supabase.from("child_reports").insert({
         user_id: user.id,
-        child_id: child.id,
+        child_id: member.id,
         language,
         blueprint: result.blueprint,
         emotional_connection: result.emotional_connection,
@@ -147,11 +170,23 @@ export default function MyChildrenTab() {
     }
   };
 
-  const toggleSection = (childId: string, section: string) => {
+  const toggleSection = (memberId: string, section: string) => {
     setExpanded(prev => ({
       ...prev,
-      [childId]: prev[childId] === section ? null : section,
+      [memberId]: prev[memberId] === section ? null : section,
     }));
+  };
+
+  const getTypeLabel = (type: RelationshipType) => t(`family.type.${type}`);
+
+  const getTypeEmoji = (type: RelationshipType) => {
+    switch (type) {
+      case "child": return "👶";
+      case "partner": return "💑";
+      case "father": return "👨";
+      case "mother": return "👩";
+      default: return "👤";
+    }
   };
 
   if (loading) {
@@ -165,29 +200,32 @@ export default function MyChildrenTab() {
 
   return (
     <div className="space-y-4">
-      {/* Child Cards */}
-      {children.map(child => {
-        const sun = getSunSign(child.date_of_birth);
-        const report = reports[child.id];
-        const isGenerating = generating === child.id;
-        const expandedSection = expanded[child.id] || null;
+      {/* Family Member Cards */}
+      {members.map(member => {
+        const sun = getSunSign(member.date_of_birth);
+        const report = reports[member.id];
+        const isGenerating = generating === member.id;
+        const expandedSection = expanded[member.id] || null;
 
         return (
-          <div key={child.id} className="glass rounded-2xl p-5 space-y-3">
+          <div key={member.id} className="glass rounded-2xl p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{sun?.emoji || "⭐"}</span>
                 <div>
-                  <h3 className="font-serif text-base text-foreground">{child.name}</h3>
+                  <h3 className="font-serif text-base text-foreground">{member.name}</h3>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-muted-foreground">
-                      {sun ? `${t(`zodiac.${sun.name}`)} · ${t(`element.${sun.element}`)}` : child.date_of_birth}
+                    <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-primary/15 text-primary">
+                      {getTypeEmoji(member.relationship_type)} {getTypeLabel(member.relationship_type)}
                     </span>
-                    <ChineseZodiacBadge dateOfBirth={child.date_of_birth} />
+                    <span className="text-xs text-muted-foreground">
+                      {sun ? `${t(`zodiac.${sun.name}`)} · ${t(`element.${sun.element}`)}` : member.date_of_birth}
+                    </span>
+                    <ChineseZodiacBadge dateOfBirth={member.date_of_birth} />
                   </div>
                 </div>
               </div>
-              <button onClick={() => deleteChild(child.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
+              <button onClick={() => deleteMember(member.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
@@ -202,7 +240,7 @@ export default function MyChildrenTab() {
                 ].map(({ key, icon: Icon, label, content }) => (
                   <div key={key} className="rounded-xl border border-white/10 overflow-hidden">
                     <button
-                      onClick={() => toggleSection(child.id, key)}
+                      onClick={() => toggleSection(member.id, key)}
                       className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors"
                     >
                       <div className="flex items-center gap-2">
@@ -221,7 +259,7 @@ export default function MyChildrenTab() {
               </div>
             ) : (
               <Button
-                onClick={() => generateReport(child)}
+                onClick={() => generateReport(member)}
                 disabled={isGenerating}
                 className="w-full gradient-cosmic text-foreground font-medium"
               >
@@ -236,50 +274,76 @@ export default function MyChildrenTab() {
         );
       })}
 
-      {/* Add Child Form */}
-      {showForm ? (
+      {/* Add Member Flow */}
+      {formStep === "selectType" && (
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <h3 className="font-serif text-base text-gradient-gold">{t("family.addChild")}</h3>
+          <h3 className="font-serif text-base text-gradient-gold">{t("family.selectType")}</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {RELATIONSHIP_TYPES.map(({ key, icon: Icon, translationKey }) => (
+              <button
+                key={key}
+                onClick={() => { setSelectedType(key); setFormStep("enterData"); }}
+                className="glass rounded-xl p-4 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary/30 border border-transparent transition-all"
+              >
+                <span className="text-2xl">{getTypeEmoji(key)}</span>
+                <span className="text-sm font-medium text-foreground">{t(translationKey)}</span>
+              </button>
+            ))}
+          </div>
+          <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
+            {t("family.cancel")}
+          </Button>
+        </div>
+      )}
+
+      {formStep === "enterData" && selectedType && (
+        <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">{getTypeEmoji(selectedType)}</span>
+            <h3 className="font-serif text-base text-gradient-gold">{t(`family.type.${selectedType}`)}</h3>
+          </div>
           <div className="space-y-3">
             <Input
-              value={childName}
-              onChange={e => setChildName(e.target.value)}
-              placeholder={t("family.childNamePlaceholder")}
+              value={memberName}
+              onChange={e => setMemberName(e.target.value)}
+              placeholder={t("family.memberNamePlaceholder")}
               className="glass border-white/10 focus:border-primary"
             />
             <BirthDatePicker
-              value={childDate}
-              onChange={setChildDate}
+              value={memberDate}
+              onChange={setMemberDate}
               placeholder={t("compat.pickDate")}
             />
             <BirthTimePicker
-              value={childTime}
-              onChange={setChildTime}
+              value={memberTime}
+              onChange={setMemberTime}
             />
           </div>
           <div className="flex gap-2">
             <Button
-              onClick={addChild}
-              disabled={saving || !childName.trim() || !childDate}
+              onClick={addMember}
+              disabled={saving || !memberName.trim() || !memberDate}
               className="flex-1 gradient-cosmic text-foreground font-medium"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("family.save")}
             </Button>
-            <Button variant="ghost" onClick={() => setShowForm(false)} className="text-muted-foreground">
+            <Button variant="ghost" onClick={resetForm} className="text-muted-foreground">
               {t("family.cancel")}
             </Button>
           </div>
         </div>
-      ) : (
+      )}
+
+      {formStep === "closed" && (
         <button
           onClick={() => {
             if (!isPremium) { setPaywallOpen(true); return; }
-            setShowForm(true);
+            setFormStep("selectType");
           }}
           className="w-full glass rounded-2xl p-5 flex items-center justify-center gap-2 text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors border border-dashed border-white/20"
         >
           <Plus className="w-5 h-5" />
-          <span className="font-medium">{t("family.addChild")}</span>
+          <span className="font-medium">{t("family.addMember")}</span>
         </button>
       )}
 
