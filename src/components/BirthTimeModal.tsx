@@ -35,10 +35,6 @@ export default function BirthTimeModal({
   const [unknownTime, setUnknownTime] = useState(false);
   const [relationshipDate, setRelationshipDate] = useState<Date | undefined>();
 
-  const handleTimeChange = (val: string) => {
-    const cleaned = val.replace(/[^\d:]/g, "");
-    if (cleaned.length <= 5) setTime(cleaned);
-  };
 
   const handleSubmit = () => {
     if (unknownTime || time.trim().length < 4) {
