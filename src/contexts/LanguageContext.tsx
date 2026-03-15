@@ -202,7 +202,7 @@ const translations: Translations = {
 
   // Synastry Report
   "synastry.title": { en: "Deep Synastry Report", ka: "ღრმა სინასტრიის ანალიზი" },
-  "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღეთ დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
+  "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღე დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
   "synastry.generate": { en: "Generate Deep Report", ka: "ღრმა ანალიზის გენერაცია" },
   "synastry.generating": { en: "Analyzing charts...", ka: "რუქების ანალიზი..." },
   "synastry.loading": { en: "Loading report...", ka: "ანალიზის ჩატვირთვა..." },
