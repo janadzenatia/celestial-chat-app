@@ -78,7 +78,7 @@ const translations: Translations = {
   "auth.orContinueWith": { en: "or continue with", ka: "ან გააგრძელე" },
 
   // Dashboard
-  "dashboard.big3": { en: "Your Big 3", ka: "თქვენი დიდი 3" },
+  "dashboard.big3": { en: "Your Big 3", ka: "შენი დიდი 3" },
   "dashboard.sun": { en: "Sun", ka: "მზე" },
   "dashboard.moon": { en: "Moon", ka: "მთვარე" },
   "dashboard.rising": { en: "Rising", ka: "ასცენდენტი" },
