@@ -85,6 +85,7 @@ export type Database = {
           date_of_birth: string
           id: string
           name: string
+          relationship_type: string
           time_of_birth: string | null
           user_id: string
         }
@@ -93,6 +94,7 @@ export type Database = {
           date_of_birth: string
           id?: string
           name: string
+          relationship_type?: string
           time_of_birth?: string | null
           user_id: string
         }
@@ -101,6 +103,7 @@ export type Database = {
           date_of_birth?: string
           id?: string
           name?: string
+          relationship_type?: string
           time_of_birth?: string | null
           user_id?: string
         }
