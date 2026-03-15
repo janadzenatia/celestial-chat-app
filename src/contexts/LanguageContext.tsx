@@ -406,36 +406,57 @@ const translations: Translations = {
   "profile.updateError": { en: "Failed to update profile. Please try again.", ka: "პროფილის განახლება ვერ მოხერხდა. სცადეთ თავიდან." },
 
   // Privacy Policy Page
-  "privacy.title": { en: "Privacy Policy", ka: "კონფიდენციალურობის პოლიტიკა" },
-  "privacy.effectiveDate": { en: "Effective Date: March 8, 2026", ka: "ძალაში შესვლის თარიღი: 2026 წლის 8 მარტი" },
+  "privacy.title": { en: "Privacy Policy", ka: "კონფიდენციალურობის პოლიტიკა (Privacy Policy)" },
+  "privacy.effectiveDate": { en: "Last Updated: March 14, 2026", ka: "ბოლოს განახლდა: 14 მარტი, 2026" },
+  "privacy.intro": {
+    en: "Thank you for choosing Astrochat. Your privacy is important to us. This policy explains what information we collect, how we use it, and how we protect it.",
+    ka: "მადლობას გიხდით, რომ იყენებთ Astrochat-ს. ჩვენთვის მნიშვნელოვანია თქვენი პირადი მონაცემების დაცვა. ეს დოკუმენტი განმარტავს, თუ რა ინფორმაციას ვაგროვებთ და როგორ ვიყენებთ მას."
+  },
   "privacy.s1.title": { en: "1. Data Collection", ka: "1. მონაცემების შეგროვება" },
   "privacy.s1.text": {
-    en: "We collect your email for account creation and your birth details (date, time, and location) specifically to provide personalized astrological insights and family compatibility analysis.",
-    ka: "ჩვენ ვაგროვებთ თქვენს ელ.ფოსტას ანგარიშის შესაქმნელად და თქვენი დაბადების მონაცემებს (თარიღი, დრო და ადგილი) პერსონალიზებული ასტროლოგიური ინსაიტების და ოჯახური თავსებადობის ანალიზის უზრუნველსაყოფად."
+    en: "We collect information that you provide directly to us when registering and using the app:",
+    ka: "ჩვენ ვაგროვებთ ინფორმაციას, რომელსაც თავად გვაწვდით აპლიკაციაში რეგისტრაციისას და მისი გამოყენებისას:"
   },
-  "privacy.s2.title": { en: "2. Data Usage", ka: "2. მონაცემების გამოყენება" },
+  "privacy.s1.bullets": {
+    en: "Account Data: Email address (for authentication purposes).|Astrological Data: Date of birth, exact time, and place of birth (required for generating personalized charts and forecasts).|Technical Data: IP address, device type, and operating system information.",
+    ka: "ანგარიშის მონაცემები: ელექტრონული ფოსტა (ავტორიზაციისთვის).|ასტროლოგიური მონაცემები: დაბადების თარიღი, ზუსტი დრო და ადგილი (პირადი პროგნოზების შესადგენად).|ტექნიკური მონაცემები: IP მისამართი, მოწყობილობის ტიპი და ოპერაციული სისტემა."
+  },
+  "privacy.s2.title": { en: "2. How We Use Your Data", ka: "2. როგორ ვიყენებთ თქვენს მონაცემებს" },
   "privacy.s2.text": {
-    en: "Your data is used solely within the app to generate AI-driven reports. We do not sell or share your personal data with third-party advertisers.",
-    ka: "თქვენი მონაცემები გამოიყენება მხოლოდ აპლიკაციის ფარგლებში AI-ზე დაფუძნებული ანგარიშების გენერაციისთვის. ჩვენ არ ვყიდით და არ ვუზიარებთ თქვენს პირად მონაცემებს მესამე მხარის რეკლამის განმთავსებლებს."
+    en: "We use the collected information solely for the following purposes:",
+    ka: "თქვენი მონაცემები გამოიყენება მხოლოდ შემდეგი მიზნებისთვის:"
   },
-  "privacy.s3.title": { en: "3. Data Storage", ka: "3. მონაცემების შენახვა" },
+  "privacy.s2.bullets": {
+    en: "To provide accurate astrological calculations and personalized content.|To manage your account and ensure security via email verification.|To improve our services and provide customer support.|To send essential service-related communications (e.g., password resets).",
+    ka: "ზუსტი ასტროლოგიური გამოთვლებისა და პერსონალიზებული კონტენტის მოსამზადებლად.|ანგარიშის ვერიფიკაციისა და უსაფრთხოების უზრუნველსაყოფად.|სერვისის გაუმჯობესებისა და ტექნიკური მხარდაჭერისთვის.|მნიშვნელოვანი შეტყობინებების გამოსაგზავნად (მაგ. პაროლის აღდგენა)."
+  },
+  "privacy.s3.title": { en: "3. Third-Party Services", ka: "3. მესამე მხარის სერვისები" },
   "privacy.s3.text": {
-    en: "Your information is securely stored via encrypted Authentication and Database services hosted on industry-standard cloud infrastructure.",
-    ka: "თქვენი ინფორმაცია უსაფრთხოდ ინახება დაშიფრული ავთენტიფიკაციისა და მონაცემთა ბაზის სერვისების მეშვეობით, რომლებიც განთავსებულია ინდუსტრიული სტანდარტის ღრუბლოვან ინფრასტრუქტურაზე."
+    en: "We do not sell your personal data. To provide our services, we use trusted third-party providers:",
+    ka: "ჩვენ არ ვყიდით თქვენს მონაცემებს. თუმცა, სერვისის სრულყოფილად მუშაობისთვის ვიყენებთ სანდო პარტნიორებს:"
   },
-  "privacy.s4.title": { en: "4. User Rights", ka: "4. მომხმარებლის უფლებები" },
+  "privacy.s3.bullets": {
+    en: "Supabase: For database management and secure user authentication.|Resend.com: For delivering transactional and verification emails.|Apple App Store / Google Play Store: For processing In-App Purchases. We do not store or have access to your credit card information.",
+    ka: "Supabase: მონაცემთა ბაზისა და ავტორიზაციის მართვისთვის.|Resend.com: სერვისული იმეილების გამოსაგზავნად.|Apple App Store / Google Play Store: გადახდების (In-App Purchases) დასამუშავებლად. ჩვენ არ გვაქვს წვდომა თქვენს საბანკო ბარათის მონაცემებზე."
+  },
+  "privacy.s4.title": { en: "4. Data Security", ka: "4. მონაცემთა უსაფრთხოება" },
   "privacy.s4.text": {
-    en: "You can delete your account and all associated data at any time through the Profile settings within the app.",
-    ka: "თქვენ შეგიძლიათ წაშალოთ თქვენი ანგარიში და ყველა დაკავშირებული მონაცემი ნებისმიერ დროს აპლიკაციის პროფილის პარამეტრებიდან."
+    en: "We implement industry-standard encryption and security measures to protect your data. Our infrastructure, powered by Supabase, follows strict security protocols. However, please be aware that no method of electronic transmission or storage is 100% secure.",
+    ka: "ჩვენ ვიყენებთ თანამედროვე დაშიფვრის (Encryption) მეთოდებს თქვენი ინფორმაციის დასაცავად. Supabase-ის ინფრასტრუქტურა უზრუნველყოფს მონაცემთა შენახვის მაღალ სტანდარტს. მიუხედავად ამისა, გახსოვდეთ, რომ ინტერნეტით მონაცემთა გადაცემის არცერთი მეთოდი არ არის 100%-ით დაცული."
   },
-  "privacy.s5.title": { en: "5. Contact", ka: "5. კონტაქტი" },
+  "privacy.s5.title": { en: "5. Your Rights", ka: "5. თქვენი უფლებები" },
   "privacy.s5.text": {
-    en: "For any privacy-related concerns, contact us at",
-    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი შეკითხვისთვის დაგვიკავშირდით:"
+    en: "You have the right to access, update, or request the deletion of your personal data at any time. Upon account deletion, all your personal astrological information will be permanently removed from our databases.",
+    ka: "თქვენ გაქვთ უფლება მოითხოვოთ თქვენი მონაცემების ნახვა, შესწორება ან სრული წაშლა. ანგარიშის წაშლის შემთხვევაში, თქვენი ყველა პერსონალური ასტროლოგიური მონაცემი ავტომატურად წაიშლება ჩვენი ბაზიდან."
+  },
+  "privacy.s6.title": { en: "6. Contact Us", ka: "6. დაგვიკავშირდით" },
+  "privacy.s6.text": {
+    en: "If you have any questions or concerns regarding this Privacy Policy, please contact us at:",
+    ka: "კონფიდენციალურობასთან დაკავშირებული ნებისმიერი კითხვის შემთხვევაში, მოგვწერეთ:"
   },
 
   // Terms of Service Page
-  "terms.title": { en: "Terms and Conditions", ka: "წესები და პირობები (Terms and Conditions)" },
+  "terms.title": { en: "Terms and Conditions", ka: "წესები და პირობები" },
   "terms.intro": {
     en: "Welcome to Astrochat. By using our application, you agree to follow and be bound by the following terms and conditions. Please read them carefully.",
     ka: "მოგესალმებით Astrochat-ში. ჩვენი აპლიკაციით სარგებლობისას თქვენ ეთანხმებით ქვემოთ მოცემულ წესებსა და პირობებს. გთხოვთ, ყურადღებით გაეცნოთ მათ."
@@ -447,8 +468,12 @@ const translations: Translations = {
   },
   "terms.s2.title": { en: "2. Payments and Refund Policy", ka: "2. გადახდები და თანხის დაბრუნების პოლიტიკა" },
   "terms.s2.text": {
-    en: "Transactions: All paid services (In-App Purchases) are processed through the Apple App Store or Google Play Store.\n\nRefunds: All transactions are final, and Astrochat does not issue refunds. Since payments are processed by third-party platforms (Apple/Google), their respective internal policies apply to all refund requests. Users must contact the relevant platform directly for any payment disputes.",
-    ka: "ტრანზაქციები: ყველა ფასიანი სერვისი (In-App Purchases) ხორციელდება Apple App Store-ის ან Google Play Store-ის მეშვეობით.\n\nრეფანდი (Refund): ყველა ტრანზაქცია საბოლოოა და Astrochat-ის მიერ თანხის დაბრუნება არ ხდება. ვინაიდან გადახდები მუშავდება მესამე მხარის (Apple/Google) მიერ, თანხის დაბრუნების საკითხებზე ვრცელდება მათი შიდა წესები და მომხმარებელმა უნდა მიმართოს შესაბამის პლატფორმას."
+    en: "All paid services and refund details:",
+    ka: "ფასიანი სერვისები და თანხის დაბრუნება:"
+  },
+  "terms.s2.bullets": {
+    en: "Transactions: All paid services (In-App Purchases) are processed through the Apple App Store or Google Play Store.|Refunds: All transactions are final, and Astrochat does not issue refunds. Since payments are processed by third-party platforms (Apple/Google), their respective internal policies apply to all refund requests. Users must contact the relevant platform directly for any payment disputes.",
+    ka: "ტრანზაქციები: ყველა ფასიანი სერვისი (In-App Purchases) ხორციელდება Apple App Store-ის ან Google Play Store-ის მეშვეობით.|რეფანდი (Refund): ყველა ტრანზაქცია საბოლოოა და Astrochat-ის მიერ თანხის დაბრუნება არ ხდება. ვინაიდან გადახდები მუშავდება მესამე მხარის (Apple/Google) მიერ, თანხის დაბრუნების საკითხებზე ვრცელდება მათი შიდა წესები და მომხმარებელმა უნდა მიმართოს შესაბამის პლატფორმას."
   },
   "terms.s3.title": { en: "3. Use of Service", ka: "3. სერვისის გამოყენება" },
   "terms.s3.text": {
@@ -466,8 +491,8 @@ const translations: Translations = {
   },
   "terms.s5.title": { en: "5. Data Protection", ka: "5. მონაცემთა დაცვა" },
   "terms.s5.text": {
-    en: "Your data security is our priority. We utilize encrypted systems to protect your authentication and personal information. For detailed information on how we handle your data, please refer to our Privacy Policy.",
-    ka: "თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას\"."
+    en: "Your data security is our priority. We utilize Supabase's encrypted systems to protect your authentication and personal information. For detailed information on how we handle your data, please refer to our Privacy Policy.",
+    ka: "თქვენი მონაცემების უსაფრთხოება ჩვენთვის მნიშვნელოვანია. ჩვენ ვიყენებთ Supabase-ის დაშიფრულ სისტემებს თქვენი ავტორიზაციისა და პირადი ინფორმაციის დასაცავად. დეტალური ინფორმაციისთვის შეგიძლიათ გაეცნოთ ჩვენს „კონფიდენციალურობის პოლიტიკას\"."
   },
   "terms.s6.title": { en: "6. Changes to Terms", ka: "6. წესების ცვლილებები" },
   "terms.s6.text": {
