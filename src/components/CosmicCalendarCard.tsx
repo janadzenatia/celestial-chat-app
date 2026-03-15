@@ -73,10 +73,7 @@ const CosmicCalendarCard = () => {
               <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
             </button>
           )}
-          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full gradient-cosmic text-foreground flex items-center gap-1">
-            <Lock className="w-3 h-3" />
-            {t("cosmic.badge")}
-          </span>
+          <PremiumBadge />
         </div>
       </div>
 
