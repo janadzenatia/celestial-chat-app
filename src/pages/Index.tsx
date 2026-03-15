@@ -36,18 +36,18 @@ const Index = () => {
       <AppHeader />
 
       <div className="px-4 py-6 space-y-5">
-        {/* Trial Banner */}
-        <TrialBanner />
-
-        {/* Cosmic Hook Notification */}
-        {dob && <CosmicHookBanner />}
-
-        {/* Greeting */}
+        {/* Greeting — first thing the user sees */}
         {profile?.name && (
           <p className="text-muted-foreground text-sm">
             ✨ {t("dashboard.greeting")}, <span className="text-foreground font-medium">{profile.name}</span>
           </p>
         )}
+
+        {/* Trial Banner */}
+        <TrialBanner />
+
+        {/* Cosmic Hook Notification */}
+        {dob && <CosmicHookBanner />}
 
         {/* Big 3 Card */}
         <section className="glass rounded-2xl p-5 shadow-gold">
