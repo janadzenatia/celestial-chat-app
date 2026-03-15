@@ -414,7 +414,7 @@ const translations: Translations = {
   "privacy.effectiveDate": { en: "Last Updated: March 14, 2026", ka: "ბოლოს განახლდა: 14 მარტი, 2026" },
   "privacy.intro": {
     en: "Thank you for choosing Astrochat. Your privacy is important to us. This policy explains what information we collect, how we use it, and how we protect it.",
-    ka: "მადლობას გიხდით, რომ იყენებთ Astrochat-ს. ჩვენთვის მნიშვნელოვანია თქვენი პირადი მონაცემების დაცვა. ეს დოკუმენტი განმარტავს, თუ რა ინფორმაციას ვაგროვებთ და როგორ ვიყენებთ მას."
+    ka: "მადლობა, რომ იყენებ Astrochat-ს. ჩვენთვის მნიშვნელოვანია შენი პირადი მონაცემების დაცვა. ეს დოკუმენტი განმარტავს, თუ რა ინფორმაციას ვაგროვებთ და როგორ ვიყენებთ მას."
   },
   "privacy.s1.title": { en: "1. Data Collection", ka: "1. მონაცემების შეგროვება" },
   "privacy.s1.text": {
