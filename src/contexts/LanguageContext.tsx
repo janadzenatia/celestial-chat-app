@@ -501,7 +501,7 @@ const translations: Translations = {
   "terms.s6.title": { en: "6. Changes to Terms", ka: "6. წესების ცვლილებები" },
   "terms.s6.text": {
     en: "We reserve the right to modify these terms at any time. Information regarding changes will be updated within the app or sent via email. Continued use of the application following such changes constitutes your agreement to the updated terms.",
-    ka: "ჩვენ ვიტოვებთ უფლებას, ნებისმიერ დროს შევიტანოთ ცვლილებები წინამდებარე წესებში. ცვლილებების შესახებ ინფორმაცია გამოქვეყნდება აპლიკაციაში ან გეცნობებათ იმეილის მეშვეობით. აპლიკაციის გამოყენების გაგრძელება ნიშნავს თქვენს თანხმობას განახლებულ პირობებზე."
+    ka: "ჩვენ ვიტოვებთ უფლებას, ნებისმიერ დროს შევიტანოთ ცვლილებები წინამდებარე წესებში. ცვლილებების შესახებ ინფორმაცია გამოქვეყნდება აპლიკაციაში ან გეცნობება იმეილის მეშვეობით. აპლიკაციის გამოყენების გაგრძელება ნიშნავს შენს თანხმობას განახლებულ პირობებზე."
   },
   "terms.s7.title": { en: "7. Contact Information", ka: "7. საკონტაქტო ინფორმაცია" },
   "terms.s7.text": {
