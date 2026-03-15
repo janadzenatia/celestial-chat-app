@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles } from "lucide-react";
+import LanguageToggle from "@/components/LanguageToggle";
 import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { useToast } from "@/hooks/use-toast";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
