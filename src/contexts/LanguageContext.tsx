@@ -316,7 +316,7 @@ const translations: Translations = {
   "paywall.unlock": { en: "Unlock Premium", ka: "პრემიუმის გააქტიურება" },
   "paywall.processing": { en: "Processing...", ka: "მიმდინარეობს..." },
   "paywall.success": { en: "Premium Activated! ✨", ka: "პრემიუმი გააქტიურებულია! ✨" },
-  "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადეთ თავიდან." },
+  "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
   "paywall.bestValue": { en: "Best Value", ka: "საუკეთესო არჩევანი" },
   "paywall.disclaimer": { en: "Cancel anytime. Entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნით." },
   "paywall.premiumContent": { en: "Premium Content", ka: "პრემიუმ კონტენტი" },
