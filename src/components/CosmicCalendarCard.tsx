@@ -91,9 +91,26 @@ const CosmicCalendarCard = () => {
           </button>
         </div>
       ) : isWorking && days.length === 0 ? (
-        <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground text-sm">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span>{t("calendar.generating")}</span>
+        <div className="flex flex-col items-center gap-3 py-6">
+          {/* Skeleton calendar grid */}
+          <div className="w-full space-y-2">
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="h-3 rounded bg-muted animate-pulse" />
+              ))}
+            </div>
+            {Array.from({ length: 5 }).map((_, row) => (
+              <div key={row} className="grid grid-cols-7 gap-1">
+                {Array.from({ length: 7 }).map((_, col) => (
+                  <div key={col} className="aspect-square rounded-lg bg-muted/60 animate-pulse" style={{ animationDelay: `${(row * 7 + col) * 40}ms` }} />
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>{showSlowMsg ? (language === "ka" ? "ჯერ კიდევ ვამუშავებ..." : "Still working on it...") : t("calendar.generating")}</span>
+          </div>
         </div>
       ) : (
         <div className="space-y-3">

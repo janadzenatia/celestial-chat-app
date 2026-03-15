@@ -29,10 +29,7 @@ const PremiumGate = ({ children, overlay = false, minPlan = "basic_premium" }: P
             {children}
           </div>
           <div className="absolute inset-0 flex items-center justify-center cursor-pointer">
-            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-semibold text-primary border border-primary/30">
-              <Lock className="w-3.5 h-3.5" />
-              Premium
-            </span>
+            <PremiumBadge className="text-xs px-3 py-1.5" />
           </div>
         </div>
         <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan={minPlan} />

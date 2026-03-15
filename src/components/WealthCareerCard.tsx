@@ -16,9 +16,7 @@ const WealthCareerCard = () => {
     <section className="glass rounded-2xl p-5 shadow-gold">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-serif text-xl text-gradient-gold">{t("wealth.title")}</h2>
-        <Badge className="gradient-gold text-primary-foreground text-[10px] px-2 py-0.5 border-0">
-          {t("cosmic.badge")}
-        </Badge>
+        <PremiumBadge />
       </div>
 
       {fetching ? (
