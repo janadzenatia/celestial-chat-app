@@ -227,7 +227,7 @@ const translations: Translations = {
   "timeModal.withTime": { en: "Analyze with Time", ka: "ანალიზი დროით" },
   "timeModal.skip": { en: "Skip — I don't know", ka: "გამოტოვება — არ ვიცი" },
   "timeModal.unknownTime": { en: "I don't know the exact time", ka: "ზუსტი დრო არ ვიცი" },
-  "timeModal.relationshipDateHint": { en: "If married, enter your wedding date. Otherwise, enter the date your relationship started.", ka: "თუ ქორწინებაში ხართ, შეიყვანეთ ქორწინების თარიღი. თუ არა — ურთიერთობის დაწყების თარიღი." },
+  "timeModal.relationshipDateHint": { en: "If married, enter your wedding date. Otherwise, enter the date your relationship started.", ka: "თუ ქორწინებაში ხარ, შეიყვანე ქორწინების თარიღი. თუ არა — ურთიერთობის დაწყების თარიღი." },
 
   // Forecast teaser
   "forecast.unlock": { en: "Unlock Forecast", ka: "პროგნოზის გახსნა" },
