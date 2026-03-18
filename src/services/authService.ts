@@ -4,17 +4,26 @@
  * Handles auth-related side effects like welcome emails.
  */
 
+import { supabase } from "@/integrations/supabase/client";
+
 /**
- * Send a welcome email after signup.
- * 
- * Currently a placeholder — replace with actual email trigger
- * (e.g., Supabase Auth "Welcome" template or edge function).
+ * Send a welcome email after signup via the send-welcome-email edge function.
  */
-export async function sendWelcomeEmail(email: string): Promise<void> {
-  console.log(`[AuthService] Welcome email triggered for: ${email}`);
-  // TODO: Replace with actual welcome email logic
-  // Options:
-  // 1. Call a Supabase edge function that sends a branded welcome email
-  // 2. Use Supabase Auth's built-in "Welcome" template (requires dashboard config)
-  // 3. Integrate with a transactional email service
+export async function sendWelcomeEmail(
+  email: string,
+  name?: string,
+  language?: string
+): Promise<void> {
+  try {
+    const { error } = await supabase.functions.invoke("send-welcome-email", {
+      body: { email, name, language },
+    });
+    if (error) {
+      console.error("[AuthService] Welcome email error:", error);
+    } else {
+      console.log("[AuthService] Welcome email sent to:", email);
+    }
+  } catch (err) {
+    console.error("[AuthService] Welcome email failed:", err);
+  }
 }
