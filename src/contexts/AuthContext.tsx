@@ -109,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         options: { emailRedirectTo: window.location.origin },
       });
       if (!error && data.user) {
-        // Fire welcome email (placeholder)
+        // Send welcome email via Resend edge function
         import("@/services/authService").then(({ sendWelcomeEmail }) => {
           sendWelcomeEmail(email);
         });
