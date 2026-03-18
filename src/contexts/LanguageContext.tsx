@@ -99,7 +99,7 @@ const translations: Translations = {
     en: "Basic Zodiac signs only reveal 20% of your relationship story. For a truly accurate reading, exact birth times change everything.",
     ka: "მხოლოდ ზოდიაქოს ნიშანი ურთიერთობის სურათის 20%-ს აჩვენებს. ზუსტი ანალიზისთვის აუცილებელია დაბადების საათის ცოდნა."
   },
-  "synastry.cta.button": { en: "Calculate Deep Synastry", ka: "ღრმა თავსებადობის ანალიზი" },
+  "synastry.cta.button": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
 
   // Cosmic Calendar
   "calendar.title": { en: "Cosmic Traffic Light", ka: "კოსმიური შუქნიშანი" },
