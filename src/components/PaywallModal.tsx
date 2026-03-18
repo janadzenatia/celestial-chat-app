@@ -44,8 +44,8 @@ const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallM
   const features = [
     {
       icon: Check,
-      en: "Deep Synastry & All Features",
-      ka: "ღრმა სინასტრია და ყველა ფუნქცია",
+      en: "Partner's Deep Compatibility & All Features",
+      ka: "პარტნიორის ღრმა თავსებადობა და ყველა ფუნქცია",
       basic: true,
       pro: true,
     },

@@ -99,7 +99,7 @@ const translations: Translations = {
     en: "Basic Zodiac signs only reveal 20% of your relationship story. For a truly accurate reading, exact birth times change everything.",
     ka: "მხოლოდ ზოდიაქოს ნიშანი ურთიერთობის სურათის 20%-ს აჩვენებს. ზუსტი ანალიზისთვის აუცილებელია დაბადების საათის ცოდნა."
   },
-  "synastry.cta.button": { en: "Calculate Deep Synastry", ka: "ღრმა თავსებადობის ანალიზი" },
+  "synastry.cta.button": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
 
   // Cosmic Calendar
   "calendar.title": { en: "Cosmic Traffic Light", ka: "კოსმიური შუქნიშანი" },
@@ -209,7 +209,7 @@ const translations: Translations = {
   "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
 
   // Synastry Report
-  "synastry.title": { en: "Deep Synastry Report", ka: "ღრმა სინასტრიის ანალიზი" },
+  "synastry.title": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
   "synastry.description": { en: "Get a detailed 4-category compatibility analysis powered by AI", ka: "მიიღე დეტალური 4-კატეგორიანი თავსებადობის ანალიზი AI-ის მეშვეობით" },
   "synastry.generate": { en: "Generate Deep Report", ka: "ღრმა ანალიზის გენერაცია" },
   "synastry.generating": { en: "Analyzing charts...", ka: "რუქების ანალიზი..." },
@@ -396,7 +396,7 @@ const translations: Translations = {
   "partner.loveLanguage": { en: "Love Language & Relationship Style", ka: "სიყვარულის ენა და ურთიერთობის სტილი" },
   "partner.generatingLove": { en: "Discovering love language...", ka: "სიყვარულის ენის აღმოჩენა..." },
   "partner.noLoveLanguage": { en: "Love language summary will appear here", ka: "სიყვარულის ენის აღწერა აქ გამოჩნდება" },
-  "partner.deepSynastry": { en: "Generate Deep Synastry", ka: "ღრმა სინასტრიის ანალიზი" },
+  "partner.deepSynastry": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
   "partner.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
   "partner.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
   "partner.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
