@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { sendWelcomeEmail } from "@/services/authService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,6 +48,9 @@ const OnboardingPage = () => {
       toast({ title: t("onboarding.error"), description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
+      // Send welcome email with real name and language
+      const lang = localStorage.getItem("app-language") || "en";
+      sendWelcomeEmail(user.email!, name, lang);
       navigate("/");
     }
   };
