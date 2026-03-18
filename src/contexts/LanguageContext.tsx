@@ -396,7 +396,7 @@ const translations: Translations = {
   "partner.loveLanguage": { en: "Love Language & Relationship Style", ka: "სიყვარულის ენა და ურთიერთობის სტილი" },
   "partner.generatingLove": { en: "Discovering love language...", ka: "სიყვარულის ენის აღმოჩენა..." },
   "partner.noLoveLanguage": { en: "Love language summary will appear here", ka: "სიყვარულის ენის აღწერა აქ გამოჩნდება" },
-  "partner.deepSynastry": { en: "Generate Deep Synastry", ka: "ღრმა სინასტრიის ანალიზი" },
+  "partner.deepSynastry": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
   "partner.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
   "partner.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
   "partner.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
