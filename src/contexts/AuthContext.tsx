@@ -108,12 +108,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         options: { emailRedirectTo: window.location.origin },
       });
-      if (!error && data.user) {
-        // Send welcome email via Resend edge function
-        import("@/services/authService").then(({ sendWelcomeEmail }) => {
-          sendWelcomeEmail(email);
-        });
-      }
       return { error };
     } catch (err: any) {
       return { error: err };
