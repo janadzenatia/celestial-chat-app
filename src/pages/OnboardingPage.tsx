@@ -48,6 +48,9 @@ const OnboardingPage = () => {
       toast({ title: t("onboarding.error"), description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
+      // Send welcome email with real name and language
+      const lang = localStorage.getItem("app-language") || "en";
+      sendWelcomeEmail(user.email!, name, lang);
       navigate("/");
     }
   };
