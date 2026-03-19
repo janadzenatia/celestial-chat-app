@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
-import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2 } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2, ChevronRight, Check } from "lucide-react";
+import PaywallModal from "@/components/PaywallModal";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import TrialBanner from "@/components/TrialBanner";
 import { getSunSign } from "@/lib/zodiac";
@@ -34,7 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ProfilePage = () => {
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { signOut, profile, user, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,6 +43,8 @@ const ProfilePage = () => {
   const [canceling, setCanceling] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [langModalOpen, setLangModalOpen] = useState(false);
 
   // Change password state
   const [passwordOpen, setPasswordOpen] = useState(false);
@@ -248,19 +251,29 @@ const ProfilePage = () => {
         <section className="glass rounded-2xl p-4 space-y-3">
           <h3 className="font-serif text-gradient-gold">{t("profile.settings")}</h3>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between items-center py-2 border-b border-white/5">
+            <button
+              onClick={() => setLangModalOpen(true)}
+              className="w-full flex justify-between items-center py-2 border-b border-white/5 active:bg-accent/20 transition-colors rounded-md px-1 -mx-1"
+            >
               <span className="text-muted-foreground">{t("profile.language")}</span>
-              <span className="text-foreground">{t("profile.languageValue")}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-white/5">
+              <span className="flex items-center gap-1 text-foreground">
+                {t("profile.languageValue")}
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              </span>
+            </button>
+            <button
+              onClick={() => setPaywallOpen(true)}
+              className="w-full flex justify-between items-center py-2 border-b border-white/5 active:bg-accent/20 transition-colors rounded-md px-1 -mx-1"
+            >
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground capitalize">
+              <span className="flex items-center gap-1 text-foreground capitalize">
                 {effectivePlan === "pro_premium" 
                   ? (profile?.trial_end_date ? (language === "ka" ? "პრო (საცდელი)" : "Pro (Trial)") : "Pro Premium")
                   : effectivePlan === "basic_premium" ? "Basic Premium" 
                   : t("profile.free")}
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
               </span>
-            </div>
+            </button>
           </div>
         </section>
 
@@ -500,6 +513,40 @@ const ProfilePage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Language Selection Modal */}
+      <Dialog open={langModalOpen} onOpenChange={setLangModalOpen}>
+        <DialogContent className="glass border-border/50 max-w-xs">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{t("profile.language")}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-2 pt-2">
+            {([["en", "English"], ["ka", "ქართული"]] as const).map(([code, label]) => (
+              <button
+                key={code}
+                onClick={() => {
+                  setLanguage(code);
+                  if (user) {
+                    supabase.from("profiles").update({ language_preference: code }).eq("user_id", user.id);
+                  }
+                  setLangModalOpen(false);
+                }}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-colors ${
+                  language === code
+                    ? "gradient-gold text-primary-foreground font-semibold"
+                    : "bg-background/50 text-foreground hover:bg-accent/30"
+                }`}
+              >
+                <span>{label}</span>
+                {language === code && <Check className="w-4 h-4" />}
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Paywall Modal */}
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 };
