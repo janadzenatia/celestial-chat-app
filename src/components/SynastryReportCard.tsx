@@ -129,7 +129,7 @@ export default function SynastryReportCard({
         <div className="flex items-center justify-between">
           <h3 className="font-serif text-lg text-gradient-gold">{t("synastry.title")}</h3>
           <button
-            onClick={onRegenerate}
+            onClick={requestRegenerate}
             disabled={generating}
             className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
           >
