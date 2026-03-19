@@ -525,14 +525,22 @@ const ProfilePage = () => {
               <button
                 key={code}
                 onClick={() => {
-                  const { setLanguage } = require("@/contexts/LanguageContext");
-                  // handled below
+                  setLanguage(code);
+                  if (user) {
+                    supabase.from("profiles").update({ language_preference: code }).eq("user_id", user.id);
+                  }
+                  setLangModalOpen(false);
                 }}
-                className="hidden"
-              />
+                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-colors ${
+                  language === code
+                    ? "gradient-gold text-primary-foreground font-semibold"
+                    : "bg-background/50 text-foreground hover:bg-accent/30"
+                }`}
+              >
+                <span>{label}</span>
+                {language === code && <Check className="w-4 h-4" />}
+              </button>
             ))}
-            <LanguageSelectorButton code="en" label="English" currentLang={language} onSelect={setLangModalOpen} />
-            <LanguageSelectorButton code="ka" label="ქართული" currentLang={language} onSelect={setLangModalOpen} />
           </div>
         </DialogContent>
       </Dialog>
