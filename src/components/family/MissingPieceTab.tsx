@@ -96,7 +96,7 @@ export default function MissingPieceTab() {
       setResult(resp.data as MissingPieceResult);
     } catch (e) {
       console.error("missing-piece error:", e);
-    } finally {
+      throw e;
       setGenerating(false);
     }
   };
