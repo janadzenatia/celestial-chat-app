@@ -5,6 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ForecastPeriod } from "@/hooks/useRelationshipForecast";
 import { Button } from "@/components/ui/button";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 const typeConfig = {
   positive: {
@@ -49,6 +51,7 @@ export default function RelationshipForecastCard({
   onRelationshipDateChange,
 }: RelationshipForecastProps) {
   const { t } = useLanguage();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   if (loading) {
@@ -126,7 +129,7 @@ export default function RelationshipForecastCard({
           <h3 className="font-serif text-lg text-gradient-gold">{t("forecast.title")}</h3>
         </div>
         <button
-          onClick={onRegenerate}
+          onClick={requestRegenerate}
           disabled={generating}
           className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
         >
@@ -168,6 +171,7 @@ export default function RelationshipForecastCard({
           );
         })}
       </div>
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </div>
   );
 }

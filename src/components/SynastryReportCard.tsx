@@ -4,6 +4,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SynastryReport } from "@/hooks/useSynastryReport";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 const categories = [
   {
@@ -68,6 +70,7 @@ export default function SynastryReportCard({
   partnerHasTime,
 }: SynastryReportCardProps) {
   const { t } = useLanguage();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
 
   if (loading) {
     return (
@@ -126,7 +129,7 @@ export default function SynastryReportCard({
         <div className="flex items-center justify-between">
           <h3 className="font-serif text-lg text-gradient-gold">{t("synastry.title")}</h3>
           <button
-            onClick={onRegenerate}
+            onClick={requestRegenerate}
             disabled={generating}
             className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
           >
@@ -187,6 +190,7 @@ export default function SynastryReportCard({
           );
         })}
       </Accordion>
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </div>
   );
 }

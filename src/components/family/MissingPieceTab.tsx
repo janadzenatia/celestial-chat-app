@@ -7,6 +7,8 @@ import { getSunSign, getApproxMoonSign } from "@/lib/zodiac";
 import { Button } from "@/components/ui/button";
 import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 interface SuggestedSign {
   sign: string;
@@ -94,10 +96,12 @@ export default function MissingPieceTab() {
       setResult(resp.data as MissingPieceResult);
     } catch (e) {
       console.error("missing-piece error:", e);
-    } finally {
+      throw e;
       setGenerating(false);
     }
   };
+
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(generate);
 
   if (!hasPartner) {
     return (
@@ -142,10 +146,11 @@ export default function MissingPieceTab() {
           </div>
         ))}
 
-        <Button onClick={generate} disabled={generating} variant="ghost" className="w-full text-muted-foreground">
+        <Button onClick={requestRegenerate} disabled={generating} variant="ghost" className="w-full text-muted-foreground">
           {generating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
           {t("family.regenerate")}
         </Button>
+        <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
       </div>
     );
   }

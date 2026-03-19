@@ -52,13 +52,6 @@ export function useCosmicMatch() {
     if (!user || !profile?.date_of_birth) return;
     setGenerating(true);
 
-    // Delete old cached result
-    await supabase
-      .from("cosmic_matches")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("language", language);
-
     const dob = profile.date_of_birth!;
     const tob = profile.time_of_birth;
     const sunSign = getSunSign(dob);
@@ -81,6 +74,13 @@ export function useCosmicMatch() {
       const result = resp.data as CosmicMatch;
 
       if (result?.compatible_signs) {
+        // Delete old AFTER successful generation
+        await supabase
+          .from("cosmic_matches")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("language", language);
+
         setMatch(result);
         await supabase.from("cosmic_matches").insert({
           user_id: user.id,
@@ -92,6 +92,7 @@ export function useCosmicMatch() {
       }
     } catch (e) {
       console.error("Failed to generate cosmic match:", e);
+      throw e; // Re-throw so useRegenerateGuard can show toast
     } finally {
       setGenerating(false);
     }

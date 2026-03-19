@@ -1,10 +1,13 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCosmicMatch } from "@/hooks/useCosmicMatch";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 import { Heart, Sparkles, CalendarDays, User, Loader2, RefreshCw } from "lucide-react";
 
 const CosmicMatchCard = () => {
   const { t } = useLanguage();
   const { match, loading, generating, generate } = useCosmicMatch();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(generate);
 
   const isWorking = loading || generating;
 
@@ -22,7 +25,7 @@ const CosmicMatchCard = () => {
           </div>
           {match && (
             <button
-              onClick={generate}
+              onClick={requestRegenerate}
               disabled={isWorking}
               className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
               aria-label="Regenerate"
@@ -102,6 +105,8 @@ const CosmicMatchCard = () => {
           </div>
         )}
       </div>
+
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </section>
   );
 };
