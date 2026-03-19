@@ -43,6 +43,8 @@ const ProfilePage = () => {
   const [canceling, setCanceling] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [langModalOpen, setLangModalOpen] = useState(false);
 
   // Change password state
   const [passwordOpen, setPasswordOpen] = useState(false);
