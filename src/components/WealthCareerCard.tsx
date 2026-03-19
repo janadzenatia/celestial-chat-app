@@ -1,6 +1,8 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWealthReport } from "@/hooks/useWealthReport";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Loader2, Briefcase, Gem, TrendingUp, RefreshCw } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
@@ -9,6 +11,7 @@ const WealthCareerCard = () => {
   const { t } = useLanguage();
   const { profile } = useAuth();
   const { report, loading, fetching, generate } = useWealthReport();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(generate);
 
   if (!profile?.date_of_birth) return null;
 
@@ -85,7 +88,7 @@ const WealthCareerCard = () => {
           </Accordion>
 
           <button
-            onClick={generate}
+            onClick={requestRegenerate}
             disabled={loading}
             className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors mx-auto pt-1"
           >
@@ -94,6 +97,8 @@ const WealthCareerCard = () => {
           </button>
         </div>
       )}
+
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </section>
   );
 };
