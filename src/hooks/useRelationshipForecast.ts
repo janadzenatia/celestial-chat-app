@@ -68,15 +68,6 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
     if (!user || !profile?.date_of_birth || !partnerDobStr || !relDateStr) return;
     setGenerating(true);
 
-    // Delete old cached result
-    await supabase
-      .from("relationship_forecasts")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("partner_dob", partnerDobStr)
-      .eq("relationship_date", relDateStr)
-      .eq("language", language);
-
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
     const userSunSign = getSunSign(dob);
@@ -108,8 +99,16 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
       const result = resp.data as RelationshipForecast;
 
       if (result?.periods) {
+        // Delete old AFTER successful generation
+        await supabase
+          .from("relationship_forecasts")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("partner_dob", partnerDobStr)
+          .eq("relationship_date", relDateStr)
+          .eq("language", language);
+
         setForecast(result);
-        // Store the full object (intro + periods) in the periods JSONB column
         await supabase.from("relationship_forecasts").insert({
           user_id: user.id,
           partner_dob: partnerDobStr,
@@ -120,6 +119,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
       }
     } catch (e) {
       console.error("Failed to generate relationship forecast:", e);
+      throw e;
     } finally {
       setGenerating(false);
     }

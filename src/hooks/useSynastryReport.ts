@@ -63,14 +63,6 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
     if (!user || !profile?.date_of_birth || !partnerDob) return;
     setGenerating(true);
 
-    // Delete old cached result
-    await supabase
-      .from("synastry_reports")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("partner_dob", partnerDob)
-      .eq("language", language);
-
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
     const userSunSign = getSunSign(dob);
@@ -106,6 +98,14 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
       const result = resp.data as SynastryReport;
 
       if (result?.overall_score !== undefined) {
+        // Delete old AFTER successful generation
+        await supabase
+          .from("synastry_reports")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("partner_dob", partnerDob)
+          .eq("language", language);
+
         setReport(result);
         await supabase.from("synastry_reports").insert({
           user_id: user.id,
@@ -122,6 +122,7 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
       }
     } catch (e) {
       console.error("Failed to generate synastry report:", e);
+      throw e;
     } finally {
       setGenerating(false);
     }

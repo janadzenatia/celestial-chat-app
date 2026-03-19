@@ -73,6 +73,7 @@ export function useWealthReport() {
       });
     } catch (e) {
       console.error("Wealth report error:", e);
+      throw e;
     } finally {
       setLoading(false);
     }
