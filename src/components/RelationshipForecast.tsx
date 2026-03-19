@@ -171,6 +171,7 @@ export default function RelationshipForecastCard({
           );
         })}
       </div>
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </div>
   );
 }
