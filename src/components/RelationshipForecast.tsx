@@ -51,6 +51,7 @@ export default function RelationshipForecastCard({
   onRelationshipDateChange,
 }: RelationshipForecastProps) {
   const { t } = useLanguage();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   if (loading) {
