@@ -335,15 +335,17 @@ const ProfilePage = () => {
             <AlertDialogTitle className="font-serif">{t("profile.cancelTitle")}</AlertDialogTitle>
             <AlertDialogDescription>{t("profile.cancelDescription")}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={canceling}>{t("profile.keepPremium")}</AlertDialogCancel>
+          <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
             <AlertDialogAction
               onClick={handleCancelSubscription}
               disabled={canceling}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive/80 text-destructive-foreground hover:bg-destructive border-0"
             >
               {canceling ? t("profile.canceling") : t("profile.yesCancel")}
             </AlertDialogAction>
+            <AlertDialogCancel disabled={canceling} className="gradient-gold text-background font-semibold border-0 hover:opacity-90">
+              {t("profile.keepPremium")}
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
