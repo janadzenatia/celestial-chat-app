@@ -513,6 +513,32 @@ const ProfilePage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Language Selection Modal */}
+      <Dialog open={langModalOpen} onOpenChange={setLangModalOpen}>
+        <DialogContent className="glass border-border/50 max-w-xs">
+          <DialogHeader>
+            <DialogTitle className="font-serif">{t("profile.language")}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-2 pt-2">
+            {([["en", "English"], ["ka", "ქართული"]] as const).map(([code, label]) => (
+              <button
+                key={code}
+                onClick={() => {
+                  const { setLanguage } = require("@/contexts/LanguageContext");
+                  // handled below
+                }}
+                className="hidden"
+              />
+            ))}
+            <LanguageSelectorButton code="en" label="English" currentLang={language} onSelect={setLangModalOpen} />
+            <LanguageSelectorButton code="ka" label="ქართული" currentLang={language} onSelect={setLangModalOpen} />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Paywall Modal */}
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 };
