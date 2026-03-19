@@ -144,10 +144,11 @@ export default function MissingPieceTab() {
           </div>
         ))}
 
-        <Button onClick={generate} disabled={generating} variant="ghost" className="w-full text-muted-foreground">
+        <Button onClick={requestRegenerate} disabled={generating} variant="ghost" className="w-full text-muted-foreground">
           {generating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
           {t("family.regenerate")}
         </Button>
+        <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
       </div>
     );
   }
