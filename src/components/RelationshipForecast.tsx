@@ -5,6 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ForecastPeriod } from "@/hooks/useRelationshipForecast";
 import { Button } from "@/components/ui/button";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 const typeConfig = {
   positive: {
