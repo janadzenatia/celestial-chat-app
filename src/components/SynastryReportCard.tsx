@@ -4,6 +4,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { SynastryReport } from "@/hooks/useSynastryReport";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 const categories = [
   {
