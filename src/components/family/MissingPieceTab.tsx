@@ -101,7 +101,7 @@ export default function MissingPieceTab() {
     }
   };
 
-  if (!hasPartner) {
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(generate);
     return (
       <div className="glass rounded-2xl p-6 text-center space-y-3">
         <Puzzle className="w-8 h-8 text-primary mx-auto" />
