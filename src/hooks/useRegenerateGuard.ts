@@ -11,7 +11,7 @@ const TIMEOUT_MS = 15_000;
  * - error toast on failure
  * - preserves previous data by only calling onSuccess after a successful result
  */
-export function useRegenerateGuard(generateFn: () => Promise<void>) {
+export function useRegenerateGuard(generateFn: () => void | Promise<void>) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [confirmOpen, setConfirmOpen] = useState(false);
