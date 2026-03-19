@@ -129,7 +129,7 @@ export default function RelationshipForecastCard({
           <h3 className="font-serif text-lg text-gradient-gold">{t("forecast.title")}</h3>
         </div>
         <button
-          onClick={onRegenerate}
+          onClick={requestRegenerate}
           disabled={generating}
           className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
         >
