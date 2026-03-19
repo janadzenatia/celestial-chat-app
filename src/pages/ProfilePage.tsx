@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ProfilePage = () => {
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { signOut, profile, user, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
