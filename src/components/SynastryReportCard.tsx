@@ -70,6 +70,7 @@ export default function SynastryReportCard({
   partnerHasTime,
 }: SynastryReportCardProps) {
   const { t } = useLanguage();
+  const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
 
   if (loading) {
     return (
