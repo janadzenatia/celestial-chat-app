@@ -251,19 +251,29 @@ const ProfilePage = () => {
         <section className="glass rounded-2xl p-4 space-y-3">
           <h3 className="font-serif text-gradient-gold">{t("profile.settings")}</h3>
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between items-center py-2 border-b border-white/5">
+            <button
+              onClick={() => setLangModalOpen(true)}
+              className="w-full flex justify-between items-center py-2 border-b border-white/5 active:bg-accent/20 transition-colors rounded-md px-1 -mx-1"
+            >
               <span className="text-muted-foreground">{t("profile.language")}</span>
-              <span className="text-foreground">{t("profile.languageValue")}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b border-white/5">
+              <span className="flex items-center gap-1 text-foreground">
+                {t("profile.languageValue")}
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              </span>
+            </button>
+            <button
+              onClick={() => setPaywallOpen(true)}
+              className="w-full flex justify-between items-center py-2 border-b border-white/5 active:bg-accent/20 transition-colors rounded-md px-1 -mx-1"
+            >
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
-              <span className="text-foreground capitalize">
+              <span className="flex items-center gap-1 text-foreground capitalize">
                 {effectivePlan === "pro_premium" 
                   ? (profile?.trial_end_date ? (language === "ka" ? "პრო (საცდელი)" : "Pro (Trial)") : "Pro Premium")
                   : effectivePlan === "basic_premium" ? "Basic Premium" 
                   : t("profile.free")}
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
               </span>
-            </div>
+            </button>
           </div>
         </section>
 
