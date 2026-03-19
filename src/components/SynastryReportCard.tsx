@@ -190,6 +190,7 @@ export default function SynastryReportCard({
           );
         })}
       </Accordion>
+      <RegenerateConfirmDialog open={confirmOpen} onConfirm={confirmRegenerate} onCancel={cancelRegenerate} />
     </div>
   );
 }
