@@ -7,6 +7,8 @@ import { getSunSign, getApproxMoonSign } from "@/lib/zodiac";
 import { Button } from "@/components/ui/button";
 import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
+import { useRegenerateGuard } from "@/hooks/useRegenerateGuard";
+import RegenerateConfirmDialog from "@/components/RegenerateConfirmDialog";
 
 interface SuggestedSign {
   sign: string;
