@@ -115,6 +115,43 @@ export default function MyChildrenTab() {
     setSaving(false);
   };
 
+  const addPartnerFromProfile = async () => {
+    if (!user || !profile?.partner_name || !profile?.partner_birth_date) return;
+    setSaving(true);
+    const { error } = await supabase.from("children").insert({
+      user_id: user.id,
+      name: profile.partner_name,
+      date_of_birth: profile.partner_birth_date,
+      time_of_birth: profile.partner_time_of_birth || null,
+      relationship_type: "partner",
+    } as any);
+    if (!error) {
+      resetForm();
+      await loadMembers();
+    }
+    setSaving(false);
+  };
+
+  const handleTypeSelect = (key: RelationshipType) => {
+    setSelectedType(key);
+    if (key === "partner") {
+      // Check if partner already exists in family
+      const existingPartner = members.find(m => m.relationship_type === "partner");
+      if (existingPartner) {
+        // Already have a partner in family, go to normal form
+        setFormStep("enterData");
+        return;
+      }
+      // Check if partner data exists from Compatibility page
+      if (profile?.partner_name && profile?.partner_birth_date) {
+        setFormStep("partnerSync");
+        return;
+      }
+    }
+    if (key === "other") return; // wait for custom type input
+    setFormStep("enterData");
+  };
+
   const resetForm = () => {
     setMemberName("");
     setMemberDate(undefined);
