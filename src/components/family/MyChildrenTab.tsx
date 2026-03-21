@@ -119,6 +119,7 @@ export default function MyChildrenTab() {
     setMemberDate(undefined);
     setMemberTime("");
     setSelectedType(null);
+    setCustomType("");
     setFormStep("closed");
   };
 
