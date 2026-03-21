@@ -37,6 +37,7 @@ const translations: Translations = {
   "family.type.grandmother": { en: "Grandmother", ka: "ბებია" },
   "family.type.other": { en: "Other", ka: "სხვა" },
   "family.customTypePlaceholder": { en: "e.g. Uncle, Friend...", ka: "მაგ. ბიძა, მეგობარი..." },
+  "family.continue": { en: "Continue", ka: "გაგრძელება" },
   "family.save": { en: "Save", ka: "შენახვა" },
   "family.cancel": { en: "Cancel", ka: "გაუქმება" },
   "family.analyzeChild": { en: "Analyze Cosmic Connection", ka: "კოსმიური კავშირის ანალიზი" },
