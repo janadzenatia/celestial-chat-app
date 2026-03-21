@@ -56,7 +56,7 @@ const translations: Translations = {
   // Trial
   "trial.days": { en: "d", ka: "დ" },
   "trial.hours": { en: "h", ka: "სთ" },
-  "trial.notice": { en: "Your free trial ends in {time}. You will be charged on day 4. Cancel anytime in App Store / Play Store settings.", ka: "შენი უფასო საცდელი პერიოდი მთავრდება {time}-ში. გადახდა მოხდება მე-4 დღეს. გაუქმება ნებისმიერ დროს შეგიძლია App Store / Play Store-ის პარამეტრებში." },
+  "trial.notice": { en: "{time} left in your free trial", ka: "{time} დარჩა უფასო საცდელი პერიოდიდან" },
 
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
@@ -308,10 +308,10 @@ const translations: Translations = {
   "profile.logout": { en: "Log Out", ka: "ანგარიშიდან გასვლა" },
   "profile.loggedOut": { en: "Logged out successfully", ka: "წარმატებით გამოხვედით" },
   "profile.cancelSubscription": { en: "Cancel Subscription", ka: "გამოწერის გაუქმება" },
-  "profile.cancelTitle": { en: "Cancel Premium?", ka: "გაუქმდეს პრემიუმი?" },
+  "profile.cancelTitle": { en: "Cancel your $1.99/month subscription?", ka: "გააუქმო $1.99/თვიანი გამოწერა?" },
   "profile.cancelDescription": {
-    en: "Are you sure you want to cancel? You will lose access to the Cosmic Calendar, Deep Synastry, and other advanced features.",
-    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
+    en: "Are you sure? You'll lose access to all premium features.",
+    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას ყველა პრემიუმ ფუნქციაზე."
   },
   "profile.keepPremium": { en: "Keep Premium", ka: "პრემიუმის გაგრძელება" },
   "profile.yesCancel": { en: "Yes, Cancel", ka: "დიახ, გაუქმება" },

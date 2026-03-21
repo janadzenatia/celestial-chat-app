@@ -36,9 +36,9 @@ const CosmicHookBanner = () => {
                 </span>
               </div>
               <p className="text-sm text-muted-foreground">
-                {language === "ka"
-                  ? "გააქტიურე პრემიუმი, რომ მიიღო პერსონალური კოსმიური შეტყობინებები"
-                  : "Upgrade to Premium to unlock your daily Cosmic Alerts"}
+                  {language === "ka"
+                    ? "გააქტიურე პრემიუმი, რომ მიიღო პერსონალური კოსმიური შეტყობინებები — $1.99/თვეში"
+                    : "Upgrade to Premium to unlock your daily Cosmic Alerts — $1.99/month"}
               </p>
             </div>
           </div>

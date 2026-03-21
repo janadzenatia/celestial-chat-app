@@ -1,15 +1,10 @@
 /**
- * Subscription Service
- * 
- * Currently uses mock payment logic with direct Supabase updates.
- * When migrating to mobile (RevenueCat + Capacitor), replace the
- * `purchaseSubscription` implementation with RevenueCat SDK calls.
- * The rest of the app (PaywallModal, etc.) won't need changes.
+ * Subscription Service — Single Premium Plan ($1.99/mo)
  */
 
 import { supabase } from "@/integrations/supabase/client";
 
-export type SubscriptionPlan = "basic_premium" | "pro_premium";
+export type SubscriptionPlan = "premium";
 
 export interface PurchaseResult {
   success: boolean;
@@ -17,22 +12,19 @@ export interface PurchaseResult {
 }
 
 /**
- * Process a subscription purchase.
- * 
- * MOCK: Simulates a 2-second payment delay, then writes directly to Supabase.
- * TODO: Replace internals with RevenueCat SDK calls for native mobile.
+ * Process a subscription purchase (single premium plan).
  */
 export async function purchaseSubscription(
   userId: string,
-  plan: SubscriptionPlan
+  _plan: string = "premium"
 ): Promise<PurchaseResult> {
-  // --- Mock payment processing ---
+  // Mock payment processing
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const { error } = await supabase
     .from("profiles")
     .update({
-      subscription_plan: plan,
+      subscription_plan: "premium",
       subscription_status: "premium",
       is_premium: true,
       trial_end_date: null,
@@ -48,8 +40,6 @@ export async function purchaseSubscription(
 
 /**
  * Cancel / downgrade to free.
- * 
- * TODO: Replace with RevenueCat cancellation for native mobile.
  */
 export async function cancelSubscription(userId: string): Promise<PurchaseResult> {
   const { error } = await supabase

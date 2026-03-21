@@ -5,19 +5,15 @@ import PremiumBadge from "./PremiumBadge";
 
 interface PremiumGateProps {
   children: React.ReactNode;
-  /** If true, shows a lock overlay on the content instead of replacing it */
   overlay?: boolean;
-  /** Minimum plan required. Defaults to basic_premium */
-  minPlan?: "basic_premium" | "pro_premium";
 }
 
-const PremiumGate = ({ children, overlay = false, minPlan = "basic_premium" }: PremiumGateProps) => {
+const PremiumGate = ({ children, overlay = false }: PremiumGateProps) => {
   const { profile } = useAuth();
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   const plan = getEffectivePlan(profile);
-  const planLevel = { free: 0, basic_premium: 1, pro_premium: 2 };
-  const hasAccess = planLevel[plan] >= planLevel[minPlan];
+  const hasAccess = plan === "premium";
 
   if (hasAccess) return <>{children}</>;
 
@@ -32,7 +28,7 @@ const PremiumGate = ({ children, overlay = false, minPlan = "basic_premium" }: P
             <PremiumBadge className="text-xs px-3 py-1.5" />
           </div>
         </div>
-        <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan={minPlan} />
+        <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
       </>
     );
   }
@@ -42,7 +38,7 @@ const PremiumGate = ({ children, overlay = false, minPlan = "basic_premium" }: P
       <div onClick={() => setPaywallOpen(true)} className="cursor-pointer">
         {children}
       </div>
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan={minPlan} />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </>
   );
 };

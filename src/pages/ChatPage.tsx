@@ -27,17 +27,20 @@ const ChatPage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const plan = getEffectivePlan(profile);
-  const isBasic = plan === "basic_premium";
-  const isPro = plan === "pro_premium";
+  const isPremium = plan === "premium";
   const isFree = plan === "free";
+
+  // Check if user is in active trial
+  const isInTrial = isFree === false || (profile?.trial_end_date && new Date(profile.trial_end_date) > new Date());
+  const trialExpired = profile?.trial_end_date && new Date(profile.trial_end_date) <= new Date() && isFree;
 
   // Daily message tracking
   const today = new Date().toISOString().slice(0, 10);
   const isToday = profile?.last_chat_date === today;
   const dailyCount = isToday ? (profile?.daily_chat_count ?? 0) : 0;
-  const DAILY_LIMIT = 5;
-  const remaining = isBasic ? Math.max(0, DAILY_LIMIT - dailyCount) : Infinity;
-  const chatDisabled = isBasic && remaining <= 0;
+  const DAILY_LIMIT = 10;
+  const remaining = isPremium ? Infinity : Math.max(0, DAILY_LIMIT - dailyCount);
+  const chatDisabled = trialExpired || (!isPremium && remaining <= 0);
   const isCoolingDown = cooldownUntil !== null && Date.now() < cooldownUntil;
 
   // Moderation messages to detect
@@ -74,12 +77,7 @@ const ChatPage = () => {
       .eq("user_id", user.id)
       .order("created_at", { ascending: true });
 
-    // Basic plan: only last 7 days
-    if (isBasic) {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      query = query.gte("created_at", sevenDaysAgo.toISOString());
-    }
+    // Non-premium: load all history (no 7-day restriction anymore)
 
     query.then(({ data }) => {
       if (data) setMessages(data as Msg[]);
@@ -235,7 +233,7 @@ const ChatPage = () => {
     setIsLoading(true);
 
     await persistMessage(userMsg);
-    if (isBasic) await incrementDailyCount();
+    if (!isPremium) await incrementDailyCount();
 
     let assistantSoFar = "";
 
@@ -328,13 +326,13 @@ const ChatPage = () => {
       <AppHeader />
 
       {/* Trial banner */}
-      {plan === "pro_premium" && profile?.trial_end_date && (
+      {!isPremium && profile?.trial_end_date && new Date(profile.trial_end_date) > new Date() && (
         <div className="px-4 pt-2">
           <div className="glass rounded-xl px-3 py-2 text-center text-xs text-primary">
             <Sparkles className="w-3 h-3 inline mr-1" />
             {language === "ka"
-              ? `პრო საცდელი პერიოდი მთავრდება: ${new Date(profile.trial_end_date).toLocaleDateString("ka-GE")}`
-              : `Pro trial ends: ${new Date(profile.trial_end_date).toLocaleDateString("en-US")}`}
+              ? `საცდელი პერიოდი — ${DAILY_LIMIT} შეტყობინება/დღეში`
+              : `Free trial — ${DAILY_LIMIT} messages/day`}
           </div>
         </div>
       )}
@@ -355,12 +353,6 @@ const ChatPage = () => {
           </div>
         ) : (
           <>
-            {/* 7-day history notice for basic */}
-            {isBasic && (
-              <div className="text-center text-[10px] text-muted-foreground pb-1">
-                {language === "ka" ? "ნაჩვენებია ბოლო 7 დღის ისტორია" : "Showing last 7 days of history"}
-              </div>
-            )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
@@ -405,19 +397,23 @@ const ChatPage = () => {
 
       {/* Limit reached banner */}
       {chatDisabled && !isCoolingDown && (
-        <div className="px-4 pb-2">
+         <div className="px-4 pb-2">
           <div className="glass rounded-xl p-3 text-center space-y-2">
             <p className="text-sm text-muted-foreground">
-              {language === "ka"
-                ? "დღის ლიმიტი ამოიწურა. გააუმჯობესე პრო-მდე შეუზღუდავი ჩატისთვის!"
-                : "Daily limit reached. Upgrade to Pro for unlimited chat!"}
+              {trialExpired
+                ? (language === "ka"
+                  ? "შენი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი — $1.99/თვეში"
+                  : "Your trial has ended. Activate Premium — $1.99/month")
+                : (language === "ka"
+                  ? "დღის ლიმიტი ამოიწურა. გააქტიურე პრემიუმი შეუზღუდავი ჩატისთვის!"
+                  : "Daily limit reached. Upgrade to Premium for unlimited chat!")}
             </p>
             <button
               onClick={() => setPaywallOpen(true)}
               className="px-4 py-2 rounded-xl gradient-gold text-primary-foreground text-sm font-semibold inline-flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              {language === "ka" ? "გააუმჯობესე პრო-მდე" : "Upgrade to Pro"}
+              {language === "ka" ? "პრემიუმის გააქტიურება" : "Activate Premium"}
             </button>
           </div>
         </div>
@@ -425,8 +421,8 @@ const ChatPage = () => {
 
       {/* Input */}
       <div className="px-4 pb-4 space-y-2">
-        {/* Daily counter for basic */}
-        {isBasic && !chatDisabled && (
+        {/* Daily counter for trial users */}
+        {!isPremium && !chatDisabled && !trialExpired && (
           <div className="text-center">
             <span className="text-[11px] text-muted-foreground glass px-3 py-1 rounded-full inline-flex items-center gap-1.5">
               <MessageCircle className="w-3 h-3" />
@@ -470,7 +466,7 @@ const ChatPage = () => {
         <p className="text-[10px] text-muted-foreground text-center">{t("chat.disclaimer")}</p>
       </div>
 
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan="pro_premium" />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 };

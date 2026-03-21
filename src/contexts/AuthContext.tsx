@@ -25,20 +25,24 @@ interface Profile {
   relationship_start_date: string | null;
 }
 
-/** Derive the effective plan considering trial expiry and legacy fields */
-export function getEffectivePlan(profile: Profile | null): "free" | "basic_premium" | "pro_premium" {
+/** Derive the effective plan: "free" or "premium" (single tier) */
+export function getEffectivePlan(profile: Profile | null): "free" | "premium" {
   if (!profile) return "free";
   const plan = profile.subscription_plan;
-  if (plan === "pro_premium" && profile.trial_end_date) {
-    if (new Date(profile.trial_end_date) < new Date()) {
-      // Trial expired — fall back to legacy check or free
-      if (profile.is_premium || profile.subscription_status === "premium") return "pro_premium";
+
+  // Active paid subscriber (any non-free plan)
+  if (plan && plan !== "free") {
+    // Check if it's a trial that expired
+    if (profile.trial_end_date && new Date(profile.trial_end_date) < new Date()) {
+      // Trial expired — check if they have a real subscription
+      if (profile.is_premium || profile.subscription_status === "premium") return "premium";
       return "free";
     }
+    return "premium";
   }
-  if (plan === "basic_premium" || plan === "pro_premium") return plan as any;
-  // Legacy backward compatibility: old users with is_premium/subscription_status but no subscription_plan
-  if (profile.is_premium || profile.subscription_status === "premium") return "pro_premium";
+
+  // Legacy backward compatibility
+  if (profile.is_premium || profile.subscription_status === "premium") return "premium";
   return "free";
 }
 
