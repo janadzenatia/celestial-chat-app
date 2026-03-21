@@ -418,6 +418,7 @@ const translations: Translations = {
   "partner.yesAdd": { en: "Yes, Add", ka: "კი, დამატება" },
   "partner.differentPerson": { en: "Different person", ka: "სხვა პირია" },
   "partner.birthTime": { en: "Partner's Birth Time", ka: "პარტნიორის დაბადების დრო" },
+  "partner.alreadyExists": { en: "Partner already exists. Delete the current partner first to add a new one.", ka: "პარტნიორი უკვე დამატებულია. ახლის დასამატებლად ჯერ წაშალე არსებული." },
 
   // Edit Profile
   "profile.edit": { en: "Edit Profile", ka: "პროფილის რედაქტირება" },
