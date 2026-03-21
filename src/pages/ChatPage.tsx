@@ -224,7 +224,7 @@ const ChatPage = () => {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || isLoading) return;
+    if (!text || isLoading || isCoolingDown) return;
 
     // Check limits
     if (chatDisabled) return;
