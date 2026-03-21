@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import CosmicMatchCard from "@/components/CosmicMatchCard";
 import WealthCareerCard from "@/components/WealthCareerCard";
@@ -7,6 +8,7 @@ import CosmicCalendarCard from "@/components/CosmicCalendarCard";
 import CosmicBlueprintCard from "@/components/CosmicBlueprintCard";
 import PremiumGate from "@/components/PremiumGate";
 import TrialBanner from "@/components/TrialBanner";
+import Big3DetailSheet from "@/components/Big3DetailSheet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
