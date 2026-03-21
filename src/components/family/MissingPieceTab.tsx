@@ -53,14 +53,19 @@ export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabPr
   const hasPartner = Boolean(partnerDob);
 
   // Load children from database - refresh when familyVersion changes
+  // Exclude partner-type entries since partner is already shown from profile data
   useEffect(() => {
     if (!user) return;
     const loadChildren = async () => {
       const { data } = await supabase
         .from("children")
-        .select("name, date_of_birth, time_of_birth")
+        .select("name, date_of_birth, time_of_birth, relationship_type")
         .eq("user_id", user.id);
-      if (data) setChildren(data);
+      if (data) {
+        // Filter out partner entries to avoid duplicates with profile partner data
+        const nonPartnerMembers = data.filter((d: any) => d.relationship_type !== "partner");
+        setChildren(nonPartnerMembers);
+      }
     };
     loadChildren();
     // Clear cached result when family composition changes
