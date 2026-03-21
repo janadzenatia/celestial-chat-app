@@ -268,7 +268,7 @@ const translations: Translations = {
   "cosmic.generate": { en: "Reveal My Match", ka: "გამოავლინე ჩემი წყვილი" },
   "cosmic.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
   "regenerate.confirmTitle": { en: "Regenerate?", ka: "ხელახლა გენერაცია?" },
-  "regenerate.confirmDesc": { en: "I will generate a new result. Continue?", ka: "ახალ შედეგს გამოვიმუშავებ. გაგრძელება?" },
+  "regenerate.confirmDesc": { en: "Processing. Continue?", ka: "მუშავდება. გაგრძელება?" },
   "regenerate.continue": { en: "Continue", ka: "გაგრძელება" },
   "regenerate.cancel": { en: "Cancel", ka: "გაუქმება" },
   "regenerate.error": { en: "Generation failed. Please try again.", ka: "გენერაცია ვერ მოხერხდა. სცადე ხელახლა." },
