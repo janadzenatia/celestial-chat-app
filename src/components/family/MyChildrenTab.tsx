@@ -145,8 +145,9 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       // Check if partner already exists in family
       const existingPartner = members.find(m => m.relationship_type === "partner");
       if (existingPartner) {
-        // Already have a partner in family, go to normal form
-        setFormStep("enterData");
+        // Block adding a second partner
+        toast.info(t("partner.alreadyExists"));
+        setSelectedType(null);
         return;
       }
       // Check if partner data exists from Compatibility page
