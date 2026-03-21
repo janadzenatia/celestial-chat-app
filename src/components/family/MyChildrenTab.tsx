@@ -10,6 +10,7 @@ import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";
+import PremiumGate from "@/components/PremiumGate";
 import { cn } from "@/lib/utils";
 
 type RelationshipType = "child" | "partner" | "father" | "mother" | "brother" | "sister" | "grandfather" | "grandmother" | "other";
@@ -46,7 +47,7 @@ export default function MyChildrenTab() {
   const { user, profile } = useAuth();
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formStep, setFormStep] = useState<"closed" | "selectType" | "enterData">("closed");
+  const [formStep, setFormStep] = useState<"closed" | "selectType" | "partnerSync" | "enterData">("closed");
   const [selectedType, setSelectedType] = useState<RelationshipType | null>(null);
   const [customType, setCustomType] = useState("");
   const [memberName, setMemberName] = useState("");
