@@ -136,6 +136,14 @@ const Index = () => {
           </PremiumGate>
         )}
       </div>
+
+      <Big3DetailSheet
+        open={!!selectedBig3}
+        onOpenChange={(open) => !open && setSelectedBig3(null)}
+        type={selectedBig3}
+        signName={selectedSignName}
+        signEmoji={selectedSignEmoji}
+      />
     </div>
   );
 };
