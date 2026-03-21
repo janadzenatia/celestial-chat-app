@@ -101,12 +101,13 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
       if (result?.periods) {
         // Delete old AFTER successful generation
+        const effectiveRelDate = relDateStr || "1970-01-01";
         await supabase
           .from("relationship_forecasts")
           .delete()
           .eq("user_id", user.id)
           .eq("partner_dob", partnerDobStr)
-          .eq("relationship_date", relDateStr)
+          .eq("relationship_date", effectiveRelDate)
           .eq("language", language);
 
         setForecast(result);
