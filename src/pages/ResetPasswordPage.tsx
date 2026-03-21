@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PasswordInput from "@/components/PasswordInput";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -87,9 +88,8 @@ const ResetPasswordPage = () => {
         <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="new-password" className="text-muted-foreground text-sm">{t("reset.newPassword")}</Label>
-            <Input
+            <PasswordInput
               id="new-password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -100,9 +100,8 @@ const ResetPasswordPage = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-password" className="text-muted-foreground text-sm">{t("reset.confirmPassword")}</Label>
-            <Input
+            <PasswordInput
               id="confirm-password"
-              type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
