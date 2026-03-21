@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
-type RelationshipType = "child" | "partner" | "father" | "mother";
+type RelationshipType = "child" | "partner" | "father" | "mother" | "brother" | "sister" | "grandfather" | "grandmother" | "other";
 
 interface FamilyMember {
   id: string;
@@ -20,6 +20,7 @@ interface FamilyMember {
   date_of_birth: string;
   time_of_birth: string | null;
   relationship_type: RelationshipType;
+  custom_type?: string;
 }
 
 interface ChildReport {
@@ -28,11 +29,16 @@ interface ChildReport {
   parenting_advice: string;
 }
 
-const RELATIONSHIP_TYPES: { key: RelationshipType; icon: typeof Baby; translationKey: string }[] = [
-  { key: "child", icon: Baby, translationKey: "family.type.child" },
-  { key: "partner", icon: Heart, translationKey: "family.type.partner" },
-  { key: "father", icon: UserRound, translationKey: "family.type.father" },
-  { key: "mother", icon: UserRound, translationKey: "family.type.mother" },
+const RELATIONSHIP_TYPES: { key: RelationshipType; emoji: string; translationKey: string }[] = [
+  { key: "child", emoji: "👶", translationKey: "family.type.child" },
+  { key: "partner", emoji: "💑", translationKey: "family.type.partner" },
+  { key: "father", emoji: "👨", translationKey: "family.type.father" },
+  { key: "mother", emoji: "👩", translationKey: "family.type.mother" },
+  { key: "brother", emoji: "👦", translationKey: "family.type.brother" },
+  { key: "sister", emoji: "👧", translationKey: "family.type.sister" },
+  { key: "grandfather", emoji: "👴", translationKey: "family.type.grandfather" },
+  { key: "grandmother", emoji: "👵", translationKey: "family.type.grandmother" },
+  { key: "other", emoji: "👤", translationKey: "family.type.other" },
 ];
 
 export default function MyChildrenTab() {
