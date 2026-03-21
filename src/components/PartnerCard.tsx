@@ -71,12 +71,27 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
 
   const partnerSign = partnerDob ? getSunSign(partnerDob) : null;
 
-  const openAddForm = () => {
+  const openAddForm = async () => {
     setName("");
     setDob(undefined);
     setLocation("");
     setBirthTime("");
     setEditMode(false);
+    // Auto-populate from family partner if exists
+    if (user) {
+      const { data } = await supabase
+        .from("children")
+        .select("name, date_of_birth, time_of_birth")
+        .eq("user_id", user.id)
+        .eq("relationship_type", "partner")
+        .limit(1)
+        .single();
+      if (data) {
+        setName(data.name);
+        setDob(parse(data.date_of_birth, "yyyy-MM-dd", new Date()));
+        setBirthTime(data.time_of_birth || "");
+      }
+    }
     setFormOpen(true);
   };
 
