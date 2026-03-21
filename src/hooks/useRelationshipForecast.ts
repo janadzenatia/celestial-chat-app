@@ -36,14 +36,15 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
     const load = async () => {
       setLoading(true);
-      const { data } = await supabase
+      let query = supabase
         .from("relationship_forecasts")
         .select("periods")
         .eq("user_id", user.id)
         .eq("partner_dob", partnerDobStr)
-        .eq("relationship_date", relDateStr)
-        .eq("language", language)
-        .maybeSingle();
+        .eq("language", language);
+      if (relDateStr) query = query.eq("relationship_date", relDateStr);
+      else query = query.eq("relationship_date", "1970-01-01");
+      const { data } = await query.maybeSingle();
 
       if (data) {
         const periods = data.periods as unknown;
