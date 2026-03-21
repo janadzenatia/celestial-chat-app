@@ -302,6 +302,18 @@ const ChatPage = () => {
 
       if (assistantSoFar) {
         await persistMessage({ role: "assistant", content: assistantSoFar });
+        // Check for moderation response
+        if (MODERATION_MARKERS.some((m) => assistantSoFar.includes(m))) {
+          const newCount = violations + 1;
+          setViolations(newCount);
+          if (newCount >= 3) {
+            setCooldownUntil(Date.now() + 60_000);
+            toast({
+              title: t("chat.cooldown"),
+              variant: "destructive",
+            });
+          }
+        }
       }
     } catch (e) {
       console.error(e);
