@@ -88,9 +88,8 @@ const ResetPasswordPage = () => {
         <form onSubmit={handleReset} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="new-password" className="text-muted-foreground text-sm">{t("reset.newPassword")}</Label>
-            <Input
+            <PasswordInput
               id="new-password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
