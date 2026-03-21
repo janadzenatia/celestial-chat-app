@@ -392,8 +392,19 @@ const ChatPage = () => {
         )}
       </div>
 
+      {/* Cooldown banner */}
+      {isCoolingDown && (
+        <div className="px-4 pb-2">
+          <div className="glass rounded-xl p-3 text-center border border-destructive/30">
+            <p className="text-sm text-destructive">
+              {t("chat.cooldown")} ({cooldownSeconds}s)
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Limit reached banner */}
-      {chatDisabled && (
+      {chatDisabled && !isCoolingDown && (
         <div className="px-4 pb-2">
           <div className="glass rounded-xl p-3 text-center space-y-2">
             <p className="text-sm text-muted-foreground">
@@ -441,14 +452,16 @@ const ChatPage = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             className="flex-1 glass rounded-full px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
-            placeholder={chatDisabled
-              ? (language === "ka" ? "დღის ლიმიტი ამოწურულია" : "Daily limit reached")
-              : t("chat.placeholder")}
-            disabled={isLoading || chatDisabled}
+            placeholder={isCoolingDown
+              ? t("chat.cooldown")
+              : chatDisabled
+                ? (language === "ka" ? "დღის ლიმიტი ამოწურულია" : "Daily limit reached")
+                : t("chat.placeholder")}
+            disabled={isLoading || chatDisabled || isCoolingDown}
           />
           <button
             onClick={send}
-            disabled={isLoading || !input.trim() || chatDisabled}
+            disabled={isLoading || !input.trim() || chatDisabled || isCoolingDown}
             className="w-11 h-11 rounded-full gradient-gold flex items-center justify-center shrink-0 disabled:opacity-50 transition-opacity"
           >
             <Send className="w-4 h-4 text-primary-foreground" />
