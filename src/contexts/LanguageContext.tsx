@@ -37,7 +37,7 @@ const translations: Translations = {
   "family.analyzingChild": { en: "Analyzing stars...", ka: "ვარსკვლავების ანალიზი..." },
   "family.blueprint": { en: "Cosmic Blueprint", ka: "კოსმიური გეგმა" },
   "family.emotionalBond": { en: "Emotional Bond", ka: "ემოციური კავშირი" },
-  "family.parentingAdvice": { en: "Parenting Advice", ka: "აღზრდის რჩევები" },
+  "family.parentingAdvice": { en: "Cosmic Advice", ka: "კოსმიური რჩევა" },
   "family.missingPieceTitle": { en: "The Missing Cosmic Piece", ka: "კოსმიური ბალანსი" },
   "family.missingPieceDesc": { en: "Discover which Zodiac sign would bring ultimate balance to your family", ka: "აღმოაჩინე რომელი ზოდიაქოს ნიშანი მოიტანს სრულ ბალანსს შენს ოჯახში" },
   "family.needPartnerData": { en: "Please add your partner's data on the Compatibility page first", ka: "გთხოვ ჯერ დაამატო პარტნიორის მონაცემები თავსებადობის გვერდზე" },
