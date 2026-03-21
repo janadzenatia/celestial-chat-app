@@ -100,9 +100,8 @@ const ResetPasswordPage = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-password" className="text-muted-foreground text-sm">{t("reset.confirmPassword")}</Label>
-            <Input
+            <PasswordInput
               id="confirm-password"
-              type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required

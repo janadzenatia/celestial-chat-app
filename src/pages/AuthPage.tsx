@@ -164,9 +164,8 @@ const AuthPage = () => {
                     </button>
                   )}
                 </div>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
