@@ -8,6 +8,7 @@ import { getSunSign, ZodiacSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
