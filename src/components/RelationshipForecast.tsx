@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Loader2, Calendar, TrendingUp, AlertTriangle, Minus, Sparkles, RefreshCw, Lock } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Loader2, Calendar, TrendingUp, AlertTriangle, Minus, Sparkles, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ForecastPeriod } from "@/hooks/useRelationshipForecast";
