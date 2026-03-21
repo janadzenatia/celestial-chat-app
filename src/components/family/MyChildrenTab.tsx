@@ -305,17 +305,19 @@ export default function MyChildrenTab() {
                 ))}
               </div>
             ) : (
-              <Button
-                onClick={() => generateReport(member)}
-                disabled={isGenerating}
-                className="w-full gradient-cosmic text-foreground font-medium"
-              >
-                {isGenerating ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
-                ) : (
-                  <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
-                )}
-              </Button>
+              <PremiumGate overlay>
+                <Button
+                  onClick={() => generateReport(member)}
+                  disabled={isGenerating}
+                  className="w-full gradient-cosmic text-foreground font-medium"
+                >
+                  {isGenerating ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
+                  ) : (
+                    <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
+                  )}
+                </Button>
+              </PremiumGate>
             )}
           </div>
         );
