@@ -397,19 +397,23 @@ const ChatPage = () => {
 
       {/* Limit reached banner */}
       {chatDisabled && !isCoolingDown && (
-        <div className="px-4 pb-2">
+         <div className="px-4 pb-2">
           <div className="glass rounded-xl p-3 text-center space-y-2">
             <p className="text-sm text-muted-foreground">
-              {language === "ka"
-                ? "დღის ლიმიტი ამოიწურა. გააუმჯობესე პრო-მდე შეუზღუდავი ჩატისთვის!"
-                : "Daily limit reached. Upgrade to Pro for unlimited chat!"}
+              {trialExpired
+                ? (language === "ka"
+                  ? "შენი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი — $1.99/თვეში"
+                  : "Your trial has ended. Activate Premium — $1.99/month")
+                : (language === "ka"
+                  ? "დღის ლიმიტი ამოიწურა. გააქტიურე პრემიუმი შეუზღუდავი ჩატისთვის!"
+                  : "Daily limit reached. Upgrade to Premium for unlimited chat!")}
             </p>
             <button
               onClick={() => setPaywallOpen(true)}
               className="px-4 py-2 rounded-xl gradient-gold text-primary-foreground text-sm font-semibold inline-flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              {language === "ka" ? "გააუმჯობესე პრო-მდე" : "Upgrade to Pro"}
+              {language === "ka" ? "პრემიუმის გააქტიურება" : "Activate Premium"}
             </button>
           </div>
         </div>
