@@ -52,8 +52,21 @@ export default function RelationshipForecastCard({
 }: RelationshipForecastProps) {
   const { t } = useLanguage();
   const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(!relationshipDate);
   const [localDate, setLocalDate] = useState<Date | undefined>(relationshipDate);
+  const [validationError, setValidationError] = useState(false);
+
+  const hasDate = Boolean(relationshipDate || localDate);
+
+  const handleGenerate = useCallback(() => {
+    if (!hasDate) {
+      setValidationError(true);
+      setShowDatePicker(true);
+      return;
+    }
+    setValidationError(false);
+    onGenerate();
+  }, [hasDate, onGenerate]);
 
   if (loading) {
     return (
@@ -74,37 +87,35 @@ export default function RelationshipForecastCard({
         </div>
         <p className="text-sm text-muted-foreground">{t("forecast.description")}</p>
 
-        {/* Optional date picker */}
-        {!relationshipDate && (
-          <>
-            {!showDatePicker ? (
-              <button
-                onClick={() => setShowDatePicker(true)}
-                className="text-xs text-primary underline underline-offset-2"
-              >
-                {t("compat.relationshipDate")}
-              </button>
-            ) : (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-                <BirthDatePicker
-                  value={localDate}
-                  onChange={(d) => {
-                    setLocalDate(d);
-                    onRelationshipDateChange?.(d);
-                  }}
-                  placeholder={t("compat.pickDate")}
-                />
-              </div>
-            )}
-          </>
-        )}
+        {/* Required date picker */}
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+          <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
+          <BirthDatePicker
+            value={localDate}
+            onChange={(d) => {
+              setLocalDate(d);
+              setValidationError(false);
+              onRelationshipDateChange?.(d);
+            }}
+            placeholder={t("compat.pickDate")}
+          />
+          {validationError && (
+            <p className="text-xs text-destructive animate-in fade-in duration-200">
+              {t("forecast.dateRequired")}
+            </p>
+          )}
+        </div>
 
-        {/* Always show generate button */}
+        {/* Generate button — disabled until date is entered */}
         <Button
-          onClick={onGenerate}
-          disabled={generating}
-          className="gradient-cosmic text-foreground font-medium px-6"
+          onClick={handleGenerate}
+          disabled={generating || !hasDate}
+          className={cn(
+            "font-medium px-6 transition-all",
+            hasDate
+              ? "gradient-cosmic text-foreground"
+              : "bg-muted text-muted-foreground cursor-not-allowed"
+          )}
         >
           {generating ? (
             <>
