@@ -390,6 +390,8 @@ interface PartnerFormDialogProps {
   setDob: (d: Date | undefined) => void;
   location: string;
   setLocation: (l: string) => void;
+  birthTime: string;
+  setBirthTime: (t: string) => void;
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
@@ -397,7 +399,7 @@ interface PartnerFormDialogProps {
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
-  location, setLocation,
+  location, setLocation, birthTime, setBirthTime,
   saving, onSave, editMode,
 }: PartnerFormDialogProps) => {
   const { t } = useLanguage();
@@ -426,6 +428,12 @@ const PartnerFormDialog = ({
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
             <BirthDatePicker value={dob} onChange={setDob} placeholder={t("compat.pickDate")} />
+          </div>
+
+          {/* Birth Time */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">{t("partner.birthTime")}</label>
+            <BirthTimePicker value={birthTime} onChange={setBirthTime} />
           </div>
 
           {/* Place of Birth */}
