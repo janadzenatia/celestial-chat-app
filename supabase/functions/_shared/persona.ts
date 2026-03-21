@@ -25,10 +25,22 @@ FAMILY MODULE GUIDELINES:
 - Emphasize the beauty of the parent-child bond and how their charts complement each other.`;
 
 export function getLanguageInstruction(language: string): string {
-  const lang = language === "ka" ? "Georgian" : "English";
   return language === "ka"
-    ? `CRITICAL LANGUAGE RULE: ALL text content MUST be written in natural, grammatically correct, modern ${lang}. Do NOT use direct machine-translation phrasing. Use rich, literary Georgian where appropriate.`
-    : `ALL text content MUST be written in ${lang}.`;
+    ? `CRITICAL LANGUAGE RULE: ALL text content MUST be written in natural, grammatically correct, modern Georgian. Do NOT use direct machine-translation phrasing. Use rich, literary Georgian where appropriate.
+
+CRITICAL TONE RULE FOR GEORGIAN: ALWAYS use the informal "შენობითი" form. NEVER use formal "თქვენობითი" forms. Specifically:
+- Use "შენ" instead of "თქვენ"
+- Use "შენი" instead of "თქვენი"
+- Use "გაქვს" instead of "გაქვთ"
+- Use "შეგიძლია" instead of "შეგიძლიათ"
+- Use "ხარ" instead of "ხართ"
+- Use "გინდა" instead of "გინდათ"
+- Use "იცი" instead of "იცით"
+- Use "გეტყვი" instead of "გეტყვით"
+- Use "დააკვირდი" instead of "დააკვირდით"
+- Use "სცადე" instead of "სცადეთ"
+This creates a warm, personal, friendly tone as if speaking to a close friend.`
+    : `ALL text content MUST be written in English. Use a warm, friendly, personal conversational tone — speak directly to the user as "you/your" like a trusted friend, never formal or distant.`;
 }
 
 export function buildSystemPrompt(base: string, language: string, extra?: string): string {
