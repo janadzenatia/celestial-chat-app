@@ -52,7 +52,7 @@ export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabPr
   const partnerDob = profile?.partner_birth_date || "";
   const hasPartner = Boolean(partnerDob);
 
-  // Load children from database
+  // Load children from database - refresh when familyVersion changes
   useEffect(() => {
     if (!user) return;
     const loadChildren = async () => {
@@ -63,7 +63,9 @@ export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabPr
       if (data) setChildren(data);
     };
     loadChildren();
-  }, [user?.id]);
+    // Clear cached result when family composition changes
+    setResult(null);
+  }, [user?.id, familyVersion]);
 
   const userSun = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const userMoon = profile?.date_of_birth ? getApproxMoonSign(profile.date_of_birth) : null;

@@ -171,6 +171,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     await supabase.from("children").delete().eq("id", id);
     setMembers(prev => prev.filter(c => c.id !== id));
     setReports(prev => { const n = { ...prev }; delete n[id]; return n; });
+    onFamilyChanged?.();
   };
 
   const generateReport = async (member: FamilyMember) => {
