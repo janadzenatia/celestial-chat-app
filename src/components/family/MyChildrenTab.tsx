@@ -331,7 +331,9 @@ export default function MyChildrenTab() {
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-2">
             <span className="text-xl">{getTypeEmoji(selectedType)}</span>
-            <h3 className="font-serif text-base text-gradient-gold">{t(`family.type.${selectedType}`)}</h3>
+            <h3 className="font-serif text-base text-gradient-gold">
+              {selectedType === "other" ? customType : t(`family.type.${selectedType}`)}
+            </h3>
           </div>
           <div className="space-y-3">
             <Input
