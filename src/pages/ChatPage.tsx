@@ -38,6 +38,26 @@ const ChatPage = () => {
   const DAILY_LIMIT = 5;
   const remaining = isBasic ? Math.max(0, DAILY_LIMIT - dailyCount) : Infinity;
   const chatDisabled = isBasic && remaining <= 0;
+  const isCoolingDown = cooldownUntil !== null && Date.now() < cooldownUntil;
+
+  // Moderation messages to detect
+  const MODERATION_MARKERS = [
+    "ეს შეტყობინება ვერ დამუშავდა",
+    "This message could not be processed",
+  ];
+
+  // Cooldown timer
+  useEffect(() => {
+    if (!cooldownUntil) return;
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000));
+      setCooldownSeconds(left);
+      if (left <= 0) setCooldownUntil(null);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [cooldownUntil]);
 
   // Load chat history
   useEffect(() => {
