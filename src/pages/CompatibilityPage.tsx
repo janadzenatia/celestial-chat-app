@@ -217,7 +217,9 @@ const CompatibilityPage = () => {
               onGenerate={generateForecast}
               onRegenerate={generateForecast}
               relationshipDate={relationshipDate}
-              onRelationshipDateChange={() => {}}
+              onRelationshipDateChange={async (d) => {
+                if (d) await saveExtraFields(undefined, d);
+              }}
             />
           </PremiumGate>
         )}

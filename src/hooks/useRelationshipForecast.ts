@@ -29,21 +29,22 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
   // Load cached forecast
   useEffect(() => {
-    if (!user || !partnerDobStr || !relDateStr) {
+    if (!user || !partnerDobStr) {
       setForecast(null);
       return;
     }
 
     const load = async () => {
       setLoading(true);
-      const { data } = await supabase
+      let query = supabase
         .from("relationship_forecasts")
         .select("periods")
         .eq("user_id", user.id)
         .eq("partner_dob", partnerDobStr)
-        .eq("relationship_date", relDateStr)
-        .eq("language", language)
-        .maybeSingle();
+        .eq("language", language);
+      if (relDateStr) query = query.eq("relationship_date", relDateStr);
+      else query = query.eq("relationship_date", "1970-01-01");
+      const { data } = await query.maybeSingle();
 
       if (data) {
         const periods = data.periods as unknown;
@@ -65,7 +66,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
   }, [user?.id, partnerDobStr, relDateStr, language]);
 
   const generate = useCallback(async () => {
-    if (!user || !profile?.date_of_birth || !partnerDobStr || !relDateStr) return;
+    if (!user || !profile?.date_of_birth || !partnerDobStr) return;
     setGenerating(true);
 
     const dob = profile.date_of_birth;
@@ -90,7 +91,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
           partnerSunSign: partnerSunSign?.name,
           partnerMoonSign: partnerMoonSign?.name,
           partnerRisingSign: partnerRisingSign?.name,
-          relationshipDate: relDateStr,
+          relationshipDate: relDateStr || "",
           language,
         },
       });
@@ -100,19 +101,20 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
       if (result?.periods) {
         // Delete old AFTER successful generation
+        const effectiveRelDate = relDateStr || "1970-01-01";
         await supabase
           .from("relationship_forecasts")
           .delete()
           .eq("user_id", user.id)
           .eq("partner_dob", partnerDobStr)
-          .eq("relationship_date", relDateStr)
+          .eq("relationship_date", effectiveRelDate)
           .eq("language", language);
 
         setForecast(result);
         await supabase.from("relationship_forecasts").insert({
           user_id: user.id,
           partner_dob: partnerDobStr,
-          relationship_date: relDateStr,
+          relationship_date: effectiveRelDate,
           language,
           periods: result as any,
         });
