@@ -421,8 +421,8 @@ const ChatPage = () => {
 
       {/* Input */}
       <div className="px-4 pb-4 space-y-2">
-        {/* Daily counter for basic */}
-        {isBasic && !chatDisabled && (
+        {/* Daily counter for trial users */}
+        {!isPremium && !chatDisabled && !trialExpired && (
           <div className="text-center">
             <span className="text-[11px] text-muted-foreground glass px-3 py-1 rounded-full inline-flex items-center gap-1.5">
               <MessageCircle className="w-3 h-3" />
