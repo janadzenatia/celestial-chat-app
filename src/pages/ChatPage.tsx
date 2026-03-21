@@ -326,13 +326,13 @@ const ChatPage = () => {
       <AppHeader />
 
       {/* Trial banner */}
-      {plan === "pro_premium" && profile?.trial_end_date && (
+      {!isPremium && profile?.trial_end_date && new Date(profile.trial_end_date) > new Date() && (
         <div className="px-4 pt-2">
           <div className="glass rounded-xl px-3 py-2 text-center text-xs text-primary">
             <Sparkles className="w-3 h-3 inline mr-1" />
             {language === "ka"
-              ? `პრო საცდელი პერიოდი მთავრდება: ${new Date(profile.trial_end_date).toLocaleDateString("ka-GE")}`
-              : `Pro trial ends: ${new Date(profile.trial_end_date).toLocaleDateString("en-US")}`}
+              ? `საცდელი პერიოდი — ${DAILY_LIMIT} შეტყობინება/დღეში`
+              : `Free trial — ${DAILY_LIMIT} messages/day`}
           </div>
         </div>
       )}
