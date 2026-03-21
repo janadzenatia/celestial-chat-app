@@ -353,12 +353,6 @@ const ChatPage = () => {
           </div>
         ) : (
           <>
-            {/* 7-day history notice for basic */}
-            {isBasic && (
-              <div className="text-center text-[10px] text-muted-foreground pb-1">
-                {language === "ka" ? "ნაჩვენებია ბოლო 7 დღის ისტორია" : "Showing last 7 days of history"}
-              </div>
-            )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
