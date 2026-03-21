@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen, Baby, Users, UserRound } from "lucide-react";
+import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
-type RelationshipType = "child" | "partner" | "father" | "mother";
+type RelationshipType = "child" | "partner" | "father" | "mother" | "brother" | "sister" | "grandfather" | "grandmother" | "other";
 
 interface FamilyMember {
   id: string;
@@ -20,6 +20,7 @@ interface FamilyMember {
   date_of_birth: string;
   time_of_birth: string | null;
   relationship_type: RelationshipType;
+  custom_type?: string;
 }
 
 interface ChildReport {
@@ -28,11 +29,16 @@ interface ChildReport {
   parenting_advice: string;
 }
 
-const RELATIONSHIP_TYPES: { key: RelationshipType; icon: typeof Baby; translationKey: string }[] = [
-  { key: "child", icon: Baby, translationKey: "family.type.child" },
-  { key: "partner", icon: Heart, translationKey: "family.type.partner" },
-  { key: "father", icon: UserRound, translationKey: "family.type.father" },
-  { key: "mother", icon: UserRound, translationKey: "family.type.mother" },
+const RELATIONSHIP_TYPES: { key: RelationshipType; emoji: string; translationKey: string }[] = [
+  { key: "child", emoji: "👶", translationKey: "family.type.child" },
+  { key: "partner", emoji: "💑", translationKey: "family.type.partner" },
+  { key: "father", emoji: "👨", translationKey: "family.type.father" },
+  { key: "mother", emoji: "👩", translationKey: "family.type.mother" },
+  { key: "brother", emoji: "👦", translationKey: "family.type.brother" },
+  { key: "sister", emoji: "👧", translationKey: "family.type.sister" },
+  { key: "grandfather", emoji: "👴", translationKey: "family.type.grandfather" },
+  { key: "grandmother", emoji: "👵", translationKey: "family.type.grandmother" },
+  { key: "other", emoji: "👤", translationKey: "family.type.other" },
 ];
 
 export default function MyChildrenTab() {
@@ -42,6 +48,7 @@ export default function MyChildrenTab() {
   const [loading, setLoading] = useState(true);
   const [formStep, setFormStep] = useState<"closed" | "selectType" | "enterData">("closed");
   const [selectedType, setSelectedType] = useState<RelationshipType | null>(null);
+  const [customType, setCustomType] = useState("");
   const [memberName, setMemberName] = useState("");
   const [memberDate, setMemberDate] = useState<Date | undefined>();
   const [memberTime, setMemberTime] = useState("");
@@ -89,14 +96,16 @@ export default function MyChildrenTab() {
 
   const addMember = async () => {
     if (!user || !memberName.trim() || !memberDate || !selectedType) return;
+    if (selectedType === "other" && !customType.trim()) return;
     setSaving(true);
     const dob = memberDate.toISOString().split("T")[0];
+    const effectiveType = selectedType === "other" ? `other:${customType.trim()}` : selectedType;
     const { error } = await supabase.from("children").insert({
       user_id: user.id,
       name: memberName.trim(),
       date_of_birth: dob,
       time_of_birth: memberTime.trim() || null,
-      relationship_type: selectedType,
+      relationship_type: effectiveType,
     } as any);
     if (!error) {
       resetForm();
@@ -110,6 +119,7 @@ export default function MyChildrenTab() {
     setMemberDate(undefined);
     setMemberTime("");
     setSelectedType(null);
+    setCustomType("");
     setFormStep("closed");
   };
 
@@ -177,16 +187,15 @@ export default function MyChildrenTab() {
     }));
   };
 
-  const getTypeLabel = (type: RelationshipType) => t(`family.type.${type}`);
+  const getTypeLabel = (type: string) => {
+    if (type.startsWith("other:")) return type.slice(6);
+    return t(`family.type.${type}`);
+  };
 
-  const getTypeEmoji = (type: RelationshipType) => {
-    switch (type) {
-      case "child": return "👶";
-      case "partner": return "💑";
-      case "father": return "👨";
-      case "mother": return "👩";
-      default: return "👤";
-    }
+  const getTypeEmoji = (type: string) => {
+    if (type.startsWith("other:")) return "👤";
+    const found = RELATIONSHIP_TYPES.find(r => r.key === type);
+    return found?.emoji || "👤";
   };
 
   if (loading) {
@@ -278,18 +287,40 @@ export default function MyChildrenTab() {
       {formStep === "selectType" && (
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <h3 className="font-serif text-base text-gradient-gold">{t("family.selectType")}</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {RELATIONSHIP_TYPES.map(({ key, icon: Icon, translationKey }) => (
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {RELATIONSHIP_TYPES.map(({ key, emoji, translationKey }) => (
               <button
                 key={key}
-                onClick={() => { setSelectedType(key); setFormStep("enterData"); }}
-                className="glass rounded-xl p-4 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary/30 border border-transparent transition-all"
+                onClick={() => { setSelectedType(key); if (key !== "other") setFormStep("enterData"); }}
+                className={cn(
+                  "flex-shrink-0 flex flex-col items-center gap-1.5 py-3 px-4 rounded-xl border transition-all min-w-[72px]",
+                  selectedType === key
+                    ? "gradient-cosmic border-primary/30 shadow-lg"
+                    : "glass border-transparent hover:bg-primary/10 hover:border-primary/30"
+                )}
               >
-                <span className="text-2xl">{getTypeEmoji(key)}</span>
-                <span className="text-sm font-medium text-foreground">{t(translationKey)}</span>
+                <span className="text-2xl">{emoji}</span>
+                <span className="text-xs font-medium text-foreground whitespace-nowrap">{t(translationKey)}</span>
               </button>
             ))}
           </div>
+          {selectedType === "other" && (
+            <div className="space-y-3 animate-in fade-in duration-200">
+              <Input
+                value={customType}
+                onChange={e => setCustomType(e.target.value)}
+                placeholder={t("family.customTypePlaceholder")}
+                className="glass border-white/10 focus:border-primary"
+              />
+              <Button
+                onClick={() => { if (customType.trim()) setFormStep("enterData"); }}
+                disabled={!customType.trim()}
+                className="w-full gradient-cosmic text-foreground font-medium"
+              >
+                {t("family.continue") || "Continue"}
+              </Button>
+            </div>
+          )}
           <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
             {t("family.cancel")}
           </Button>
@@ -300,7 +331,9 @@ export default function MyChildrenTab() {
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-2">
             <span className="text-xl">{getTypeEmoji(selectedType)}</span>
-            <h3 className="font-serif text-base text-gradient-gold">{t(`family.type.${selectedType}`)}</h3>
+            <h3 className="font-serif text-base text-gradient-gold">
+              {selectedType === "other" ? customType : t(`family.type.${selectedType}`)}
+            </h3>
           </div>
           <div className="space-y-3">
             <Input
