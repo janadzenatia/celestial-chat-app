@@ -308,10 +308,10 @@ const translations: Translations = {
   "profile.logout": { en: "Log Out", ka: "ანგარიშიდან გასვლა" },
   "profile.loggedOut": { en: "Logged out successfully", ka: "წარმატებით გამოხვედით" },
   "profile.cancelSubscription": { en: "Cancel Subscription", ka: "გამოწერის გაუქმება" },
-  "profile.cancelTitle": { en: "Cancel Premium?", ka: "გაუქმდეს პრემიუმი?" },
+  "profile.cancelTitle": { en: "Cancel your $1.99/month subscription?", ka: "გააუქმო $1.99/თვიანი გამოწერა?" },
   "profile.cancelDescription": {
-    en: "Are you sure you want to cancel? You will lose access to the Cosmic Calendar, Deep Synastry, and other advanced features.",
-    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას კოსმიურ კალენდარზე და სხვა პრემიუმ ფუნქციებზე."
+    en: "Are you sure? You'll lose access to all premium features.",
+    ka: "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას ყველა პრემიუმ ფუნქციაზე."
   },
   "profile.keepPremium": { en: "Keep Premium", ka: "პრემიუმის გაგრძელება" },
   "profile.yesCancel": { en: "Yes, Cancel", ka: "დიახ, გაუქმება" },
