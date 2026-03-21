@@ -21,6 +21,9 @@ const ChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [violations, setViolations] = useState(0);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const plan = getEffectivePlan(profile);
