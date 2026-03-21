@@ -466,7 +466,7 @@ const ChatPage = () => {
         <p className="text-[10px] text-muted-foreground text-center">{t("chat.disclaimer")}</p>
       </div>
 
-      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} highlightPlan="pro_premium" />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 };
