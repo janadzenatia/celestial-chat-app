@@ -287,18 +287,40 @@ export default function MyChildrenTab() {
       {formStep === "selectType" && (
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <h3 className="font-serif text-base text-gradient-gold">{t("family.selectType")}</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {RELATIONSHIP_TYPES.map(({ key, icon: Icon, translationKey }) => (
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {RELATIONSHIP_TYPES.map(({ key, emoji, translationKey }) => (
               <button
                 key={key}
-                onClick={() => { setSelectedType(key); setFormStep("enterData"); }}
-                className="glass rounded-xl p-4 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary/30 border border-transparent transition-all"
+                onClick={() => { setSelectedType(key); if (key !== "other") setFormStep("enterData"); }}
+                className={cn(
+                  "flex-shrink-0 flex flex-col items-center gap-1.5 py-3 px-4 rounded-xl border transition-all min-w-[72px]",
+                  selectedType === key
+                    ? "gradient-cosmic border-primary/30 shadow-lg"
+                    : "glass border-transparent hover:bg-primary/10 hover:border-primary/30"
+                )}
               >
-                <span className="text-2xl">{getTypeEmoji(key)}</span>
-                <span className="text-sm font-medium text-foreground">{t(translationKey)}</span>
+                <span className="text-2xl">{emoji}</span>
+                <span className="text-xs font-medium text-foreground whitespace-nowrap">{t(translationKey)}</span>
               </button>
             ))}
           </div>
+          {selectedType === "other" && (
+            <div className="space-y-3 animate-in fade-in duration-200">
+              <Input
+                value={customType}
+                onChange={e => setCustomType(e.target.value)}
+                placeholder={t("family.customTypePlaceholder")}
+                className="glass border-white/10 focus:border-primary"
+              />
+              <Button
+                onClick={() => { if (customType.trim()) setFormStep("enterData"); }}
+                disabled={!customType.trim()}
+                className="w-full gradient-cosmic text-foreground font-medium"
+              >
+                {t("family.continue") || "Continue"}
+              </Button>
+            </div>
+          )}
           <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
             {t("family.cancel")}
           </Button>
