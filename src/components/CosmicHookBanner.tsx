@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Bell, X, Loader2, Sparkles, Lock } from "lucide-react";
+import { Bell, X, Loader2, Sparkles, Lock, User, Heart, Baby } from "lucide-react";
 import { useCosmicHook } from "@/hooks/useCosmicHook";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
@@ -63,6 +63,18 @@ const CosmicHookBanner = () => {
     navigate("/chat");
   };
 
+  const isSelf = hookData?.subject === "self";
+  const subjectName = isSelf ? null : hookData?.subject;
+
+  const getSubjectIcon = () => {
+    if (isSelf) return <User className="w-3.5 h-3.5" />;
+    // Check if partner name matches
+    if (profile?.partner_name && hookData?.subject === profile.partner_name) {
+      return <Heart className="w-3.5 h-3.5" />;
+    }
+    return <Baby className="w-3.5 h-3.5" />;
+  };
+
   return (
     <div className="relative glass rounded-2xl p-4 border border-primary/30 shadow-gold animate-in fade-in slide-in-from-top-2 duration-500">
       <button
@@ -95,6 +107,12 @@ const CosmicHookBanner = () => {
                 {t("hook.label")}
               </span>
             </div>
+            {subjectName && (
+              <div className="flex items-center gap-1.5 text-xs text-primary/80">
+                {getSubjectIcon()}
+                <span className="font-medium">{subjectName}</span>
+              </div>
+            )}
             <p className="text-sm text-foreground leading-relaxed">{hookData?.hook}</p>
           </div>
         </button>

@@ -9,8 +9,6 @@ interface HookData {
   subjectDob: string | null;
 }
 
-const HOOK_STORAGE_KEY = "cosmic_hook_cache";
-
 export const useCosmicHook = () => {
   const { profile, user } = useAuth();
   const { language } = useLanguage();
@@ -20,21 +18,34 @@ export const useCosmicHook = () => {
 
   useEffect(() => {
     if (!user || !profile?.date_of_birth) return;
+    checkCacheAndGenerate();
+  }, [user?.id, profile?.date_of_birth, language]);
+
+  const checkCacheAndGenerate = async () => {
+    if (!user || !profile?.date_of_birth) return;
 
     const today = new Date().toISOString().split("T")[0];
-    const cached = localStorage.getItem(HOOK_STORAGE_KEY);
+
+    // Check DB cache first
+    const { data: cached } = await (supabase as any)
+      .from("cosmic_hooks")
+      .select("hook, subject, subject_dob")
+      .eq("user_id", user.id)
+      .eq("hook_date", today)
+      .eq("language", language)
+      .maybeSingle();
+
     if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (parsed.date === today && parsed.language === language && parsed.userId === user.id) {
-          setHookData(parsed.data);
-          return;
-        }
-      } catch { /* ignore */ }
+      setHookData({
+        hook: cached.hook,
+        subject: cached.subject,
+        subjectDob: cached.subject_dob,
+      });
+      return;
     }
 
-    generateHook();
-  }, [user?.id, profile?.date_of_birth, language]);
+    await generateHook();
+  };
 
   const generateHook = async () => {
     if (!user || !profile?.date_of_birth) return;
@@ -62,6 +73,22 @@ export const useCosmicHook = () => {
         });
       }
 
+      // Build rotation list: user → partner → children
+      const rotationList: { name: string; dateOfBirth: string; relationship: string }[] = [
+        { name: profile.name || "self", dateOfBirth: profile.date_of_birth!, relationship: "self" },
+      ];
+
+      const partner = familyMembers.find((m) => m.relationship === "partner");
+      if (partner) rotationList.push(partner);
+
+      const childMembers = familyMembers.filter((m) => m.relationship === "child");
+      childMembers.forEach((c) => rotationList.push(c));
+
+      // Determine today's index using epoch day count
+      const epochDays = Math.floor(Date.now() / 86400000);
+      const todayIndex = epochDays % rotationList.length;
+      const todaySubject = rotationList[todayIndex];
+
       const resp = await supabase.functions.invoke("cosmic-hook", {
         body: {
           userName: profile.name,
@@ -69,6 +96,7 @@ export const useCosmicHook = () => {
           timeOfBirth: profile.time_of_birth,
           familyMembers,
           language,
+          todaySubject,
         },
       });
 
@@ -76,11 +104,16 @@ export const useCosmicHook = () => {
       const data = resp.data as HookData;
       setHookData(data);
 
+      // Cache in DB
       const today = new Date().toISOString().split("T")[0];
-      localStorage.setItem(
-        HOOK_STORAGE_KEY,
-        JSON.stringify({ date: today, language, userId: user.id, data })
-      );
+      await (supabase as any).from("cosmic_hooks").insert({
+        user_id: user.id,
+        hook_date: today,
+        language,
+        hook: data.hook,
+        subject: data.subject,
+        subject_dob: data.subjectDob,
+      });
     } catch (e) {
       console.error("Failed to generate cosmic hook:", e);
     } finally {
