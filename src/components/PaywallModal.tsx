@@ -10,70 +10,38 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Crown, Check, Loader2, Sparkles, MessageCircle, Infinity, Clock, Database } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Crown, Check, Loader2, Sparkles } from "lucide-react";
 
 interface PaywallModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
-  /** If set, highlight a specific plan */
-  highlightPlan?: "basic_premium" | "pro_premium";
+  highlightPlan?: string; // kept for API compat, ignored
 }
 
-const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallModalProps) => {
+const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
   const { t, language } = useLanguage();
   const { user, refreshProfile, profile } = useAuth();
   const { toast } = useToast();
-  const [selectedPlan, setSelectedPlan] = useState<"basic_premium" | "pro_premium">(highlightPlan || "pro_premium");
   const [loading, setLoading] = useState(false);
 
   const effectivePlan = getEffectivePlan(profile);
-
-  const plans = {
-    basic_premium: {
-      en: { price: "$1.99", period: "/mo", label: "Basic Plan" },
-      ka: { price: "4.99 ₾", period: "/თვე", label: "ბაზისური გეგმა" },
-    },
-    pro_premium: {
-      en: { price: "$2.99", period: "/mo", label: "Pro Plan" },
-      ka: { price: "6.99 ₾", period: "/თვე", label: "პრო გეგმა" },
-    },
-  };
+  const isPremium = effectivePlan === "premium";
 
   const features = [
-    {
-      icon: Check,
-      en: "Partner's Deep Compatibility & All Features",
-      ka: "პარტნიორის ღრმა თავსებადობა და ყველა ფუნქცია",
-      basic: true,
-      pro: true,
-    },
-    {
-      icon: MessageCircle,
-      en: "AI Chat Messages",
-      ka: "AI ჩატის შეტყობინებები",
-      basic: false,
-      pro: false,
-      basicLabel: { en: "5/day", ka: "5/დღე" },
-      proLabel: { en: "Unlimited", ka: "შეუზღუდავი" },
-    },
-    {
-      icon: Clock,
-      en: "Chat History",
-      ka: "ჩატის ისტორია",
-      basic: false,
-      pro: false,
-      basicLabel: { en: "7 days", ka: "7 დღე" },
-      proLabel: { en: "Forever", ka: "სამუდამოდ" },
-    },
+    { en: "Unlimited AI Chat Messages", ka: "შეუზღუდავი AI ჩატის შეტყობინებები" },
+    { en: "Deep Compatibility Analysis", ka: "ღრმა თავსებადობის ანალიზი" },
+    { en: "Cosmic Calendar & Traffic Light", ka: "კოსმიური კალენდარი და შუქნიშანი" },
+    { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },
+    { en: "Family Cosmic Balance", ka: "ოჯახის კოსმიური ბალანსი" },
+    { en: "Cosmic Blueprint & Daily Alerts", ka: "კოსმიური გეგმა და დღიური შეტყობინებები" },
   ];
 
   const handlePurchase = async () => {
     if (!user) return;
     setLoading(true);
 
-    const result = await purchaseSubscription(user.id, selectedPlan);
+    const result = await purchaseSubscription(user.id, "premium");
 
     if (!result.success) {
       toast({ title: t("paywall.error"), variant: "destructive" });
@@ -103,72 +71,27 @@ const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallM
         </div>
 
         <div className="px-6 pb-6 space-y-5">
-          {/* Plan cards */}
-          <div className="flex gap-2">
-            {(["basic_premium", "pro_premium"] as const).map((p) => {
-              const info = plans[p][language];
-              const isActive = selectedPlan === p;
-              const isCurrent = effectivePlan === p;
-              return (
-                <button
-                  key={p}
-                  onClick={() => setSelectedPlan(p)}
-                  disabled={isCurrent}
-                  className={cn(
-                    "flex-1 relative rounded-xl p-3 text-center transition-all border",
-                    isActive
-                      ? "border-primary bg-primary/10 shadow-lg"
-                      : "border-border/30 hover:border-primary/40",
-                    isCurrent && "opacity-50 cursor-not-allowed"
-                  )}
-                >
-                  {p === "pro_premium" && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full gradient-gold text-primary-foreground">
-                      {language === "ka" ? "რეკომენდებული" : "Recommended"}
-                    </span>
-                  )}
-                  <span className="block text-lg font-bold text-foreground">
-                    {info.price}
-                    <span className="text-xs font-normal text-muted-foreground">{info.period}</span>
-                  </span>
-                  <span className="block text-[10px] text-muted-foreground mt-0.5">{info.label}</span>
-                  {isCurrent && (
-                    <span className="block text-[9px] text-primary mt-1">
-                      {language === "ka" ? "მიმდინარე" : "Current"}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+          {/* Single price card */}
+          <div className="rounded-xl p-4 text-center border border-primary bg-primary/10 shadow-lg">
+            <span className="block text-2xl font-bold text-foreground">
+              $1.99
+              <span className="text-sm font-normal text-muted-foreground">
+                {language === "ka" ? "/თვეში" : "/month"}
+              </span>
+            </span>
+            <span className="block text-xs text-primary mt-1 font-semibold">
+              {language === "ka" ? "პრემიუმი" : "Premium"}
+            </span>
           </div>
 
-          {/* Comparison table */}
+          {/* Features list */}
           <div className="space-y-2.5">
             {features.map((f, i) => (
               <div key={i} className="flex items-center gap-2.5 text-sm text-foreground">
                 <span className="w-5 h-5 rounded-full gradient-gold flex items-center justify-center shrink-0">
-                  <f.icon className="w-3 h-3 text-primary-foreground" />
+                  <Check className="w-3 h-3 text-primary-foreground" />
                 </span>
-                <span className="flex-1">{f[language]}</span>
-                {f.basicLabel && (
-                  <div className="flex gap-1.5 text-[10px]">
-                    <span className={cn(
-                      "px-1.5 py-0.5 rounded-md",
-                      selectedPlan === "basic_premium" ? "bg-primary/20 text-primary font-semibold" : "text-muted-foreground"
-                    )}>
-                      {f.basicLabel[language]}
-                    </span>
-                    <span className={cn(
-                      "px-1.5 py-0.5 rounded-md",
-                      selectedPlan === "pro_premium" ? "bg-primary/20 text-primary font-semibold" : "text-muted-foreground"
-                    )}>
-                      {f.proLabel?.[language]}
-                    </span>
-                  </div>
-                )}
-                {!f.basicLabel && (
-                  <Check className="w-4 h-4 text-primary" />
-                )}
+                <span>{language === "ka" ? f.ka : f.en}</span>
               </div>
             ))}
           </div>
@@ -176,7 +99,7 @@ const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallM
           {/* CTA */}
           <button
             onClick={handlePurchase}
-            disabled={loading || effectivePlan === selectedPlan}
+            disabled={loading || isPremium}
             className="w-full py-3.5 rounded-xl gradient-gold text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {loading ? (
@@ -184,12 +107,12 @@ const PaywallModal = ({ open, onOpenChange, onSuccess, highlightPlan }: PaywallM
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {t("paywall.processing")}
               </>
+            ) : isPremium ? (
+              language === "ka" ? "პრემიუმი აქტიურია ✓" : "Premium Active ✓"
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                {effectivePlan === "basic_premium" && selectedPlan === "pro_premium"
-                  ? (language === "ka" ? "გააუმჯობესე პრო-მდე" : "Upgrade to Pro")
-                  : t("paywall.unlock")}
+                {t("paywall.unlock")}
               </>
             )}
           </button>
