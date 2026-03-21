@@ -329,7 +329,7 @@ export default function MyChildrenTab() {
             {RELATIONSHIP_TYPES.map(({ key, emoji, translationKey }) => (
               <button
                 key={key}
-                onClick={() => { setSelectedType(key); if (key !== "other") setFormStep("enterData"); }}
+                onClick={() => handleTypeSelect(key)}
                 className={cn(
                   "flex-shrink-0 flex flex-col items-center gap-1.5 py-3 px-4 rounded-xl border transition-all min-w-[72px]",
                   selectedType === key
