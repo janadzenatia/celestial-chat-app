@@ -21,6 +21,9 @@ const ChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [violations, setViolations] = useState(0);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const plan = getEffectivePlan(profile);
@@ -35,6 +38,26 @@ const ChatPage = () => {
   const DAILY_LIMIT = 5;
   const remaining = isBasic ? Math.max(0, DAILY_LIMIT - dailyCount) : Infinity;
   const chatDisabled = isBasic && remaining <= 0;
+  const isCoolingDown = cooldownUntil !== null && Date.now() < cooldownUntil;
+
+  // Moderation messages to detect
+  const MODERATION_MARKERS = [
+    "ეს შეტყობინება ვერ დამუშავდა",
+    "This message could not be processed",
+  ];
+
+  // Cooldown timer
+  useEffect(() => {
+    if (!cooldownUntil) return;
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000));
+      setCooldownSeconds(left);
+      if (left <= 0) setCooldownUntil(null);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [cooldownUntil]);
 
   // Load chat history
   useEffect(() => {
@@ -201,7 +224,7 @@ const ChatPage = () => {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || isLoading) return;
+    if (!text || isLoading || isCoolingDown) return;
 
     // Check limits
     if (chatDisabled) return;
@@ -279,6 +302,18 @@ const ChatPage = () => {
 
       if (assistantSoFar) {
         await persistMessage({ role: "assistant", content: assistantSoFar });
+        // Check for moderation response
+        if (MODERATION_MARKERS.some((m) => assistantSoFar.includes(m))) {
+          const newCount = violations + 1;
+          setViolations(newCount);
+          if (newCount >= 3) {
+            setCooldownUntil(Date.now() + 60_000);
+            toast({
+              title: t("chat.cooldown"),
+              variant: "destructive",
+            });
+          }
+        }
       }
     } catch (e) {
       console.error(e);
@@ -357,8 +392,19 @@ const ChatPage = () => {
         )}
       </div>
 
+      {/* Cooldown banner */}
+      {isCoolingDown && (
+        <div className="px-4 pb-2">
+          <div className="glass rounded-xl p-3 text-center border border-destructive/30">
+            <p className="text-sm text-destructive">
+              {t("chat.cooldown")} ({cooldownSeconds}s)
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Limit reached banner */}
-      {chatDisabled && (
+      {chatDisabled && !isCoolingDown && (
         <div className="px-4 pb-2">
           <div className="glass rounded-xl p-3 text-center space-y-2">
             <p className="text-sm text-muted-foreground">
@@ -406,14 +452,16 @@ const ChatPage = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             className="flex-1 glass rounded-full px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
-            placeholder={chatDisabled
-              ? (language === "ka" ? "დღის ლიმიტი ამოწურულია" : "Daily limit reached")
-              : t("chat.placeholder")}
-            disabled={isLoading || chatDisabled}
+            placeholder={isCoolingDown
+              ? t("chat.cooldown")
+              : chatDisabled
+                ? (language === "ka" ? "დღის ლიმიტი ამოწურულია" : "Daily limit reached")
+                : t("chat.placeholder")}
+            disabled={isLoading || chatDisabled || isCoolingDown}
           />
           <button
             onClick={send}
-            disabled={isLoading || !input.trim() || chatDisabled}
+            disabled={isLoading || !input.trim() || chatDisabled || isCoolingDown}
             className="w-11 h-11 rounded-full gradient-gold flex items-center justify-center shrink-0 disabled:opacity-50 transition-opacity"
           >
             <Send className="w-4 h-4 text-primary-foreground" />

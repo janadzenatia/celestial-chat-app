@@ -534,6 +534,8 @@ const translations: Translations = {
   "chat.askDesc": { en: "Ask me anything about your horoscope, love life, career, or cosmic destiny...", ka: "მკითხე ყველაფერი ჰოროსკოპის, სიყვარულის, კარიერის ან კოსმიური ბედისწერის შესახებ..." },
   "chat.error": { en: "Error", ka: "შეცდომა" },
   "chat.errorDesc": { en: "Failed to reach the stars. Try again.", ka: "ვარსკვლავებთან კავშირი ვერ მოხერხდა. სცადე თავიდან." },
+  "chat.moderation": { en: "This message could not be processed — please keep your communication respectful. ✨", ka: "ეს შეტყობინება ვერ დამუშავდა — გთხოვ დაიცვა კომუნიკაციის ეთიკური ნორმები. ✨" },
+  "chat.cooldown": { en: "Usage temporarily paused. Please try again in 60 seconds.", ka: "გამოყენება დროებით შეჩერებულია. სცადე 60 წამში." },
   "profile.defaultName": { en: "Stargazer", ka: "ვარსკვლავთმრიცხველი" },
   "profile.languageValue": { en: "English", ka: "ქართული" },
   "onboarding.error": { en: "Something went wrong", ka: "რაღაც შეცდომა მოხდა" },
