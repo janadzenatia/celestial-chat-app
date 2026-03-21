@@ -77,12 +77,7 @@ const ChatPage = () => {
       .eq("user_id", user.id)
       .order("created_at", { ascending: true });
 
-    // Basic plan: only last 7 days
-    if (isBasic) {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      query = query.gte("created_at", sevenDaysAgo.toISOString());
-    }
+    // Non-premium: load all history (no 7-day restriction anymore)
 
     query.then(({ data }) => {
       if (data) setMessages(data as Msg[]);
