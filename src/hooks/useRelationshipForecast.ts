@@ -114,7 +114,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
         await supabase.from("relationship_forecasts").insert({
           user_id: user.id,
           partner_dob: partnerDobStr,
-          relationship_date: relDateStr,
+          relationship_date: effectiveRelDate,
           language,
           periods: result as any,
         });

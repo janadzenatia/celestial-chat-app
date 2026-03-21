@@ -53,6 +53,7 @@ export default function RelationshipForecastCard({
   const { t } = useLanguage();
   const { confirmOpen, requestRegenerate, confirmRegenerate, cancelRegenerate } = useRegenerateGuard(onRegenerate);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [localDate, setLocalDate] = useState<Date | undefined>(relationshipDate);
 
   if (loading) {
     return (
@@ -65,8 +66,6 @@ export default function RelationshipForecastCard({
 
   // Teaser state: no forecast yet
   if (!periods) {
-    const hasRelDate = Boolean(relationshipDate);
-
     return (
       <div className="glass rounded-2xl p-6 space-y-4 text-center">
         <div className="flex items-center justify-center gap-2">
@@ -75,47 +74,50 @@ export default function RelationshipForecastCard({
         </div>
         <p className="text-sm text-muted-foreground">{t("forecast.description")}</p>
 
-        {/* Inline date picker for relationship date */}
-        {showDatePicker && !hasRelDate && onRelationshipDateChange && (
-          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-            <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
-            <BirthDatePicker
-              value={relationshipDate}
-              onChange={(d) => {
-                onRelationshipDateChange(d);
-              }}
-              placeholder={t("compat.pickDate")}
-            />
-          </div>
+        {/* Optional date picker */}
+        {!relationshipDate && (
+          <>
+            {!showDatePicker ? (
+              <button
+                onClick={() => setShowDatePicker(true)}
+                className="text-xs text-primary underline underline-offset-2"
+              >
+                {t("compat.relationshipDate")}
+              </button>
+            ) : (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                <label className="text-sm font-medium text-foreground">{t("compat.relationshipDate")}</label>
+                <BirthDatePicker
+                  value={localDate}
+                  onChange={(d) => {
+                    setLocalDate(d);
+                    onRelationshipDateChange?.(d);
+                  }}
+                  placeholder={t("compat.pickDate")}
+                />
+              </div>
+            )}
+          </>
         )}
 
-        {!hasRelDate && !showDatePicker ? (
-          <Button
-            onClick={() => setShowDatePicker(true)}
-            className="gradient-cosmic text-foreground font-medium px-6"
-          >
-            <Lock className="w-4 h-4 mr-2" />
-            {t("forecast.unlock")}
-          </Button>
-        ) : hasRelDate ? (
-          <Button
-            onClick={onGenerate}
-            disabled={generating}
-            className="gradient-cosmic text-foreground font-medium px-6"
-          >
-            {generating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {t("forecast.generating")}
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                {t("forecast.generate")}
-              </>
-            )}
-          </Button>
-        ) : null}
+        {/* Always show generate button */}
+        <Button
+          onClick={onGenerate}
+          disabled={generating}
+          className="gradient-cosmic text-foreground font-medium px-6"
+        >
+          {generating ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {t("forecast.generating")}
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              {t("forecast.generate")}
+            </>
+          )}
+        </Button>
       </div>
     );
   }
