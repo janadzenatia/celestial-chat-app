@@ -15,9 +15,6 @@ serve(async (req) => {
     const auth = await validateAuth(req);
     if (auth.error) return auth.error;
 
-    const premiumCheck = await requirePremium(auth.userId);
-    if (premiumCheck) return premiumCheck;
-
     const { name, dateOfBirth, sunSign, moonSign, risingSign, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");

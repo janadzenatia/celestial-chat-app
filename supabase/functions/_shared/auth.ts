@@ -73,10 +73,12 @@ export async function requirePremium(userId: string): Promise<Response | null> {
     });
   }
 
-  // Check if user has premium access: is_premium flag, paid plan, or active trial
-  const hasPaidPlan = profile.subscription_plan !== "free";
+  // Check premium access
   const hasActiveTrial = profile.trial_end_date && new Date(profile.trial_end_date) > new Date();
-  const isPremium = profile.is_premium || hasPaidPlan || hasActiveTrial;
+  const hasPaidSubscription = profile.is_premium;
+  // If plan is non-free but trial expired and not actually paid, treat as free
+  const trialExpiredNoPay = profile.trial_end_date && !hasActiveTrial && !profile.is_premium;
+  const isPremium = hasPaidSubscription || hasActiveTrial || (profile.subscription_plan !== "free" && !trialExpiredNoPay);
 
   if (!isPremium) {
     return new Response(JSON.stringify({ error: "Premium subscription required" }), {
