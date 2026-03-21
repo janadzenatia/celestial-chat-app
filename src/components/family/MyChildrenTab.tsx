@@ -365,6 +365,37 @@ export default function MyChildrenTab() {
         </div>
       )}
 
+      {/* Partner Sync Prompt */}
+      {formStep === "partnerSync" && profile?.partner_name && (
+        <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">💑</span>
+            <p className="text-sm text-foreground leading-relaxed">
+              {t("partner.syncPrompt").replace("{name}", profile.partner_name)}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={addPartnerFromProfile}
+              disabled={saving}
+              className="flex-1 gradient-gold text-primary-foreground font-medium"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("partner.yesAdd")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setFormStep("enterData")}
+              className="flex-1"
+            >
+              {t("partner.differentPerson")}
+            </Button>
+          </div>
+          <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
+            {t("family.cancel")}
+          </Button>
+        </div>
+      )}
+
       {formStep === "enterData" && selectedType && (
         <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-2">
