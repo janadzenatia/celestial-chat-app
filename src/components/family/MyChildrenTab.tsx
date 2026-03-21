@@ -96,14 +96,16 @@ export default function MyChildrenTab() {
 
   const addMember = async () => {
     if (!user || !memberName.trim() || !memberDate || !selectedType) return;
+    if (selectedType === "other" && !customType.trim()) return;
     setSaving(true);
     const dob = memberDate.toISOString().split("T")[0];
+    const effectiveType = selectedType === "other" ? `other:${customType.trim()}` : selectedType;
     const { error } = await supabase.from("children").insert({
       user_id: user.id,
       name: memberName.trim(),
       date_of_birth: dob,
       time_of_birth: memberTime.trim() || null,
-      relationship_type: selectedType,
+      relationship_type: effectiveType,
     } as any);
     if (!error) {
       resetForm();
