@@ -267,10 +267,13 @@ const ProfilePage = () => {
             >
               <span className="text-muted-foreground">{t("profile.subscription")}</span>
               <span className="flex items-center gap-1 text-foreground capitalize">
-                {effectivePlan === "pro_premium" 
-                  ? (profile?.trial_end_date ? (language === "ka" ? "პრო (საცდელი)" : "Pro (Trial)") : "Pro Premium")
-                  : effectivePlan === "basic_premium" ? "Basic Premium" 
-                  : t("profile.free")}
+                {effectivePlan === "premium"
+                  ? (language === "ka" ? "პრემიუმი აქტიურია ✓" : "Premium Active ✓")
+                  : profile?.trial_end_date && new Date(profile.trial_end_date) > new Date()
+                    ? (language === "ka"
+                      ? `უფასო საცდელი — ${Math.ceil((new Date(profile.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))} დღე დარჩა`
+                      : `Free Trial — ${Math.ceil((new Date(profile.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days remaining`)
+                    : t("profile.free")}
                 <ChevronRight className="w-4 h-4 text-muted-foreground" />
               </span>
             </button>

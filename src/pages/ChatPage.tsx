@@ -27,18 +27,20 @@ const ChatPage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const plan = getEffectivePlan(profile);
-  const isBasic = plan === "basic_premium";
-  const isPro = plan === "pro_premium";
+  const isPremium = plan === "premium";
   const isFree = plan === "free";
+
+  // Check if user is in active trial
+  const isInTrial = isFree === false || (profile?.trial_end_date && new Date(profile.trial_end_date) > new Date());
+  const trialExpired = profile?.trial_end_date && new Date(profile.trial_end_date) <= new Date() && isFree;
 
   // Daily message tracking
   const today = new Date().toISOString().slice(0, 10);
   const isToday = profile?.last_chat_date === today;
   const dailyCount = isToday ? (profile?.daily_chat_count ?? 0) : 0;
-  const DAILY_LIMIT = 5;
-  const remaining = isBasic ? Math.max(0, DAILY_LIMIT - dailyCount) : Infinity;
-  const chatDisabled = isBasic && remaining <= 0;
-  const isCoolingDown = cooldownUntil !== null && Date.now() < cooldownUntil;
+  const DAILY_LIMIT = 10;
+  const remaining = isPremium ? Infinity : Math.max(0, DAILY_LIMIT - dailyCount);
+  const chatDisabled = trialExpired || (!isPremium && remaining <= 0);
 
   // Moderation messages to detect
   const MODERATION_MARKERS = [
