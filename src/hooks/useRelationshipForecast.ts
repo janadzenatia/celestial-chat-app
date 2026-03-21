@@ -91,7 +91,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
           partnerSunSign: partnerSunSign?.name,
           partnerMoonSign: partnerMoonSign?.name,
           partnerRisingSign: partnerRisingSign?.name,
-          relationshipDate: relDateStr,
+          relationshipDate: relDateStr || "",
           language,
         },
       });
