@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import CosmicMatchCard from "@/components/CosmicMatchCard";
 import WealthCareerCard from "@/components/WealthCareerCard";
@@ -7,6 +8,7 @@ import CosmicCalendarCard from "@/components/CosmicCalendarCard";
 import CosmicBlueprintCard from "@/components/CosmicBlueprintCard";
 import PremiumGate from "@/components/PremiumGate";
 import TrialBanner from "@/components/TrialBanner";
+import Big3DetailSheet from "@/components/Big3DetailSheet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
@@ -17,6 +19,7 @@ const Index = () => {
   const { t, language } = useLanguage();
   const { profile } = useAuth();
   const { insight, loading: insightLoading, refresh: refreshInsight, period } = useDailyInsight();
+  const [selectedBig3, setSelectedBig3] = useState<"sun" | "moon" | "rising" | null>(null);
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -26,10 +29,14 @@ const Index = () => {
   const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
 
   const big3 = [
-    { label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
-    { label: t("dashboard.moon"), icon: Moon, sign: moonSign ? t(`zodiac.${moonSign.name}`) : "—", emoji: moonSign?.emoji ?? "🌙" },
-    { label: t("dashboard.rising"), icon: Sunrise, sign: risingSign ? t(`zodiac.${risingSign.name}`) : "—", emoji: risingSign?.emoji ?? "🌅" },
+    { key: "sun" as const, label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
+    { key: "moon" as const, label: t("dashboard.moon"), icon: Moon, sign: moonSign ? t(`zodiac.${moonSign.name}`) : "—", emoji: moonSign?.emoji ?? "🌙" },
+    { key: "rising" as const, label: t("dashboard.rising"), icon: Sunrise, sign: risingSign ? t(`zodiac.${risingSign.name}`) : "—", emoji: risingSign?.emoji ?? "🌅" },
   ];
+
+  const selectedSign = selectedBig3 === "sun" ? sunSign : selectedBig3 === "moon" ? moonSign : risingSign;
+  const selectedSignName = selectedSign ? t(`zodiac.${selectedSign.name}`) : "";
+  const selectedSignEmoji = selectedSign?.emoji ?? "";
 
   return (
     <div className="flex flex-col">
@@ -53,13 +60,17 @@ const Index = () => {
         <section className="glass rounded-2xl p-5 shadow-gold">
           <h2 className="font-serif text-xl text-gradient-gold mb-4">{t("dashboard.big3")}</h2>
           <div className="grid grid-cols-3 gap-3">
-            {big3.map(({ label, icon: Icon, sign, emoji }) => (
-              <div key={label} className="flex flex-col items-center gap-2 glass rounded-xl p-3">
+            {big3.map(({ key, label, icon: Icon, sign, emoji }) => (
+              <button
+                key={key}
+                onClick={() => dob && setSelectedBig3(key)}
+                className="flex flex-col items-center gap-2 glass rounded-xl p-3 cursor-pointer hover:border-primary/30 hover:shadow-gold/20 transition-all active:scale-95 border border-transparent"
+              >
                 <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
                 <span className="text-2xl">{emoji}</span>
                 <span className="text-xs text-muted-foreground">{label}</span>
                 <span className="text-sm font-semibold text-foreground">{sign}</span>
-              </div>
+              </button>
             ))}
           </div>
           {!tob && dob && (
@@ -125,6 +136,14 @@ const Index = () => {
           </PremiumGate>
         )}
       </div>
+
+      <Big3DetailSheet
+        open={!!selectedBig3}
+        onOpenChange={(open) => !open && setSelectedBig3(null)}
+        type={selectedBig3}
+        signName={selectedSignName}
+        signEmoji={selectedSignEmoji}
+      />
     </div>
   );
 };
