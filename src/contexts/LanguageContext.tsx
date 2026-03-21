@@ -56,7 +56,7 @@ const translations: Translations = {
   // Trial
   "trial.days": { en: "d", ka: "დ" },
   "trial.hours": { en: "h", ka: "სთ" },
-  "trial.notice": { en: "Your free trial ends in {time}. You will be charged on day 4. Cancel anytime in App Store / Play Store settings.", ka: "შენი უფასო საცდელი პერიოდი მთავრდება {time}-ში. გადახდა მოხდება მე-4 დღეს. გაუქმება ნებისმიერ დროს შეგიძლია App Store / Play Store-ის პარამეტრებში." },
+  "trial.notice": { en: "{time} left in your free trial", ka: "{time} დარჩა უფასო საცდელი პერიოდიდან" },
 
   "family.planSign": { en: "Plan a Sign", ka: "დაგეგმე ნიშანი" },
   "family.expecting": { en: "I'm Expecting", ka: "ველოდები ბავშვს" },
