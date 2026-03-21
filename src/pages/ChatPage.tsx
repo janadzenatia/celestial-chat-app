@@ -233,7 +233,7 @@ const ChatPage = () => {
     setIsLoading(true);
 
     await persistMessage(userMsg);
-    if (isBasic) await incrementDailyCount();
+    if (!isPremium) await incrementDailyCount();
 
     let assistantSoFar = "";
 
