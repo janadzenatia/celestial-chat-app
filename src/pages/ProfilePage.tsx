@@ -335,8 +335,14 @@ const ProfilePage = () => {
       <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <AlertDialogContent className="glass border-border/50">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-serif">{t("profile.cancelTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("profile.cancelDescription")}</AlertDialogDescription>
+            <AlertDialogTitle className="font-serif">
+              {language === "ka" ? "გააუქმო $1.99/თვიანი გამოწერა?" : "Cancel your $1.99/month subscription?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {language === "ka"
+                ? "ნამდვილად გსურს გაუქმება? დაკარგავ წვდომას ყველა პრემიუმ ფუნქციაზე."
+                : "Are you sure? You'll lose access to all premium features."}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
             <AlertDialogAction
