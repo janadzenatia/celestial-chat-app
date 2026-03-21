@@ -133,6 +133,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     if (!error) {
       resetForm();
       await loadMembers();
+      onFamilyChanged?.();
     }
     setSaving(false);
   };
