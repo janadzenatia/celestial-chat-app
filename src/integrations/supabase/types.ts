@@ -139,6 +139,39 @@ export type Database = {
         }
         Relationships: []
       }
+      cosmic_hooks: {
+        Row: {
+          created_at: string
+          hook: string
+          hook_date: string
+          id: string
+          language: string
+          subject: string
+          subject_dob: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hook: string
+          hook_date?: string
+          id?: string
+          language?: string
+          subject?: string
+          subject_dob?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hook?: string
+          hook_date?: string
+          id?: string
+          language?: string
+          subject?: string
+          subject_dob?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       cosmic_matches: {
         Row: {
           birth_years: Json
