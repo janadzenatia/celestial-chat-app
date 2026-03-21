@@ -207,6 +207,7 @@ const translations: Translations = {
   "forecast.generate": { en: "Reveal Forecast", ka: "პროგნოზის ნახვა" },
   "forecast.generating": { en: "Reading the transits...", ka: "ტრანზიტების წაკითხვა..." },
   "forecast.loading": { en: "Loading forecast...", ka: "პროგნოზის ჩატვირთვა..." },
+  "forecast.dateRequired": { en: "Please enter your relationship start date", ka: "გთხოვ შეიყვანე ურთიერთობის დაწყების თარიღი" },
 
   // Synastry Report
   "synastry.title": { en: "Partner's Deep Compatibility Analysis", ka: "პარტნიორის ღრმა თავსებადობის ანალიზი" },
