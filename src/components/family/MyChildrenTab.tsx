@@ -187,16 +187,15 @@ export default function MyChildrenTab() {
     }));
   };
 
-  const getTypeLabel = (type: RelationshipType) => t(`family.type.${type}`);
+  const getTypeLabel = (type: string) => {
+    if (type.startsWith("other:")) return type.slice(6);
+    return t(`family.type.${type}`);
+  };
 
-  const getTypeEmoji = (type: RelationshipType) => {
-    switch (type) {
-      case "child": return "👶";
-      case "partner": return "💑";
-      case "father": return "👨";
-      case "mother": return "👩";
-      default: return "👤";
-    }
+  const getTypeEmoji = (type: string) => {
+    if (type.startsWith("other:")) return "👤";
+    const found = RELATIONSHIP_TYPES.find(r => r.key === type);
+    return found?.emoji || "👤";
   };
 
   if (loading) {
