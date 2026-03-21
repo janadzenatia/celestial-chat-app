@@ -42,7 +42,11 @@ const RELATIONSHIP_TYPES: { key: RelationshipType; emoji: string; translationKey
   { key: "other", emoji: "👤", translationKey: "family.type.other" },
 ];
 
-export default function MyChildrenTab() {
+interface MyChildrenTabProps {
+  onFamilyChanged?: () => void;
+}
+
+export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
   const { t, language } = useLanguage();
   const { user, profile } = useAuth();
   const [members, setMembers] = useState<FamilyMember[]>([]);
@@ -111,6 +115,7 @@ export default function MyChildrenTab() {
     if (!error) {
       resetForm();
       await loadMembers();
+      onFamilyChanged?.();
     }
     setSaving(false);
   };
@@ -128,6 +133,7 @@ export default function MyChildrenTab() {
     if (!error) {
       resetForm();
       await loadMembers();
+      onFamilyChanged?.();
     }
     setSaving(false);
   };
@@ -165,6 +171,7 @@ export default function MyChildrenTab() {
     await supabase.from("children").delete().eq("id", id);
     setMembers(prev => prev.filter(c => c.id !== id));
     setReports(prev => { const n = { ...prev }; delete n[id]; return n; });
+    onFamilyChanged?.();
   };
 
   const generateReport = async (member: FamilyMember) => {

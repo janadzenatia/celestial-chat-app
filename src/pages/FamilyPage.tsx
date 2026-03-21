@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Baby, Users, Puzzle, Calculator } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AppHeader from "@/components/AppHeader";
@@ -12,6 +12,11 @@ type FamilyTab = "children" | "missing" | "calculator";
 const FamilyPage = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<FamilyTab>("children");
+  const [familyVersion, setFamilyVersion] = useState(0);
+
+  const onFamilyChanged = useCallback(() => {
+    setFamilyVersion(v => v + 1);
+  }, []);
 
   const tabs = [
     { key: "children" as FamilyTab, icon: Users, label: t("family.myChildren") },
@@ -49,8 +54,8 @@ const FamilyPage = () => {
           ))}
         </div>
 
-        {activeTab === "children" && <MyChildrenTab />}
-        {activeTab === "missing" && <MissingPieceTab />}
+        {activeTab === "children" && <MyChildrenTab onFamilyChanged={onFamilyChanged} />}
+        {activeTab === "missing" && <MissingPieceTab familyVersion={familyVersion} />}
         {activeTab === "calculator" && <ZodiacCalculatorTab />}
       </div>
     </div>

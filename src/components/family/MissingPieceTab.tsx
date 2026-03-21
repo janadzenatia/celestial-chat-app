@@ -28,7 +28,11 @@ interface ChildData {
   time_of_birth: string | null;
 }
 
-export default function MissingPieceTab() {
+interface MissingPieceTabProps {
+  familyVersion?: number;
+}
+
+export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabProps) {
   const { t, language } = useLanguage();
   const { profile, user, refreshProfile } = useAuth();
   const [generating, setGenerating] = useState(false);
@@ -48,7 +52,7 @@ export default function MissingPieceTab() {
   const partnerDob = profile?.partner_birth_date || "";
   const hasPartner = Boolean(partnerDob);
 
-  // Load children from database
+  // Load children from database - refresh when familyVersion changes
   useEffect(() => {
     if (!user) return;
     const loadChildren = async () => {
@@ -59,7 +63,9 @@ export default function MissingPieceTab() {
       if (data) setChildren(data);
     };
     loadChildren();
-  }, [user?.id]);
+    // Clear cached result when family composition changes
+    setResult(null);
+  }, [user?.id, familyVersion]);
 
   const userSun = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
   const userMoon = profile?.date_of_birth ? getApproxMoonSign(profile.date_of_birth) : null;
