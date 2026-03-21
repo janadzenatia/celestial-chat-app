@@ -10,6 +10,7 @@ import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaywallModal from "@/components/PaywallModal";
+import PremiumGate from "@/components/PremiumGate";
 import { cn } from "@/lib/utils";
 
 type RelationshipType = "child" | "partner" | "father" | "mother" | "brother" | "sister" | "grandfather" | "grandmother" | "other";
@@ -46,7 +47,7 @@ export default function MyChildrenTab() {
   const { user, profile } = useAuth();
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formStep, setFormStep] = useState<"closed" | "selectType" | "enterData">("closed");
+  const [formStep, setFormStep] = useState<"closed" | "selectType" | "partnerSync" | "enterData">("closed");
   const [selectedType, setSelectedType] = useState<RelationshipType | null>(null);
   const [customType, setCustomType] = useState("");
   const [memberName, setMemberName] = useState("");
@@ -112,6 +113,43 @@ export default function MyChildrenTab() {
       await loadMembers();
     }
     setSaving(false);
+  };
+
+  const addPartnerFromProfile = async () => {
+    if (!user || !profile?.partner_name || !profile?.partner_birth_date) return;
+    setSaving(true);
+    const { error } = await supabase.from("children").insert({
+      user_id: user.id,
+      name: profile.partner_name,
+      date_of_birth: profile.partner_birth_date,
+      time_of_birth: profile.partner_time_of_birth || null,
+      relationship_type: "partner",
+    } as any);
+    if (!error) {
+      resetForm();
+      await loadMembers();
+    }
+    setSaving(false);
+  };
+
+  const handleTypeSelect = (key: RelationshipType) => {
+    setSelectedType(key);
+    if (key === "partner") {
+      // Check if partner already exists in family
+      const existingPartner = members.find(m => m.relationship_type === "partner");
+      if (existingPartner) {
+        // Already have a partner in family, go to normal form
+        setFormStep("enterData");
+        return;
+      }
+      // Check if partner data exists from Compatibility page
+      if (profile?.partner_name && profile?.partner_birth_date) {
+        setFormStep("partnerSync");
+        return;
+      }
+    }
+    if (key === "other") return; // wait for custom type input
+    setFormStep("enterData");
   };
 
   const resetForm = () => {
@@ -267,17 +305,19 @@ export default function MyChildrenTab() {
                 ))}
               </div>
             ) : (
-              <Button
-                onClick={() => generateReport(member)}
-                disabled={isGenerating}
-                className="w-full gradient-cosmic text-foreground font-medium"
-              >
-                {isGenerating ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
-                ) : (
-                  <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
-                )}
-              </Button>
+              <PremiumGate overlay>
+                <Button
+                  onClick={() => generateReport(member)}
+                  disabled={isGenerating}
+                  className="w-full gradient-cosmic text-foreground font-medium"
+                >
+                  {isGenerating ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
+                  ) : (
+                    <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
+                  )}
+                </Button>
+              </PremiumGate>
             )}
           </div>
         );
@@ -291,7 +331,7 @@ export default function MyChildrenTab() {
             {RELATIONSHIP_TYPES.map(({ key, emoji, translationKey }) => (
               <button
                 key={key}
-                onClick={() => { setSelectedType(key); if (key !== "other") setFormStep("enterData"); }}
+                onClick={() => handleTypeSelect(key)}
                 className={cn(
                   "flex-shrink-0 flex flex-col items-center gap-1.5 py-3 px-4 rounded-xl border transition-all min-w-[72px]",
                   selectedType === key
@@ -321,6 +361,37 @@ export default function MyChildrenTab() {
               </Button>
             </div>
           )}
+          <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
+            {t("family.cancel")}
+          </Button>
+        </div>
+      )}
+
+      {/* Partner Sync Prompt */}
+      {formStep === "partnerSync" && profile?.partner_name && (
+        <div className="glass rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">💑</span>
+            <p className="text-sm text-foreground leading-relaxed">
+              {t("partner.syncPrompt").replace("{name}", profile.partner_name)}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={addPartnerFromProfile}
+              disabled={saving}
+              className="flex-1 gradient-gold text-primary-foreground font-medium"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("partner.yesAdd")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setFormStep("enterData")}
+              className="flex-1"
+            >
+              {t("partner.differentPerson")}
+            </Button>
+          </div>
           <Button variant="ghost" onClick={resetForm} className="w-full text-muted-foreground">
             {t("family.cancel")}
           </Button>

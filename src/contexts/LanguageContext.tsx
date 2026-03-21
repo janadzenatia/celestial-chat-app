@@ -414,6 +414,10 @@ const translations: Translations = {
   "partner.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
   "partner.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
   "partner.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
+  "partner.syncPrompt": { en: "We have your partner's data — {name}. Add them to your family?    ", ka: "გვაქვს შენი პარტნიორის მონაცემები — {name}. დავამატოთ ოჯახში?" },
+  "partner.yesAdd": { en: "Yes, Add", ka: "კი, დამატება" },
+  "partner.differentPerson": { en: "Different person", ka: "სხვა პირია" },
+  "partner.birthTime": { en: "Partner's Birth Time", ka: "პარტნიორის დაბადების დრო" },
 
   // Edit Profile
   "profile.edit": { en: "Edit Profile", ka: "პროფილის რედაქტირება" },

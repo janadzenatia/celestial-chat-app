@@ -8,6 +8,7 @@ import { getSunSign, ZodiacSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
+import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -58,6 +59,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [name, setName] = useState("");
   const [dob, setDob] = useState<Date | undefined>();
   const [location, setLocation] = useState("");
+  const [birthTime, setBirthTime] = useState("");
   const [saving, setSaving] = useState(false);
   const [generatingLove, setGeneratingLove] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -69,11 +71,27 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
 
   const partnerSign = partnerDob ? getSunSign(partnerDob) : null;
 
-  const openAddForm = () => {
+  const openAddForm = async () => {
     setName("");
     setDob(undefined);
     setLocation("");
+    setBirthTime("");
     setEditMode(false);
+    // Auto-populate from family partner if exists
+    if (user) {
+      const { data } = await supabase
+        .from("children")
+        .select("name, date_of_birth, time_of_birth")
+        .eq("user_id", user.id)
+        .eq("relationship_type", "partner")
+        .limit(1)
+        .single();
+      if (data) {
+        setName(data.name);
+        setDob(parse(data.date_of_birth, "yyyy-MM-dd", new Date()));
+        setBirthTime(data.time_of_birth || "");
+      }
+    }
     setFormOpen(true);
   };
 
@@ -81,6 +99,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setName(partnerName || "");
     setDob(partnerDob ? parse(partnerDob, "yyyy-MM-dd", new Date()) : undefined);
     setLocation(profile?.partner_place_of_birth || "");
+    setBirthTime(profile?.partner_time_of_birth || "");
     setEditMode(true);
     setFormOpen(true);
   };
@@ -122,7 +141,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_birth_date: dobStr,
       partner_love_language: null,
       partner_place_of_birth: location.trim() || null,
-      partner_time_of_birth: null,
+      partner_time_of_birth: birthTime.trim() || null,
       relationship_start_date: null,
     };
 
@@ -201,6 +220,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
           setDob={setDob}
           location={location}
           setLocation={setLocation}
+          birthTime={birthTime}
+          setBirthTime={setBirthTime}
           saving={saving}
           onSave={handleSave}
           editMode={editMode}
@@ -363,6 +384,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         setDob={setDob}
         location={location}
         setLocation={setLocation}
+        birthTime={birthTime}
+        setBirthTime={setBirthTime}
         saving={saving}
         onSave={handleSave}
         editMode={editMode}
@@ -382,6 +405,8 @@ interface PartnerFormDialogProps {
   setDob: (d: Date | undefined) => void;
   location: string;
   setLocation: (l: string) => void;
+  birthTime: string;
+  setBirthTime: (t: string) => void;
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
@@ -389,7 +414,7 @@ interface PartnerFormDialogProps {
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
-  location, setLocation,
+  location, setLocation, birthTime, setBirthTime,
   saving, onSave, editMode,
 }: PartnerFormDialogProps) => {
   const { t } = useLanguage();
@@ -418,6 +443,12 @@ const PartnerFormDialog = ({
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("compat.partnerDob")}</label>
             <BirthDatePicker value={dob} onChange={setDob} placeholder={t("compat.pickDate")} />
+          </div>
+
+          {/* Birth Time */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">{t("partner.birthTime")}</label>
+            <BirthTimePicker value={birthTime} onChange={setBirthTime} />
           </div>
 
           {/* Place of Birth */}
