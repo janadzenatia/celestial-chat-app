@@ -29,7 +29,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
   // Load cached forecast
   useEffect(() => {
-    if (!user || !partnerDobStr || !relDateStr) {
+    if (!user || !partnerDobStr) {
       setForecast(null);
       return;
     }
