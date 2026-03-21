@@ -48,6 +48,7 @@ export default function MyChildrenTab() {
   const [loading, setLoading] = useState(true);
   const [formStep, setFormStep] = useState<"closed" | "selectType" | "enterData">("closed");
   const [selectedType, setSelectedType] = useState<RelationshipType | null>(null);
+  const [customType, setCustomType] = useState("");
   const [memberName, setMemberName] = useState("");
   const [memberDate, setMemberDate] = useState<Date | undefined>();
   const [memberTime, setMemberTime] = useState("");
