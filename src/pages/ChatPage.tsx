@@ -41,6 +41,7 @@ const ChatPage = () => {
   const DAILY_LIMIT = 10;
   const remaining = isPremium ? Infinity : Math.max(0, DAILY_LIMIT - dailyCount);
   const chatDisabled = trialExpired || (!isPremium && remaining <= 0);
+  const isCoolingDown = cooldownUntil !== null && Date.now() < cooldownUntil;
 
   // Moderation messages to detect
   const MODERATION_MARKERS = [
