@@ -66,7 +66,7 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
   }, [user?.id, partnerDobStr, relDateStr, language]);
 
   const generate = useCallback(async () => {
-    if (!user || !profile?.date_of_birth || !partnerDobStr || !relDateStr) return;
+    if (!user || !profile?.date_of_birth || !partnerDobStr) return;
     setGenerating(true);
 
     const dob = profile.date_of_birth;
