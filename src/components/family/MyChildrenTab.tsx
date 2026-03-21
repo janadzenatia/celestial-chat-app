@@ -42,7 +42,11 @@ const RELATIONSHIP_TYPES: { key: RelationshipType; emoji: string; translationKey
   { key: "other", emoji: "👤", translationKey: "family.type.other" },
 ];
 
-export default function MyChildrenTab() {
+interface MyChildrenTabProps {
+  onFamilyChanged?: () => void;
+}
+
+export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
   const { t, language } = useLanguage();
   const { user, profile } = useAuth();
   const [members, setMembers] = useState<FamilyMember[]>([]);

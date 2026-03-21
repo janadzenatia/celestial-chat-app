@@ -28,7 +28,11 @@ interface ChildData {
   time_of_birth: string | null;
 }
 
-export default function MissingPieceTab() {
+interface MissingPieceTabProps {
+  familyVersion?: number;
+}
+
+export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabProps) {
   const { t, language } = useLanguage();
   const { profile, user, refreshProfile } = useAuth();
   const [generating, setGenerating] = useState(false);
