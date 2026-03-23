@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Heart, Pencil, Trash2, Sparkles, Loader2, Lock, Plus, Star, Flame, MessageCircle, Target, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Heart, Pencil, Trash2, Sparkles, Loader2, Lock, Plus, Star, Flame, MessageCircle, Target, ChevronDown, ChevronUp, MapPin, AlertCircle, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
