@@ -74,17 +74,40 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
 
   const partnerSign = partnerDob ? getSunSign(partnerDob) : null;
 
+  // Debounced geocoding for birth place
+  useEffect(() => {
+    if (!location.trim() || location.trim().length < 2) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    setGeoStatus("checking");
+    const timer = setTimeout(async () => {
+      const result = await geocodePlace(location.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [location]);
+
   const openAddForm = async () => {
     setName("");
     setDob(undefined);
     setLocation("");
     setBirthTime("");
+    setGeoStatus("idle");
+    setGeoCoords(null);
     setEditMode(false);
     // Auto-populate from family partner if exists
     if (user) {
       const { data } = await supabase
         .from("children")
-        .select("name, date_of_birth, time_of_birth")
+        .select("name, date_of_birth, time_of_birth, birth_place")
         .eq("user_id", user.id)
         .eq("relationship_type", "partner")
         .limit(1)
@@ -93,6 +116,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         setName(data.name);
         setDob(parse(data.date_of_birth, "yyyy-MM-dd", new Date()));
         setBirthTime(data.time_of_birth || "");
+        setLocation(data.birth_place || "");
       }
     }
     setFormOpen(true);
