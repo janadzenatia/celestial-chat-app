@@ -65,6 +65,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [generatingLove, setGeneratingLove] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
 
   const partnerName = profile?.partner_name as string | undefined;
   const partnerDob = profile?.partner_birth_date as string | undefined;
@@ -72,17 +74,40 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
 
   const partnerSign = partnerDob ? getSunSign(partnerDob) : null;
 
+  // Debounced geocoding for birth place
+  useEffect(() => {
+    if (!location.trim() || location.trim().length < 2) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    setGeoStatus("checking");
+    const timer = setTimeout(async () => {
+      const result = await geocodePlace(location.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [location]);
+
   const openAddForm = async () => {
     setName("");
     setDob(undefined);
     setLocation("");
     setBirthTime("");
+    setGeoStatus("idle");
+    setGeoCoords(null);
     setEditMode(false);
     // Auto-populate from family partner if exists
     if (user) {
       const { data } = await supabase
         .from("children")
-        .select("name, date_of_birth, time_of_birth")
+        .select("name, date_of_birth, time_of_birth, birth_place")
         .eq("user_id", user.id)
         .eq("relationship_type", "partner")
         .limit(1)
@@ -91,6 +116,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         setName(data.name);
         setDob(parse(data.date_of_birth, "yyyy-MM-dd", new Date()));
         setBirthTime(data.time_of_birth || "");
+        setLocation(data.birth_place || "");
       }
     }
     setFormOpen(true);
@@ -101,6 +127,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setDob(partnerDob ? parse(partnerDob, "yyyy-MM-dd", new Date()) : undefined);
     setLocation(profile?.partner_place_of_birth || "");
     setBirthTime(profile?.partner_time_of_birth || "");
+    setGeoStatus("idle");
+    setGeoCoords(null);
     setEditMode(true);
     setFormOpen(true);
   };
@@ -137,9 +165,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     const dobStr = format(dob, "yyyy-MM-dd");
     const sign = getSunSign(dobStr);
 
-    // Geocode partner's birth place
-    let partnerGeo: { lat: number; lon: number; displayName: string } | null = null;
-    if (location.trim()) {
+    // Use geocoded coordinates if available, otherwise try geocoding now
+    let partnerGeo = geoCoords;
+    if (!partnerGeo && location.trim()) {
       partnerGeo = await geocodePlace(location.trim());
     }
 
@@ -149,6 +177,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_love_language: null,
       partner_place_of_birth: location.trim() || null,
       partner_time_of_birth: birthTime.trim() || null,
+      partner_birth_place_lat: partnerGeo?.lat ?? null,
+      partner_birth_place_lon: partnerGeo?.lon ?? null,
+      partner_birth_place_normalized: partnerGeo?.displayName ?? null,
       relationship_start_date: null,
     };
 
@@ -160,6 +191,29 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     if (error) {
       toast({ title: t("auth.genericError"), variant: "destructive" });
     } else {
+      // Sync to family partner card
+      const { data: familyPartner } = await supabase
+        .from("children")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("relationship_type", "partner")
+        .limit(1)
+        .maybeSingle();
+
+      if (familyPartner) {
+        await supabase
+          .from("children")
+          .update({
+            name: name.trim(),
+            date_of_birth: dobStr,
+            time_of_birth: birthTime.trim() || null,
+            birth_place: location.trim() || null,
+            birth_place_lat: partnerGeo?.lat ?? null,
+            birth_place_lon: partnerGeo?.lon ?? null,
+          })
+          .eq("id", familyPartner.id);
+      }
+
       await refreshProfile();
       setFormOpen(false);
       onPartnerChange();
@@ -232,6 +286,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
           saving={saving}
           onSave={handleSave}
           editMode={editMode}
+          geoStatus={geoStatus}
+          geoCoords={geoCoords}
         />
       </>
     );
@@ -396,6 +452,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         saving={saving}
         onSave={handleSave}
         editMode={editMode}
+        geoStatus={geoStatus}
+        geoCoords={geoCoords}
       />
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
     </>
@@ -417,14 +475,16 @@ interface PartnerFormDialogProps {
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
+  geoStatus: "idle" | "checking" | "found" | "not_found";
+  geoCoords: { lat: number; lon: number; displayName: string } | null;
 }
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
   location, setLocation, birthTime, setBirthTime,
-  saving, onSave, editMode,
+  saving, onSave, editMode, geoStatus, geoCoords,
 }: PartnerFormDialogProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -458,7 +518,7 @@ const PartnerFormDialog = ({
             <BirthTimePicker value={birthTime} onChange={setBirthTime} />
           </div>
 
-          {/* Place of Birth */}
+          {/* Place of Birth with geocoding verification */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("partner.placeOfBirth")}</label>
             <Input
@@ -467,6 +527,24 @@ const PartnerFormDialog = ({
               placeholder={t("partner.placeOfBirthPlaceholder")}
               className="glass border-white/10 focus:border-primary"
             />
+            {geoStatus === "checking" && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span>{language === "ka" ? "მდებარეობის ძებნა..." : "Searching location..."}</span>
+              </div>
+            )}
+            {geoStatus === "found" && geoCoords && (
+              <div className="flex items-center gap-1.5 text-xs text-green-400">
+                <MapPin className="w-3 h-3" />
+                <span>{geoCoords.displayName} ({geoCoords.lat.toFixed(2)}°, {geoCoords.lon.toFixed(2)}°)</span>
+              </div>
+            )}
+            {geoStatus === "not_found" && (
+              <div className="flex items-center gap-1.5 text-xs text-destructive">
+                <AlertCircle className="w-3 h-3" />
+                <span>{t("profile.cityNotFound")}</span>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2 pt-2">
