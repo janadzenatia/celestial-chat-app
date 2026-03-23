@@ -191,6 +191,7 @@ const ProfilePage = () => {
         place_of_birth: placeStr || null,
         birth_lat: birthLat,
         birth_lon: birthLon,
+        birth_place_normalized: birthPlaceNormalized,
       } as any)
       .eq("user_id", user.id);
 
