@@ -132,6 +132,12 @@ const ProfilePage = () => {
     if (!user || !editDob) return;
     setSaving(true);
     const dobStr = `${editDob.getFullYear()}-${String(editDob.getMonth() + 1).padStart(2, "0")}-${String(editDob.getDate()).padStart(2, "0")}`;
+
+    // Detect if birth time changed
+    const oldTime = origValues.time;
+    const newTime = editTimeUnknown ? "" : editTime;
+    const birthTimeChanged = oldTime !== newTime || editTimeUnknown !== origValues.timeUnknown;
+
     const { error } = await supabase
       .from("profiles")
       .update({
@@ -145,8 +151,44 @@ const ProfilePage = () => {
     if (error) {
       toast({ title: t("profile.updateError"), variant: "destructive" });
     } else {
+      // Invalidate all cached cosmic data for this user
+      // 1. Clear localStorage caches (Big 3 detail, blueprint, etc.)
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (
+          key.startsWith(`blueprint_${user.id}`) ||
+          key.startsWith(`big3_`) ||
+          key.startsWith(`insight_${user.id}`) ||
+          key.startsWith(`cosmic_`) ||
+          key.startsWith(`wealth_`) ||
+          key.startsWith(`match_`) ||
+          key.startsWith(`synastry_`) ||
+          key.startsWith(`hook_`)
+        )) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+
+      // 2. Delete stale DB-cached data (daily insights, cosmic hooks)
+      await Promise.all([
+        supabase.from("daily_insights").delete().eq("user_id", user.id),
+        supabase.from("cosmic_hooks").delete().eq("user_id", user.id),
+        supabase.from("cosmic_matches").delete().eq("user_id", user.id),
+      ]);
+
       await refreshProfile();
-      toast({ title: t("profile.updateSuccess") });
+
+      // Show birth-time-specific note
+      if (birthTimeChanged) {
+        toast({
+          title: t("profile.updateSuccessCosmic"),
+          description: t("profile.birthTimeNote"),
+        });
+      } else {
+        toast({ title: t("profile.updateSuccessCosmic") });
+      }
       setEditOpen(false);
     }
     setSaving(false);

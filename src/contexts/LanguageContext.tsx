@@ -432,6 +432,8 @@ const translations: Translations = {
   "profile.saveChanges": { en: "Save Changes", ka: "ცვლილებების შენახვა" },
   "profile.saving": { en: "Saving...", ka: "ინახება..." },
   "profile.updateSuccess": { en: "Profile updated successfully!", ka: "პროფილი წარმატებით განახლდა!" },
+  "profile.updateSuccessCosmic": { en: "Profile updated. Your cosmic data will be recalculated.", ka: "პროფილი განახლდა. კოსმიური მონაცემები ახლიდან გამოთვლება." },
+  "profile.birthTimeNote": { en: "Changing birth time affects your Moon and Ascendant signs", ka: "დაბადების დროის შეცვლა გავლენას ახდენს მთვარისა და ასცენდენტის ნიშნებზე" },
   "profile.discardTitle": { en: "Unsaved Changes", ka: "შეუნახავი ცვლილებები" },
   "profile.discardDescription": { en: "Changes will not be saved. Close?", ka: "ცვლილებები არ შეინახება. დახურვა?" },
   "profile.discardClose": { en: "Close", ka: "დახურვა" },
