@@ -17,9 +17,10 @@ import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
   const { t, language } = useLanguage();
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const { insight, loading: insightLoading, refresh: refreshInsight, period } = useDailyInsight();
   const [selectedBig3, setSelectedBig3] = useState<"sun" | "moon" | "rising" | null>(null);
+  const [big3Refreshing, setBig3Refreshing] = useState(false);
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -27,6 +28,12 @@ const Index = () => {
   const sunSign = dob ? getSunSign(dob) : null;
   const moonSign = dob ? getApproxMoonSign(dob) : null;
   const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
+
+  const handleBig3Refresh = async () => {
+    setBig3Refreshing(true);
+    await refreshProfile();
+    setBig3Refreshing(false);
+  };
 
   const big3 = [
     { key: "sun" as const, label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
@@ -58,7 +65,17 @@ const Index = () => {
 
         {/* Big 3 Card */}
         <section className="glass rounded-2xl p-5 shadow-gold">
-          <h2 className="font-serif text-xl text-gradient-gold mb-4">{t("dashboard.big3")}</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-serif text-xl text-gradient-gold">{t("dashboard.big3")}</h2>
+            <button
+              onClick={handleBig3Refresh}
+              disabled={big3Refreshing}
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+              aria-label={language === "ka" ? "განახლება" : "Refresh"}
+            >
+              <RefreshCw className={`w-4 h-4 ${big3Refreshing ? "animate-spin" : ""}`} />
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-3">
             {big3.map(({ key, label, icon: Icon, sign, emoji }) => (
               <button
