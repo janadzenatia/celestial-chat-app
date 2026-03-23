@@ -175,9 +175,9 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
 
 /**
  * Accurate Moon sign using Meeus lunar ephemeris.
- * Accepts optional birth longitude for more precise UTC offset estimation.
+ * Uses browser timezone for UTC conversion.
  */
-export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | null, birthLon?: number | null): ZodiacSign {
+export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | null): ZodiacSign {
   const [year, month, day] = dateOfBirth.split("-").map(Number);
 
   let hours = 12, minutes = 0;
@@ -187,19 +187,11 @@ export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | nu
     minutes = parts[1] ?? 0;
   }
 
-  // Convert local time to UTC
-  // If we have birth longitude, estimate UTC offset from it (longitude/15 = hours east of UTC)
-  // Otherwise fall back to browser timezone
-  let utcOffsetHours: number;
-  if (birthLon != null) {
-    // Round to nearest whole hour offset for standard timezone approximation
-    utcOffsetHours = Math.round(birthLon / 15);
-  } else {
-    const localDate = new Date(year, month - 1, day, hours, minutes);
-    utcOffsetHours = -(localDate.getTimezoneOffset() / 60);
-  }
+  // Convert local time to UTC using browser timezone
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  const utcOffsetMinutes = localDate.getTimezoneOffset();
+  const utcHours = hours + utcOffsetMinutes / 60;
 
-  const utcHours = hours - utcOffsetHours;
   const jd = toJulianDay(year, month, day, utcHours, minutes);
   const moonLon = getMoonLongitude(jd);
   return longitudeToSign(moonLon);
@@ -207,7 +199,9 @@ export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | nu
 
 /**
  * Rising (Ascendant) sign using astronomical calculation.
- * Requires birth time and ideally exact geographic coordinates.
+ * Requires birth time. Uses exact coordinates when available.
+ * Browser timezone is used for UTC conversion (political timezones are more
+ * accurate than solar-longitude estimation).
  */
 export function getApproxRisingSign(
   dateOfBirth: string,
@@ -224,27 +218,18 @@ export function getApproxRisingSign(
   const [year, month, day] = dateOfBirth.split("-").map(Number);
   const [hours, minutes] = timeOfBirth.split(":").map(Number);
 
-  // Convert local time to UTC using coordinates or browser timezone
-  let utcOffsetHours: number;
-  let lat: number;
-  let lon: number;
+  // Convert local time to UTC using browser timezone
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  const utcOffsetMinutes = localDate.getTimezoneOffset();
+  const utcHours = hours + utcOffsetMinutes / 60;
 
-  if (birthLat != null && birthLon != null) {
-    utcOffsetHours = Math.round(birthLon / 15);
-    lat = birthLat;
-    lon = birthLon;
-  } else {
-    const localDate = new Date(year, month - 1, day, hours, minutes);
-    utcOffsetHours = -(localDate.getTimezoneOffset() / 60);
-    lon = utcOffsetHours * 15;
-    lat = 42;
-  }
-
-  const utcHours = hours - utcOffsetHours;
   const jd = toJulianDay(year, month, day, utcHours, minutes);
 
+  // Use exact coordinates if available, otherwise estimate from timezone
+  const lat = birthLat ?? 42;
+  const lon = birthLon ?? (-(utcOffsetMinutes / 60) * 15);
+
   const ascLon = getAscendantLon(jd, lat, lon);
-  return longitudeToSign(ascLon);
   return longitudeToSign(ascLon);
 }
 
