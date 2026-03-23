@@ -253,6 +253,9 @@ export type Database = {
           name: string | null
           onboarding_completed: boolean
           partner_birth_date: string | null
+          partner_birth_place_lat: number | null
+          partner_birth_place_lon: number | null
+          partner_birth_place_normalized: string | null
           partner_love_language: string | null
           partner_name: string | null
           partner_place_of_birth: string | null
@@ -280,6 +283,9 @@ export type Database = {
           name?: string | null
           onboarding_completed?: boolean
           partner_birth_date?: string | null
+          partner_birth_place_lat?: number | null
+          partner_birth_place_lon?: number | null
+          partner_birth_place_normalized?: string | null
           partner_love_language?: string | null
           partner_name?: string | null
           partner_place_of_birth?: string | null
@@ -307,6 +313,9 @@ export type Database = {
           name?: string | null
           onboarding_completed?: boolean
           partner_birth_date?: string | null
+          partner_birth_place_lat?: number | null
+          partner_birth_place_lon?: number | null
+          partner_birth_place_normalized?: string | null
           partner_love_language?: string | null
           partner_name?: string | null
           partner_place_of_birth?: string | null
