@@ -17,9 +17,10 @@ import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
   const { t, language } = useLanguage();
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const { insight, loading: insightLoading, refresh: refreshInsight, period } = useDailyInsight();
   const [selectedBig3, setSelectedBig3] = useState<"sun" | "moon" | "rising" | null>(null);
+  const [big3Refreshing, setBig3Refreshing] = useState(false);
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
@@ -27,6 +28,12 @@ const Index = () => {
   const sunSign = dob ? getSunSign(dob) : null;
   const moonSign = dob ? getApproxMoonSign(dob) : null;
   const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
+
+  const handleBig3Refresh = async () => {
+    setBig3Refreshing(true);
+    await refreshProfile();
+    setBig3Refreshing(false);
+  };
 
   const big3 = [
     { key: "sun" as const, label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
