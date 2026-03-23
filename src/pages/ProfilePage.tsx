@@ -139,14 +139,28 @@ const ProfilePage = () => {
     const newTime = editTimeUnknown ? "" : editTime;
     const birthTimeChanged = oldTime !== newTime || editTimeUnknown !== origValues.timeUnknown;
 
+    // Geocode birth place to get coordinates
+    let birthLat: number | null = null;
+    let birthLon: number | null = null;
+    const placeStr = editPlace.trim();
+    if (placeStr) {
+      const coords = await geocodePlace(placeStr);
+      if (coords) {
+        birthLat = coords.lat;
+        birthLon = coords.lon;
+      }
+    }
+
     const { error } = await supabase
       .from("profiles")
       .update({
         name: editName.trim() || null,
         date_of_birth: dobStr,
         time_of_birth: editTimeUnknown ? null : (editTime || null),
-        place_of_birth: editPlace.trim() || null,
-      })
+        place_of_birth: placeStr || null,
+        birth_lat: birthLat,
+        birth_lon: birthLon,
+      } as any)
       .eq("user_id", user.id);
 
     if (error) {
