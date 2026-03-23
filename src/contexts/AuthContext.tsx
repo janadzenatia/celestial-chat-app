@@ -23,6 +23,8 @@ interface Profile {
   partner_time_of_birth: string | null;
   partner_place_of_birth: string | null;
   relationship_start_date: string | null;
+  birth_lat: number | null;
+  birth_lon: number | null;
 }
 
 /** Derive the effective plan: "free" or "premium" (single tier) */
