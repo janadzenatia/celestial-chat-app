@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { sendWelcomeEmail } from "@/services/authService";
+import { geocodePlace } from "@/lib/geocoding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2, MapPin, AlertCircle, Check } from "lucide-react";
 import LanguageToggle from "@/components/LanguageToggle";
 import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { useToast } from "@/hooks/use-toast";
@@ -26,11 +27,53 @@ const OnboardingPage = () => {
   const [place, setPlace] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Geocode verification
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
+
+  useEffect(() => {
+    if (!place.trim() || place.trim().length < 3) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setGeoStatus("checking");
+      const result = await geocodePlace(place.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [place]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !dobDate) return;
 
     setIsLoading(true);
+
+    // Geocode if not already done
+    let birthLat: number | null = null;
+    let birthLon: number | null = null;
+    let birthPlaceNormalized: string | null = null;
+    if (geoCoords) {
+      birthLat = geoCoords.lat;
+      birthLon = geoCoords.lon;
+      birthPlaceNormalized = geoCoords.displayName;
+    } else if (place.trim()) {
+      const coords = await geocodePlace(place.trim());
+      if (coords) {
+        birthLat = coords.lat;
+        birthLon = coords.lon;
+        birthPlaceNormalized = coords.displayName;
+      }
+    }
+
     const { error } = await supabase
       .from("profiles")
       .update({
@@ -39,7 +82,10 @@ const OnboardingPage = () => {
         time_of_birth: time || null,
         place_of_birth: place,
         onboarding_completed: true,
-      })
+        birth_lat: birthLat,
+        birth_lon: birthLon,
+        birth_place_normalized: birthPlaceNormalized,
+      } as any)
       .eq("user_id", user.id);
 
     setIsLoading(false);
@@ -98,13 +144,35 @@ const OnboardingPage = () => {
 
           <div className="space-y-2">
             <Label className="text-muted-foreground text-sm">{t("onboarding.place")}</Label>
-            <Input
-              value={place}
-              onChange={(e) => setPlace(e.target.value)}
-              required
-              className="glass border-white/10 focus:border-primary"
-              placeholder="Tbilisi, Georgia"
-            />
+            <div className="relative">
+              <Input
+                value={place}
+                onChange={(e) => setPlace(e.target.value)}
+                required
+                className="glass border-white/10 focus:border-primary pr-8"
+                placeholder="Tbilisi, Georgia"
+              />
+              {geoStatus === "checking" && (
+                <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground animate-spin" />
+              )}
+              {geoStatus === "found" && (
+                <MapPin className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-green-400" />
+              )}
+              {geoStatus === "not_found" && (
+                <AlertCircle className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive/70" />
+              )}
+            </div>
+            {geoStatus === "found" && geoCoords && (
+              <p className="text-[10px] text-green-400/80 flex items-center gap-1">
+                <Check className="w-3 h-3" />
+                {geoCoords.lat.toFixed(4)}°, {geoCoords.lon.toFixed(4)}°
+              </p>
+            )}
+            {geoStatus === "not_found" && (
+              <p className="text-[10px] text-destructive/70">
+                {t("profile.cityNotFound")}
+              </p>
+            )}
           </div>
 
           <Button
