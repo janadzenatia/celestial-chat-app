@@ -24,8 +24,8 @@ const Index = () => {
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
-  const birthLat = (profile as any)?.birth_lat ?? null;
-  const birthLon = (profile as any)?.birth_lon ?? null;
+  const birthLat = profile?.birth_lat ?? null;
+  const birthLon = profile?.birth_lon ?? null;
 
   const sunSign = dob ? getSunSign(dob) : null;
   const moonSign = dob ? getApproxMoonSign(dob, tob, birthLon) : null;
