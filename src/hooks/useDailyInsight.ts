@@ -62,9 +62,11 @@ export function useDailyInsight() {
 
     const dob = profile.date_of_birth!;
     const tob = profile.time_of_birth;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
     const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob);
-    const risingSign = getApproxRisingSign(dob, tob);
+    const moonSign = getApproxMoonSign(dob, tob);
+    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
 
     try {
       const resp = await supabase.functions.invoke("daily-insight", {
@@ -100,7 +102,7 @@ export function useDailyInsight() {
 
   useEffect(() => {
     generate(refreshKey > 0);
-  }, [user?.id, profile?.date_of_birth, language, refreshKey]);
+  }, [user?.id, profile?.date_of_birth, profile?.time_of_birth, (profile as any)?.birth_lat, language, refreshKey]);
 
   const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
