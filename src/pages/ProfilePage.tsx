@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
 import { geocodePlace } from "@/lib/geocoding";
-import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2, ChevronRight, Check } from "lucide-react";
+import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2, ChevronRight, Check, MapPin, AlertCircle } from "lucide-react";
 import PaywallModal from "@/components/PaywallModal";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import TrialBanner from "@/components/TrialBanner";
@@ -90,8 +90,33 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
 
+  // Geocode verification state
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
+
   // Track original values for dirty check
   const [origValues, setOrigValues] = useState({ name: "", dob: "", time: "", timeUnknown: false, place: "" });
+
+  // Debounced geocode check when place changes
+  useEffect(() => {
+    if (!editPlace.trim() || editPlace.trim().length < 3) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setGeoStatus("checking");
+      const result = await geocodePlace(editPlace.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [editPlace]);
 
   const effectivePlan = getEffectivePlan(profile);
   const isPremium = effectivePlan !== "free";
@@ -139,15 +164,21 @@ const ProfilePage = () => {
     const newTime = editTimeUnknown ? "" : editTime;
     const birthTimeChanged = oldTime !== newTime || editTimeUnknown !== origValues.timeUnknown;
 
-    // Geocode birth place to get coordinates
+    // Use already-verified geocode result, or fetch fresh
     let birthLat: number | null = null;
     let birthLon: number | null = null;
+    let birthPlaceNormalized: string | null = null;
     const placeStr = editPlace.trim();
-    if (placeStr) {
+    if (placeStr && geoCoords) {
+      birthLat = geoCoords.lat;
+      birthLon = geoCoords.lon;
+      birthPlaceNormalized = geoCoords.displayName;
+    } else if (placeStr) {
       const coords = await geocodePlace(placeStr);
       if (coords) {
         birthLat = coords.lat;
         birthLon = coords.lon;
+        birthPlaceNormalized = coords.displayName;
       }
     }
 
@@ -160,6 +191,7 @@ const ProfilePage = () => {
         place_of_birth: placeStr || null,
         birth_lat: birthLat,
         birth_lon: birthLon,
+        birth_place_normalized: birthPlaceNormalized,
       } as any)
       .eq("user_id", user.id);
 
@@ -466,12 +498,34 @@ const ProfilePage = () => {
             {/* Place of Birth */}
             <div className="space-y-1.5">
               <Label className="text-sm text-muted-foreground">{t("profile.placeOfBirth")}</Label>
-              <Input
-                value={editPlace}
-                onChange={(e) => setEditPlace(e.target.value)}
-                placeholder={t("profile.placeOfBirthPlaceholder")}
-                className="bg-background/50"
-              />
+              <div className="relative">
+                <Input
+                  value={editPlace}
+                  onChange={(e) => setEditPlace(e.target.value)}
+                  placeholder={t("profile.placeOfBirthPlaceholder")}
+                  className="bg-background/50 pr-8"
+                />
+                {geoStatus === "checking" && (
+                  <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground animate-spin" />
+                )}
+                {geoStatus === "found" && (
+                  <MapPin className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-green-400" />
+                )}
+                {geoStatus === "not_found" && (
+                  <AlertCircle className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive/70" />
+                )}
+              </div>
+              {geoStatus === "found" && geoCoords && (
+                <p className="text-[10px] text-green-400/80 flex items-center gap-1">
+                  <Check className="w-3 h-3" />
+                  {geoCoords.lat.toFixed(4)}°N, {geoCoords.lon.toFixed(4)}°E
+                </p>
+              )}
+              {geoStatus === "not_found" && (
+                <p className="text-[10px] text-destructive/70">
+                  {t("profile.cityNotFound")}
+                </p>
+              )}
             </div>
 
             {/* Save Button */}

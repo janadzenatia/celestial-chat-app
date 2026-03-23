@@ -429,6 +429,7 @@ const translations: Translations = {
   "profile.timeUnknown": { en: "Time unknown", ka: "საათი უცნობია" },
   "profile.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
   "profile.placeOfBirthPlaceholder": { en: "City, Country...", ka: "ქალაქი, ქვეყანა..." },
+  "profile.cityNotFound": { en: "City not found, try another format (e.g: Tbilisi, Georgia)", ka: "ქალაქი ვერ მოიძებნა, სცადე სხვა ფორმატი (მაგ: თბილისი, საქართველო)" },
   "profile.saveChanges": { en: "Save Changes", ka: "ცვლილებების შენახვა" },
   "profile.saving": { en: "Saving...", ka: "ინახება..." },
   "profile.updateSuccess": { en: "Profile updated successfully!", ka: "პროფილი წარმატებით განახლდა!" },
