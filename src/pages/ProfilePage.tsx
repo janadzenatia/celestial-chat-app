@@ -164,15 +164,21 @@ const ProfilePage = () => {
     const newTime = editTimeUnknown ? "" : editTime;
     const birthTimeChanged = oldTime !== newTime || editTimeUnknown !== origValues.timeUnknown;
 
-    // Geocode birth place to get coordinates
+    // Use already-verified geocode result, or fetch fresh
     let birthLat: number | null = null;
     let birthLon: number | null = null;
+    let birthPlaceNormalized: string | null = null;
     const placeStr = editPlace.trim();
-    if (placeStr) {
+    if (placeStr && geoCoords) {
+      birthLat = geoCoords.lat;
+      birthLon = geoCoords.lon;
+      birthPlaceNormalized = geoCoords.displayName;
+    } else if (placeStr) {
       const coords = await geocodePlace(placeStr);
       if (coords) {
         birthLat = coords.lat;
         birthLon = coords.lon;
+        birthPlaceNormalized = coords.displayName;
       }
     }
 
