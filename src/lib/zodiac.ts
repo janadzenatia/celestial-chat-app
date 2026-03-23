@@ -24,6 +24,133 @@ const signs: ZodiacSign[] = [
   { name: "Sagittarius", emoji: "♐", element: "Fire", startMonth: 11, startDay: 22, endMonth: 12, endDay: 21 },
 ];
 
+// Sign lookup by ecliptic longitude (0° = Aries)
+const signsByLongitude: ZodiacSign[] = [
+  signs[3],  // Aries 0-30
+  signs[4],  // Taurus 30-60
+  signs[5],  // Gemini 60-90
+  signs[6],  // Cancer 90-120
+  signs[7],  // Leo 120-150
+  signs[8],  // Virgo 150-180
+  signs[9],  // Libra 180-210
+  signs[10], // Scorpio 210-240
+  signs[11], // Sagittarius 240-270
+  signs[0],  // Capricorn 270-300
+  signs[1],  // Aquarius 300-330
+  signs[2],  // Pisces 330-360
+];
+
+// ─── Utility math ───────────────────────────────────────────
+function norm360(deg: number): number { return ((deg % 360) + 360) % 360; }
+function sinD(d: number): number { return Math.sin(d * Math.PI / 180); }
+function cosD(d: number): number { return Math.cos(d * Math.PI / 180); }
+function tanD(d: number): number { return Math.tan(d * Math.PI / 180); }
+
+/**
+ * Convert calendar date/time to Julian Day number
+ */
+function toJulianDay(year: number, month: number, day: number, hour: number, minute: number): number {
+  const h = hour + minute / 60;
+  let y = year, m = month;
+  if (m <= 2) { y--; m += 12; }
+  const A = Math.floor(y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + h / 24 + B - 1524.5;
+}
+
+/**
+ * Accurate Moon ecliptic longitude using Meeus Chapter 47
+ * Returns degrees (0-360)
+ */
+function getMoonLongitude(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  const T2 = T * T;
+  const T3 = T2 * T;
+  const T4 = T3 * T;
+
+  // Fundamental arguments (degrees)
+  const Lp = norm360(218.3164477 + 481267.88123421 * T - 0.0015786 * T2 + T3 / 538841 - T4 / 65194000);
+  const D  = norm360(297.8501921 + 445267.1114034 * T - 0.0018819 * T2 + T3 / 545868 - T4 / 113065000);
+  const M  = norm360(357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000);
+  const Mp = norm360(134.9633964 + 477198.8675055 * T + 0.0087414 * T2 + T3 / 69699 - T4 / 14712000);
+  const F  = norm360(93.2720950 + 483202.0175233 * T - 0.0036539 * T2 - T3 / 3526000 + T4 / 863310000);
+
+  const A1 = norm360(119.75 + 131.849 * T);
+  const A2 = norm360(53.09 + 479264.290 * T);
+
+  let E = 1 - 0.002516 * T - 0.0000074 * T2;
+  const E2 = E * E;
+
+  // Periodic terms for longitude (Meeus Table 47.A — top ~50 terms)
+  const lonTerms: [number, number, number, number, number][] = [
+    [0,0,1,0, 6288774], [2,0,-1,0, 1274027], [2,0,0,0, 658314], [0,0,2,0, 213618],
+    [0,1,0,0, -185116], [0,0,0,2, -114332], [2,0,-2,0, 58793], [2,-1,-1,0, 57066],
+    [2,0,1,0, 53322], [2,-1,0,0, 45758], [0,1,-1,0, -40923], [1,0,0,0, -34720],
+    [0,1,1,0, -30383], [2,0,0,-2, 15327], [0,0,1,2, -12528], [0,0,1,-2, 10980],
+    [4,0,-1,0, 10675], [0,0,3,0, 10034], [4,0,-2,0, 8548], [2,1,-1,0, -7888],
+    [2,1,0,0, -6766], [1,0,-1,0, -5163], [1,1,0,0, 4987], [2,-1,1,0, 4036],
+    [2,0,2,0, 3994], [4,0,0,0, 3861], [2,0,-3,0, 3665], [0,1,-2,0, -2689],
+    [2,0,-1,2, -2602], [2,-1,-2,0, 2390], [1,0,1,0, -2348], [2,-2,0,0, 2236],
+    [0,1,2,0, -2120], [0,2,0,0, -2069], [2,-2,-1,0, 2048], [2,0,1,-2, -1773],
+    [2,0,0,2, -1595], [4,-1,-1,0, 1215], [0,0,2,2, -1110], [3,0,-1,0, -892],
+    [2,1,1,0, -810], [4,-1,-2,0, 759], [0,2,-1,0, -713], [2,2,-1,0, -700],
+    [2,1,-2,0, 691], [2,-1,0,-2, 596], [4,0,1,0, 549], [0,0,4,0, 537],
+    [4,-1,0,0, 520], [1,0,-2,0, -487],
+  ];
+
+  let SigmaL = 0;
+  for (const [d, m, mp, f, coeff] of lonTerms) {
+    let c = coeff;
+    if (Math.abs(m) === 1) c *= E;
+    if (Math.abs(m) === 2) c *= E2;
+    SigmaL += c * sinD(d * D + m * M + mp * Mp + f * F);
+  }
+
+  SigmaL += 3958 * sinD(A1) + 1962 * sinD(Lp - F) + 318 * sinD(A2);
+
+  return norm360(Lp + SigmaL / 1000000);
+}
+
+/**
+ * Obliquity of the ecliptic (Meeus)
+ */
+function getObliquity(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  return 23.4392911 - 0.0130042 * T - 0.00000016 * T * T;
+}
+
+/**
+ * Greenwich Mean Sidereal Time in degrees
+ */
+function getGMST(jd: number): number {
+  const T = (jd - 2451545.0) / 36525;
+  return norm360(
+    280.46061837 + 360.98564736629 * (jd - 2451545.0) +
+    0.000387933 * T * T - T * T * T / 38710000
+  );
+}
+
+/**
+ * Ascendant ecliptic longitude using birth time and geographic coordinates
+ */
+function getAscendantLon(jd: number, latDeg: number, lonDeg: number): number {
+  const gmst = getGMST(jd);
+  const lst = norm360(gmst + lonDeg);
+  const eps = getObliquity(jd);
+  const ascRad = Math.atan2(
+    cosD(lst),
+    -(sinD(lst) * cosD(eps) + tanD(latDeg) * sinD(eps))
+  );
+  return norm360(ascRad * 180 / Math.PI);
+}
+
+function longitudeToSign(lon: number): ZodiacSign {
+  const idx = Math.floor(norm360(lon) / 30) % 12;
+  return signsByLongitude[idx];
+}
+
+// ─── Public API ─────────────────────────────────────────────
+
 /**
  * Get the Sun sign from a date of birth string (YYYY-MM-DD)
  */
@@ -35,10 +162,7 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
 
   for (const sign of signs) {
     if (sign.startMonth === 12 && sign.endMonth === 1) {
-      // Capricorn wraps around year
-      if ((month === 12 && day >= sign.startDay) || (month === 1 && day <= sign.endDay)) {
-        return sign;
-      }
+      if ((month === 12 && day >= sign.startDay) || (month === 1 && day <= sign.endDay)) return sign;
     } else if (
       (month === sign.startMonth && day >= sign.startDay) ||
       (month === sign.endMonth && day <= sign.endDay)
@@ -50,40 +174,61 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
 }
 
 /**
- * Approximate Moon sign using a simplified lunar cycle calculation.
- * This is an approximation — real Moon sign requires an ephemeris.
+ * Accurate Moon sign using Meeus lunar ephemeris.
+ * Uses the user's browser timezone to convert local birth time to UTC.
  */
-export function getApproxMoonSign(dateOfBirth: string): ZodiacSign {
-  const date = new Date(dateOfBirth + "T12:00:00");
-  // Simplified: Moon moves ~13.2° per day, completes zodiac in ~27.3 days
-  // Using a known new moon in Aries as reference: Jan 1, 2000
-  const refDate = new Date("2000-01-06T12:00:00"); // Moon was in Aries
-  const diffDays = (date.getTime() - refDate.getTime()) / (1000 * 60 * 60 * 24);
-  const moonCycleDays = 27.3216;
-  const position = ((diffDays % moonCycleDays) + moonCycleDays) % moonCycleDays;
-  const signIndex = Math.floor((position / moonCycleDays) * 12) % 12;
-  // Offset by 3 because reference was Aries (index 3 in our array)
-  return signs[(signIndex + 3) % 12];
+export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | null): ZodiacSign {
+  const [year, month, day] = dateOfBirth.split("-").map(Number);
+
+  // Parse birth time or default to noon local
+  let hours = 12, minutes = 0;
+  if (timeOfBirth) {
+    const parts = timeOfBirth.split(":").map(Number);
+    hours = parts[0] ?? 12;
+    minutes = parts[1] ?? 0;
+  }
+
+  // Convert local time to approximate UTC using browser timezone offset
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  const utcOffsetMinutes = localDate.getTimezoneOffset(); // negative for east of UTC
+  const utcHours = hours + utcOffsetMinutes / 60;
+  const utcMinutes = minutes;
+
+  const jd = toJulianDay(year, month, day, utcHours, utcMinutes);
+  const moonLon = getMoonLongitude(jd);
+  return longitudeToSign(moonLon);
 }
 
 /**
- * Approximate Rising sign using birth time and date.
- * This is a rough approximation — real Rising sign requires exact coordinates.
+ * Rising (Ascendant) sign using astronomical calculation.
+ * Requires birth time; uses browser timezone for UTC conversion.
+ * Uses approximate longitude from timezone when coordinates unavailable.
  */
 export function getApproxRisingSign(dateOfBirth: string, timeOfBirth: string | null): ZodiacSign {
   const sunSign = getSunSign(dateOfBirth);
-  const sunIndex = sunSign ? signs.findIndex(s => s.name === sunSign.name) : 0;
 
   if (!timeOfBirth) {
-    // Without birth time, use sun sign as fallback
-    return signs[sunIndex];
+    // Without birth time, Ascendant cannot be calculated — return Sun sign as placeholder
+    return sunSign ?? signs[0];
   }
 
+  const [year, month, day] = dateOfBirth.split("-").map(Number);
   const [hours, minutes] = timeOfBirth.split(":").map(Number);
-  const totalMinutes = hours * 60 + minutes;
-  // Rising sign changes every ~2 hours, full cycle in 24h
-  const risingOffset = Math.floor((totalMinutes / 120)) % 12;
-  return signs[(sunIndex + risingOffset) % 12];
+
+  // Convert local time to UTC
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  const utcOffsetMinutes = localDate.getTimezoneOffset();
+  const utcHours = hours + utcOffsetMinutes / 60;
+
+  const jd = toJulianDay(year, month, day, utcHours, minutes);
+
+  // Estimate geographic coordinates from timezone offset
+  // Each hour offset = ~15° longitude; assume mid-latitude ~42° (reasonable for many regions)
+  const estLongitude = -(utcOffsetMinutes / 60) * 15;
+  const estLatitude = 42;
+
+  const ascLon = getAscendantLon(jd, estLatitude, estLongitude);
+  return longitudeToSign(ascLon);
 }
 
 /**
