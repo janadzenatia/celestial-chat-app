@@ -137,6 +137,12 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     const dobStr = format(dob, "yyyy-MM-dd");
     const sign = getSunSign(dobStr);
 
+    // Geocode partner's birth place
+    let partnerGeo: { lat: number; lon: number; displayName: string } | null = null;
+    if (location.trim()) {
+      partnerGeo = await geocodePlace(location.trim());
+    }
+
     const updateData: any = {
       partner_name: name.trim(),
       partner_birth_date: dobStr,
