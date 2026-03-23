@@ -52,6 +52,9 @@ const translations: Translations = {
   "family.analyzing": { en: "Consulting the cosmos...", ka: "კოსმოსთან კონსულტაცია..." },
   "family.regenerate": { en: "Regenerate", ka: "ხელახლა გენერაცია" },
   "family.analyzedMembers": { en: "Family analyzed", ka: "გაანალიზებული ოჯახი" },
+  "family.placeOfBirth": { en: "Place of Birth", ka: "დაბადების ადგილი" },
+  "family.placeOfBirthPlaceholder": { en: "e.g: Tbilisi, Georgia", ka: "მაგ: თბილისი, საქართველო" },
+  "family.cityNotFound": { en: "City not found, try another format (e.g: Tbilisi, Georgia)", ka: "ქალაქი ვერ მოიძებნა, სცადე სხვა ფორმატი (მაგ: თბილისი, საქართველო)" },
 
   // Trial
   "trial.days": { en: "d", ka: "დ" },
