@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import AppHeader from "@/components/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
