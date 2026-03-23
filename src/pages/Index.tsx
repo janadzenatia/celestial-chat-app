@@ -24,10 +24,12 @@ const Index = () => {
 
   const dob = profile?.date_of_birth ?? null;
   const tob = profile?.time_of_birth ?? null;
+  const birthLat = (profile as any)?.birth_lat ?? null;
+  const birthLon = (profile as any)?.birth_lon ?? null;
 
   const sunSign = dob ? getSunSign(dob) : null;
-  const moonSign = dob ? getApproxMoonSign(dob, tob) : null;
-  const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
+  const moonSign = dob ? getApproxMoonSign(dob, tob, birthLon) : null;
+  const risingSign = dob ? getApproxRisingSign(dob, tob, birthLat, birthLon) : null;
 
   const handleBig3Refresh = async () => {
     setBig3Refreshing(true);
