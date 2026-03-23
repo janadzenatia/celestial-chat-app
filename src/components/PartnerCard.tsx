@@ -473,14 +473,16 @@ interface PartnerFormDialogProps {
   saving: boolean;
   onSave: () => void;
   editMode: boolean;
+  geoStatus: "idle" | "checking" | "found" | "not_found";
+  geoCoords: { lat: number; lon: number; displayName: string } | null;
 }
 
 const PartnerFormDialog = ({
   open, onOpenChange, name, setName, dob, setDob,
   location, setLocation, birthTime, setBirthTime,
-  saving, onSave, editMode,
+  saving, onSave, editMode, geoStatus, geoCoords,
 }: PartnerFormDialogProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -514,7 +516,7 @@ const PartnerFormDialog = ({
             <BirthTimePicker value={birthTime} onChange={setBirthTime} />
           </div>
 
-          {/* Place of Birth */}
+          {/* Place of Birth with geocoding verification */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("partner.placeOfBirth")}</label>
             <Input
@@ -523,6 +525,24 @@ const PartnerFormDialog = ({
               placeholder={t("partner.placeOfBirthPlaceholder")}
               className="glass border-white/10 focus:border-primary"
             />
+            {geoStatus === "checking" && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span>{language === "ka" ? "მდებარეობის ძებნა..." : "Searching location..."}</span>
+              </div>
+            )}
+            {geoStatus === "found" && geoCoords && (
+              <div className="flex items-center gap-1.5 text-xs text-green-400">
+                <MapPin className="w-3 h-3" />
+                <span>{geoCoords.displayName} ({geoCoords.lat.toFixed(2)}°, {geoCoords.lon.toFixed(2)}°)</span>
+              </div>
+            )}
+            {geoStatus === "not_found" && (
+              <div className="flex items-center gap-1.5 text-xs text-destructive">
+                <AlertCircle className="w-3 h-3" />
+                <span>{t("profile.cityNotFound")}</span>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2 pt-2">
