@@ -26,7 +26,7 @@ const Index = () => {
   const tob = profile?.time_of_birth ?? null;
 
   const sunSign = dob ? getSunSign(dob) : null;
-  const moonSign = dob ? getApproxMoonSign(dob) : null;
+  const moonSign = dob ? getApproxMoonSign(dob, tob) : null;
   const risingSign = dob ? getApproxRisingSign(dob, tob) : null;
 
   const handleBig3Refresh = async () => {
