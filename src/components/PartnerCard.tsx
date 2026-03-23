@@ -165,9 +165,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     const dobStr = format(dob, "yyyy-MM-dd");
     const sign = getSunSign(dobStr);
 
-    // Geocode partner's birth place
-    let partnerGeo: { lat: number; lon: number; displayName: string } | null = null;
-    if (location.trim()) {
+    // Use geocoded coordinates if available, otherwise try geocoding now
+    let partnerGeo = geoCoords;
+    if (!partnerGeo && location.trim()) {
       partnerGeo = await geocodePlace(location.trim());
     }
 
@@ -177,6 +177,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       partner_love_language: null,
       partner_place_of_birth: location.trim() || null,
       partner_time_of_birth: birthTime.trim() || null,
+      partner_birth_place_lat: partnerGeo?.lat ?? null,
+      partner_birth_place_lon: partnerGeo?.lon ?? null,
+      partner_birth_place_normalized: partnerGeo?.displayName ?? null,
       relationship_start_date: null,
     };
 
@@ -188,6 +191,29 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     if (error) {
       toast({ title: t("auth.genericError"), variant: "destructive" });
     } else {
+      // Sync to family partner card
+      const { data: familyPartner } = await supabase
+        .from("children")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("relationship_type", "partner")
+        .limit(1)
+        .maybeSingle();
+
+      if (familyPartner) {
+        await supabase
+          .from("children")
+          .update({
+            name: name.trim(),
+            date_of_birth: dobStr,
+            time_of_birth: birthTime.trim() || null,
+            birth_place: location.trim() || null,
+            birth_place_lat: partnerGeo?.lat ?? null,
+            birth_place_lon: partnerGeo?.lon ?? null,
+          })
+          .eq("id", familyPartner.id);
+      }
+
       await refreshProfile();
       setFormOpen(false);
       onPartnerChange();
