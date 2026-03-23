@@ -498,12 +498,34 @@ const ProfilePage = () => {
             {/* Place of Birth */}
             <div className="space-y-1.5">
               <Label className="text-sm text-muted-foreground">{t("profile.placeOfBirth")}</Label>
-              <Input
-                value={editPlace}
-                onChange={(e) => setEditPlace(e.target.value)}
-                placeholder={t("profile.placeOfBirthPlaceholder")}
-                className="bg-background/50"
-              />
+              <div className="relative">
+                <Input
+                  value={editPlace}
+                  onChange={(e) => setEditPlace(e.target.value)}
+                  placeholder={t("profile.placeOfBirthPlaceholder")}
+                  className="bg-background/50 pr-8"
+                />
+                {geoStatus === "checking" && (
+                  <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground animate-spin" />
+                )}
+                {geoStatus === "found" && (
+                  <MapPin className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-green-400" />
+                )}
+                {geoStatus === "not_found" && (
+                  <AlertCircle className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive/70" />
+                )}
+              </div>
+              {geoStatus === "found" && geoCoords && (
+                <p className="text-[10px] text-green-400/80 flex items-center gap-1">
+                  <Check className="w-3 h-3" />
+                  {geoCoords.lat.toFixed(4)}°N, {geoCoords.lon.toFixed(4)}°E
+                </p>
+              )}
+              {geoStatus === "not_found" && (
+                <p className="text-[10px] text-destructive/70">
+                  {t("profile.cityNotFound")}
+                </p>
+              )}
             </div>
 
             {/* Save Button */}
