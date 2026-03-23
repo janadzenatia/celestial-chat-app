@@ -231,6 +231,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          birth_lat: number | null
+          birth_lon: number | null
           created_at: string
           daily_chat_count: number
           date_of_birth: string | null
@@ -255,6 +257,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          birth_lat?: number | null
+          birth_lon?: number | null
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
@@ -279,6 +283,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          birth_lat?: number | null
+          birth_lon?: number | null
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
