@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelSubscription } from "@/services/subscriptionService";
+import { geocodePlace } from "@/lib/geocoding";
 import { User, Star, Shield, LogOut, XCircle, Pencil, Loader2, KeyRound, Trash2, ChevronRight, Check } from "lucide-react";
 import PaywallModal from "@/components/PaywallModal";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
