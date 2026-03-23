@@ -102,7 +102,7 @@ export function useDailyInsight() {
 
   useEffect(() => {
     generate(refreshKey > 0);
-  }, [user?.id, profile?.date_of_birth, language, refreshKey]);
+  }, [user?.id, profile?.date_of_birth, profile?.time_of_birth, (profile as any)?.birth_lat, language, refreshKey]);
 
   const refresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
