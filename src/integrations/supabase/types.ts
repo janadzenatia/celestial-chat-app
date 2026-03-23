@@ -81,6 +81,9 @@ export type Database = {
       }
       children: {
         Row: {
+          birth_place: string | null
+          birth_place_lat: number | null
+          birth_place_lon: number | null
           created_at: string
           date_of_birth: string
           id: string
@@ -90,6 +93,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          birth_place?: string | null
+          birth_place_lat?: number | null
+          birth_place_lon?: number | null
           created_at?: string
           date_of_birth: string
           id?: string
@@ -99,6 +105,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          birth_place?: string | null
+          birth_place_lat?: number | null
+          birth_place_lon?: number | null
           created_at?: string
           date_of_birth?: string
           id?: string

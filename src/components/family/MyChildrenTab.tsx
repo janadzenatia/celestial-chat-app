@@ -1,14 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen } from "lucide-react";
+import { Plus, Loader2, Trash2, Sparkles, ChevronDown, ChevronUp, Star, Heart, BookOpen, MapPin, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { geocodePlace } from "@/lib/geocoding";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
 import { BirthTimePicker } from "@/components/BirthTimePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import PaywallModal from "@/components/PaywallModal";
 import PremiumGate from "@/components/PremiumGate";
 import { cn } from "@/lib/utils";
@@ -23,6 +25,9 @@ interface FamilyMember {
   time_of_birth: string | null;
   relationship_type: RelationshipType;
   custom_type?: string;
+  birth_place?: string | null;
+  birth_place_lat?: number | null;
+  birth_place_lon?: number | null;
 }
 
 interface ChildReport {
@@ -58,14 +63,40 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
   const [memberName, setMemberName] = useState("");
   const [memberDate, setMemberDate] = useState<Date | undefined>();
   const [memberTime, setMemberTime] = useState("");
+  const [memberPlace, setMemberPlace] = useState("");
   const [saving, setSaving] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+
+  // Geocode verification state
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
 
   const isPremium = getEffectivePlan(profile) !== "free";
 
   const [reports, setReports] = useState<Record<string, ChildReport>>({});
   const [generating, setGenerating] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, string | null>>({});
+
+  // Debounced geocode check
+  useEffect(() => {
+    if (!memberPlace.trim() || memberPlace.trim().length < 3) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    setGeoStatus("checking");
+    const timer = setTimeout(async () => {
+      const result = await geocodePlace(memberPlace.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [memberPlace]);
 
   const loadMembers = useCallback(async () => {
     if (!user) return;
@@ -106,12 +137,28 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     setSaving(true);
     const dob = memberDate.toISOString().split("T")[0];
     const effectiveType = selectedType === "other" ? `other:${customType.trim()}` : selectedType;
+
+    // Use geocode result if available, or fetch fresh
+    let lat: number | null = null;
+    let lon: number | null = null;
+    let placeText = memberPlace.trim() || null;
+    if (geoCoords && geoStatus === "found") {
+      lat = geoCoords.lat;
+      lon = geoCoords.lon;
+    } else if (placeText) {
+      const coords = await geocodePlace(placeText);
+      if (coords) { lat = coords.lat; lon = coords.lon; }
+    }
+
     const { error } = await supabase.from("children").insert({
       user_id: user.id,
       name: memberName.trim(),
       date_of_birth: dob,
       time_of_birth: memberTime.trim() || null,
       relationship_type: effectiveType,
+      birth_place: placeText,
+      birth_place_lat: lat,
+      birth_place_lon: lon,
     } as any);
     if (!error) {
       resetForm();
@@ -130,6 +177,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       date_of_birth: profile.partner_birth_date,
       time_of_birth: profile.partner_time_of_birth || null,
       relationship_type: "partner",
+      birth_place: profile.partner_place_of_birth || null,
     } as any);
     if (!error) {
       resetForm();
@@ -142,21 +190,18 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
   const handleTypeSelect = (key: RelationshipType) => {
     setSelectedType(key);
     if (key === "partner") {
-      // Check if partner already exists in family
       const existingPartner = members.find(m => m.relationship_type === "partner");
       if (existingPartner) {
-        // Block adding a second partner
         toast.info(t("partner.alreadyExists"));
         setSelectedType(null);
         return;
       }
-      // Check if partner data exists from Compatibility page
       if (profile?.partner_name && profile?.partner_birth_date) {
         setFormStep("partnerSync");
         return;
       }
     }
-    if (key === "other") return; // wait for custom type input
+    if (key === "other") return;
     setFormStep("enterData");
   };
 
@@ -164,9 +209,12 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     setMemberName("");
     setMemberDate(undefined);
     setMemberTime("");
+    setMemberPlace("");
     setSelectedType(null);
     setCustomType("");
     setFormStep("closed");
+    setGeoStatus("idle");
+    setGeoCoords(null);
   };
 
   const deleteMember = async (id: string) => {
@@ -176,6 +224,18 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     onFamilyChanged?.();
   };
 
+  const getMemberBig3 = (member: FamilyMember) => {
+    const sun = getSunSign(member.date_of_birth);
+    const moon = getApproxMoonSign(member.date_of_birth, member.time_of_birth);
+    const rising = getApproxRisingSign(
+      member.date_of_birth,
+      member.time_of_birth,
+      member.birth_place_lat,
+      member.birth_place_lon
+    );
+    return { sun, moon, rising };
+  };
+
   const generateReport = async (member: FamilyMember) => {
     if (!user || !profile?.date_of_birth) return;
     setGenerating(member.id);
@@ -183,11 +243,9 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       await supabase.from("child_reports").delete().eq("child_id", member.id).eq("language", language);
 
       const parentSun = getSunSign(profile.date_of_birth);
-      const parentMoon = getApproxMoonSign(profile.date_of_birth);
-      const parentRising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth);
-      const memberSun = getSunSign(member.date_of_birth);
-      const memberMoon = getApproxMoonSign(member.date_of_birth);
-      const memberRising = getApproxRisingSign(member.date_of_birth, member.time_of_birth);
+      const parentMoon = getApproxMoonSign(profile.date_of_birth, profile.time_of_birth);
+      const parentRising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, profile.birth_lat, profile.birth_lon);
+      const { sun: memberSun, moon: memberMoon, rising: memberRising } = getMemberBig3(member);
 
       const resp = await supabase.functions.invoke("child-synastry", {
         body: {
@@ -198,10 +256,13 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
           parentRisingSign: parentRising?.name,
           childName: member.name,
           childDob: member.date_of_birth,
+          childTimeOfBirth: member.time_of_birth || null,
+          childBirthPlace: member.birth_place || null,
           childSunSign: memberSun?.name,
           childMoonSign: memberMoon?.name,
           childRisingSign: memberRising?.name,
           childHasTime: Boolean(member.time_of_birth),
+          childHasPlace: Boolean(member.birth_place_lat),
           relationshipType: member.relationship_type,
           language,
         },
@@ -258,7 +319,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     <div className="space-y-4">
       {/* Family Member Cards */}
       {members.map(member => {
-        const sun = getSunSign(member.date_of_birth);
+        const { sun, moon, rising } = getMemberBig3(member);
         const report = reports[member.id];
         const isGenerating = generating === member.id;
         const expandedSection = expanded[member.id] || null;
@@ -284,6 +345,21 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
               <button onClick={() => deleteMember(member.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
                 <Trash2 className="w-4 h-4" />
               </button>
+            </div>
+
+            {/* Big 3 display */}
+            <div className="flex gap-2">
+              {[
+                { label: t("dashboard.sun"), sign: sun },
+                { label: t("dashboard.moon"), sign: moon },
+                { label: t("dashboard.rising"), sign: rising },
+              ].map(({ label, sign }) => (
+                <div key={label} className="flex-1 text-center py-1.5 px-1 rounded-lg bg-white/5 border border-white/10">
+                  <span className="text-lg">{sign?.emoji || "?"}</span>
+                  <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{label}</p>
+                  <p className="text-[10px] font-medium text-foreground">{sign ? t(`zodiac.${sign.name}`) : "—"}</p>
+                </div>
+              ))}
             </div>
 
             {/* Report or Generate */}
@@ -431,6 +507,34 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
               value={memberTime}
               onChange={setMemberTime}
             />
+
+            {/* Birth Place with geocoding */}
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">{t("family.placeOfBirth")}</Label>
+              <Input
+                value={memberPlace}
+                onChange={e => setMemberPlace(e.target.value)}
+                placeholder={t("family.placeOfBirthPlaceholder")}
+                className="glass border-white/10 focus:border-primary"
+              />
+              {geoStatus === "checking" && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                </div>
+              )}
+              {geoStatus === "found" && geoCoords && (
+                <div className="flex items-center gap-1.5 text-xs text-green-400">
+                  <MapPin className="w-3 h-3" />
+                  <span>{geoCoords.lat.toFixed(2)}°, {geoCoords.lon.toFixed(2)}°</span>
+                </div>
+              )}
+              {geoStatus === "not_found" && (
+                <div className="flex items-center gap-1.5 text-xs text-destructive">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>{t("family.cityNotFound")}</span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-2">
             <Button
