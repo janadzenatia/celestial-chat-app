@@ -29,12 +29,11 @@ const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
   const isPremium = effectivePlan === "premium";
 
   const features = [
-    { en: "Unlimited AI Chat Messages", ka: "შეუზღუდავი AI ჩატის შეტყობინებები" },
-    { en: "Deep Compatibility Analysis", ka: "ღრმა თავსებადობის ანალიზი" },
-    { en: "Cosmic Calendar & Traffic Light", ka: "კოსმიური კალენდარი და შუქნიშანი" },
-    { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედისწერა" },
-    { en: "Family Cosmic Balance", ka: "ოჯახის კოსმიური ბალანსი" },
-    { en: "Cosmic Blueprint & Daily Alerts", ka: "კოსმიური გეგმა და დღიური შეტყობინებები" },
+    { en: "Deep synastry & all features", ka: "ღრმა სინასტრია და ყველა ფუნქცია" },
+    { en: "Unlimited AI chat", ka: "ულიმიტო AI ჩატი" },
+    { en: "Cosmic calendar", ka: "კოსმიური კალენდარი" },
+    { en: "Family cosmic analysis", ka: "ოჯახის კოსმიური ანალიზი" },
+    { en: "Unlimited chat history", ka: "შეუზღუდავი ჩატის ისტორია" },
   ];
 
   const handlePurchase = async () => {

@@ -337,12 +337,12 @@ const translations: Translations = {
   // Paywall
   "paywall.title": { en: "Unlock Your Cosmic Destiny", ka: "გახსენი შენი კოსმიური ბედისწერა" },
   "paywall.subtitle": { en: "Access all premium astrology features", ka: "მიიღე წვდომა ყველა პრემიუმ ასტროლოგიურ ფუნქციაზე" },
-  "paywall.unlock": { en: "Unlock Premium", ka: "პრემიუმის გააქტიურება" },
+  "paywall.unlock": { en: "✨ Activate Premium", ka: "✨ პრემიუმის გააქტიურება" },
   "paywall.processing": { en: "Processing...", ka: "მიმდინარეობს..." },
   "paywall.success": { en: "Premium Activated! ✨", ka: "პრემიუმი გააქტიურებულია! ✨" },
   "paywall.error": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
   "paywall.bestValue": { en: "Best Value", ka: "საუკეთესო არჩევანი" },
-  "paywall.disclaimer": { en: "Cancel anytime. Entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნით." },
+  "paywall.disclaimer": { en: "Cancel anytime. For entertainment purposes only.", ka: "გაუქმება ნებისმიერ დროს. მხოლოდ გასართობი მიზნებით." },
   "paywall.premiumContent": { en: "Premium Content", ka: "პრემიუმ კონტენტი" },
 
   "hook.label": { en: "Cosmic Alert", ka: "კოსმიური შეტყობინება" },
