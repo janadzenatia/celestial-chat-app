@@ -450,6 +450,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         saving={saving}
         onSave={handleSave}
         editMode={editMode}
+        geoStatus={geoStatus}
+        geoCoords={geoCoords}
       />
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
     </>
