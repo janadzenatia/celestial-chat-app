@@ -38,8 +38,10 @@ Parent:
 Child:
 - Name: ${childName}
 - Date of Birth: ${childDob}
+${childTimeOfBirth ? `- Birth Time: ${childTimeOfBirth}` : ""}
+${childBirthPlace ? `- Birth Place: ${childBirthPlace}` : ""}
 - Sun: ${childSunSign || "Unknown"}, Moon: ${childMoonSign || "Unknown"}, Rising: ${childRisingSign || "Unknown"}
-${childHasTime ? "- Birth time provided: Moon and Rising are precise." : "- No birth time: Moon/Rising are approximate."}
+${childHasTime && childHasPlace ? "- Birth time and place provided: Big 3 (Sun, Moon, Rising) are precise." : childHasTime ? "- Birth time provided but no place: Moon is precise, Rising is approximate." : "- No birth time: Moon/Rising are approximate."}
 
 Return ONLY a valid JSON object (no markdown) with this structure:
 
