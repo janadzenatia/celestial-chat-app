@@ -25,6 +25,7 @@ interface Profile {
   relationship_start_date: string | null;
   birth_lat: number | null;
   birth_lon: number | null;
+  birth_place_normalized: string | null;
 }
 
 /** Derive the effective plan: "free" or "premium" (single tier) */
