@@ -75,7 +75,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .select("*")
       .eq("user_id", userId)
       .single();
-    setProfile(data as Profile | null);
+    const prof = data as Profile | null;
+    setProfile(prof);
+
+    // Auto-geocode existing users who have place_of_birth but no coordinates
+    if (prof && prof.place_of_birth && prof.birth_lat == null) {
+      const coords = await geocodePlace(prof.place_of_birth);
+      if (coords) {
+        await supabase
+          .from("profiles")
+          .update({
+            birth_lat: coords.lat,
+            birth_lon: coords.lon,
+            birth_place_normalized: coords.displayName,
+          } as any)
+          .eq("user_id", userId);
+        setProfile({ ...prof, birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName });
+      }
+    }
   };
 
   const refreshProfile = async () => {
