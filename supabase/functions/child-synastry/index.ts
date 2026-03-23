@@ -18,7 +18,7 @@ serve(async (req) => {
     const premiumCheck = await requirePremium(auth.userId);
     if (premiumCheck) return premiumCheck;
 
-    const { parentName, parentDob, parentSunSign, parentMoonSign, parentRisingSign, childName, childDob, childSunSign, childMoonSign, childRisingSign, childHasTime, language } = await req.json();
+    const { parentName, parentDob, parentSunSign, parentMoonSign, parentRisingSign, childName, childDob, childTimeOfBirth, childBirthPlace, childSunSign, childMoonSign, childRisingSign, childHasTime, childHasPlace, language } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");
