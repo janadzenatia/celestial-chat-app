@@ -233,6 +233,7 @@ export type Database = {
         Row: {
           birth_lat: number | null
           birth_lon: number | null
+          birth_place_normalized: string | null
           created_at: string
           daily_chat_count: number
           date_of_birth: string | null
@@ -259,6 +260,7 @@ export type Database = {
         Insert: {
           birth_lat?: number | null
           birth_lon?: number | null
+          birth_place_normalized?: string | null
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
@@ -285,6 +287,7 @@ export type Database = {
         Update: {
           birth_lat?: number | null
           birth_lon?: number | null
+          birth_place_normalized?: string | null
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
