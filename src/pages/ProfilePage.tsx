@@ -90,8 +90,33 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
 
+  // Geocode verification state
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
+  const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
+
   // Track original values for dirty check
   const [origValues, setOrigValues] = useState({ name: "", dob: "", time: "", timeUnknown: false, place: "" });
+
+  // Debounced geocode check when place changes
+  useEffect(() => {
+    if (!editPlace.trim() || editPlace.trim().length < 3) {
+      setGeoStatus("idle");
+      setGeoCoords(null);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setGeoStatus("checking");
+      const result = await geocodePlace(editPlace.trim());
+      if (result) {
+        setGeoStatus("found");
+        setGeoCoords(result);
+      } else {
+        setGeoStatus("not_found");
+        setGeoCoords(null);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [editPlace]);
 
   const effectivePlan = getEffectivePlan(profile);
   const isPremium = effectivePlan !== "free";
