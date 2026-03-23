@@ -127,6 +127,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setDob(partnerDob ? parse(partnerDob, "yyyy-MM-dd", new Date()) : undefined);
     setLocation(profile?.partner_place_of_birth || "");
     setBirthTime(profile?.partner_time_of_birth || "");
+    setGeoStatus("idle");
+    setGeoCoords(null);
     setEditMode(true);
     setFormOpen(true);
   };
