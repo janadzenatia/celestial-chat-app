@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
 interface WealthReport {
   cosmic_calling: string;
@@ -44,12 +45,25 @@ export function useWealthReport() {
   const generate = async () => {
     if (!user || !profile?.date_of_birth) return;
     setLoading(true);
+
+    const dob = profile.date_of_birth;
+    const tob = profile.time_of_birth;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
+    const sunSign = getSunSign(dob);
+    const moonSign = getApproxMoonSign(dob, tob);
+    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
+
     try {
       const { data, error } = await supabase.functions.invoke("wealth-career", {
         body: {
-          dateOfBirth: profile.date_of_birth,
-          timeOfBirth: profile.time_of_birth,
+          dateOfBirth: dob,
+          timeOfBirth: tob,
+          placeOfBirth: profile.place_of_birth,
           name: profile.name,
+          sunSign: sunSign?.name,
+          moonSign: moonSign?.name,
+          risingSign: risingSign?.name,
           language,
         },
       });
@@ -63,7 +77,6 @@ export function useWealthReport() {
       };
       setReport(newReport);
 
-      // Persist
       await supabase.from("wealth_reports").insert({
         user_id: user.id,
         language,

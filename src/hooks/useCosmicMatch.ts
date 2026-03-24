@@ -54,15 +54,19 @@ export function useCosmicMatch() {
 
     const dob = profile.date_of_birth!;
     const tob = profile.time_of_birth;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
     const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob);
-    const risingSign = getApproxRisingSign(dob, tob);
+    const moonSign = getApproxMoonSign(dob, tob);
+    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
 
     try {
       const resp = await supabase.functions.invoke("cosmic-match", {
         body: {
           name: profile.name,
           dateOfBirth: dob,
+          timeOfBirth: tob,
+          placeOfBirth: profile.place_of_birth,
           sunSign: sunSign?.name,
           moonSign: moonSign?.name,
           risingSign: risingSign?.name,
@@ -92,7 +96,7 @@ export function useCosmicMatch() {
       }
     } catch (e) {
       console.error("Failed to generate cosmic match:", e);
-      throw e; // Re-throw so useRegenerateGuard can show toast
+      throw e;
     } finally {
       setGenerating(false);
     }

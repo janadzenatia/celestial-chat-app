@@ -50,12 +50,14 @@ export function useCosmicCalendar() {
     setGenerating(true);
 
     const dob = profile.date_of_birth;
+    const tob = profile.time_of_birth;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
     const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob);
-    const risingSign = getApproxRisingSign(dob, profile.time_of_birth);
+    const moonSign = getApproxMoonSign(dob, tob);
+    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
 
     try {
-      // Delete old cache
       await supabase
         .from("cosmic_calendars")
         .delete()
@@ -67,7 +69,8 @@ export function useCosmicCalendar() {
       const resp = await supabase.functions.invoke("cosmic-calendar", {
         body: {
           dateOfBirth: dob,
-          timeOfBirth: profile.time_of_birth,
+          timeOfBirth: tob,
+          placeOfBirth: profile.place_of_birth,
           sunSign: sunSign?.name,
           moonSign: moonSign?.name,
           risingSign: risingSign?.name,

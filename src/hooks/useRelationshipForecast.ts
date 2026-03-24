@@ -48,7 +48,6 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
       if (data) {
         const periods = data.periods as unknown;
-        // Handle both old format (array) and new format (object with intro + periods)
         if (Array.isArray(periods)) {
           setForecast({ periods: periods as ForecastPeriod[] });
         } else if (periods && typeof periods === "object" && "periods" in (periods as any)) {
@@ -71,23 +70,32 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
+    const userBirthLat = (profile as any).birth_lat ?? null;
+    const userBirthLon = (profile as any).birth_lon ?? null;
+    const partnerBirthLat = (profile as any).partner_birth_place_lat ?? null;
+    const partnerBirthLon = (profile as any).partner_birth_place_lon ?? null;
+
     const userSunSign = getSunSign(dob);
-    const userMoonSign = getApproxMoonSign(dob);
-    const userRisingSign = getApproxRisingSign(dob, tob);
+    const userMoonSign = getApproxMoonSign(dob, tob);
+    const userRisingSign = getApproxRisingSign(dob, tob, userBirthLat, userBirthLon);
     const partnerSunSign = getSunSign(partnerDobStr);
-    const partnerMoonSign = getApproxMoonSign(partnerDobStr);
-    const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null);
+    const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null);
+    const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
 
     try {
       const resp = await supabase.functions.invoke("relationship-forecast", {
         body: {
           userName: profile.name,
           userDob: dob,
+          userTimeOfBirth: tob,
+          userPlaceOfBirth: profile.place_of_birth,
           userSunSign: userSunSign?.name,
           userMoonSign: userMoonSign?.name,
           userRisingSign: userRisingSign?.name,
           partnerName: partnerName || "",
           partnerDob: partnerDobStr,
+          partnerTimeOfBirth: partnerTime || null,
+          partnerPlaceOfBirth: (profile as any).partner_place_of_birth || null,
           partnerSunSign: partnerSunSign?.name,
           partnerMoonSign: partnerMoonSign?.name,
           partnerRisingSign: partnerRisingSign?.name,
@@ -100,7 +108,6 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
       const result = resp.data as RelationshipForecast;
 
       if (result?.periods) {
-        // Delete old AFTER successful generation
         const effectiveRelDate = relDateStr || "1970-01-01";
         await supabase
           .from("relationship_forecasts")
