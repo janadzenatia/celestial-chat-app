@@ -28,6 +28,7 @@ interface Profile {
   birth_lat: number | null;
   birth_lon: number | null;
   birth_place_normalized: string | null;
+  device_id: string | null;
 }
 
 /** Derive the effective plan: "free" or "premium" (single tier) */
