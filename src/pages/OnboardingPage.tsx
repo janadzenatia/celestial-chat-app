@@ -93,15 +93,10 @@ const OnboardingPage = () => {
       toast({ title: t("onboarding.error"), description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
-      // Send welcome email via built-in transactional email system
+      // Send welcome email via the legacy send-welcome-email function (uses auth user's own email)
       const lang = localStorage.getItem("app-language") || "en";
-      supabase.functions.invoke("send-transactional-email", {
-        body: {
-          templateName: "welcome-email",
-          recipientEmail: user.email!,
-          idempotencyKey: `welcome-${user.id}`,
-          templateData: { name, language: lang },
-        },
+      supabase.functions.invoke("send-welcome-email", {
+        body: { name, language: lang },
       }).catch((err) => console.error("[Welcome email]", err));
       navigate("/");
     }

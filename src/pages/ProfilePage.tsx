@@ -251,19 +251,8 @@ const ProfilePage = () => {
     if (!user) return;
     setCanceling(true);
     const result = await cancelSubscription(user.id);
-    if (result.success && user.email) {
-      // Send subscription cancelled notification email
-      supabase.functions.invoke("send-transactional-email", {
-        body: {
-          templateName: "subscription-cancelled",
-          recipientEmail: user.email,
-          idempotencyKey: `sub-cancelled-${user.id}-${Date.now()}`,
-          templateData: {
-            name: profile?.name || undefined,
-            language: profile?.language_preference || "en",
-          },
-        },
-      }).catch(console.error);
+    if (result.success) {
+      // Cancellation email is now sent server-side by the manage-subscription function
     }
     await refreshProfile();
     setCanceling(false);
