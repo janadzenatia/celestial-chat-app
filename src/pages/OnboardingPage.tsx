@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { sendWelcomeEmail } from "@/services/authService";
 import { geocodePlace } from "@/lib/geocoding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,9 +93,16 @@ const OnboardingPage = () => {
       toast({ title: t("onboarding.error"), description: error.message, variant: "destructive" });
     } else {
       await refreshProfile();
-      // Send welcome email with real name and language
+      // Send welcome email via built-in transactional email system
       const lang = localStorage.getItem("app-language") || "en";
-      sendWelcomeEmail(user.email!, name, lang);
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "welcome-email",
+          recipientEmail: user.email!,
+          idempotencyKey: `welcome-${user.id}`,
+          templateData: { name, language: lang },
+        },
+      }).catch((err) => console.error("[Welcome email]", err));
       navigate("/");
     }
   };
