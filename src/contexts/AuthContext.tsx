@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { geocodePlace } from "@/lib/geocoding";
+import { getDeviceId } from "@/lib/deviceId";
 
 interface Profile {
   id: string;
@@ -27,6 +28,7 @@ interface Profile {
   birth_lat: number | null;
   birth_lon: number | null;
   birth_place_normalized: string | null;
+  device_id: string | null;
 }
 
 /** Derive the effective plan: "free" or "premium" (single tier) */
@@ -77,6 +79,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .single();
     const prof = data as Profile | null;
     setProfile(prof);
+
+    // Save device_id to profile if not already set
+    if (prof && !prof.device_id) {
+      const deviceId = getDeviceId();
+      await supabase
+        .from("profiles")
+        .update({ device_id: deviceId } as any)
+        .eq("user_id", userId);
+    }
 
     // Auto-geocode existing users who have place_of_birth but no coordinates
     if (prof && prof.place_of_birth && prof.birth_lat == null) {
@@ -133,6 +144,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         options: { emailRedirectTo: window.location.origin },
       });
+
+      // After successful signup, check device ID for trial abuse
+      if (!error && data?.user) {
+        const deviceId = getDeviceId();
+        try {
+          const { data: checkData } = await supabase.functions.invoke("check-trial", {
+            body: { device_id: deviceId },
+          });
+          // If device already used trial, revoke it by updating profile
+          if (checkData && !checkData.trial_available) {
+            // Use a small delay to let the trigger create the profile first
+            setTimeout(async () => {
+              await supabase
+                .from("profiles")
+                .update({ device_id: deviceId } as any)
+                .eq("user_id", data.user!.id);
+            }, 1000);
+          } else {
+            // Save device_id for future tracking
+            setTimeout(async () => {
+              await supabase
+                .from("profiles")
+                .update({ device_id: deviceId } as any)
+                .eq("user_id", data.user!.id);
+            }, 1000);
+          }
+        } catch (e) {
+          console.error("Trial check failed:", e);
+        }
+      }
+
       return { error };
     } catch (err: any) {
       return { error: err };

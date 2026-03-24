@@ -246,6 +246,7 @@ export type Database = {
           created_at: string
           daily_chat_count: number
           date_of_birth: string | null
+          device_id: string | null
           id: string
           is_premium: boolean
           language_preference: string
@@ -276,6 +277,7 @@ export type Database = {
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
+          device_id?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
@@ -306,6 +308,7 @@ export type Database = {
           created_at?: string
           daily_chat_count?: number
           date_of_birth?: string | null
+          device_id?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
@@ -403,6 +406,36 @@ export type Database = {
           partner_time?: string | null
           romantic?: Json
           user_id?: string
+        }
+        Relationships: []
+      }
+      trial_history: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          email_hash: string
+          id: string
+          trial_end_date: string | null
+          trial_start_date: string | null
+          trial_used: boolean
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          email_hash: string
+          id?: string
+          trial_end_date?: string | null
+          trial_start_date?: string | null
+          trial_used?: boolean
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          email_hash?: string
+          id?: string
+          trial_end_date?: string | null
+          trial_start_date?: string | null
+          trial_used?: boolean
         }
         Relationships: []
       }
