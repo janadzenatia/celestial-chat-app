@@ -37,6 +37,50 @@ Deno.serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const userId = user.id;
+    const emailHash = await hashEmail(user.email || "");
+
+    // Get profile to capture device_id before deletion
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("device_id, trial_end_date")
+      .eq("user_id", userId)
+      .single();
+
+    // Record trial usage in trial_history (if not already recorded)
+    const { data: existingHistory } = await adminClient
+      .from("trial_history")
+      .select("id")
+      .eq("email_hash", emailHash)
+      .limit(1);
+
+    if (!existingHistory || existingHistory.length === 0) {
+      await adminClient.from("trial_history").insert({
+        email_hash: emailHash,
+        device_id: profile?.device_id || null,
+        trial_used: true,
+        trial_start_date: new Date().toISOString(),
+        trial_end_date: profile?.trial_end_date || null,
+      });
+    }
+
+    // Also record device_id if present and not already tracked
+    if (profile?.device_id) {
+      const { data: deviceHistory } = await adminClient
+        .from("trial_history")
+        .select("id")
+        .eq("device_id", profile.device_id)
+        .limit(1);
+
+      if (!deviceHistory || deviceHistory.length === 0) {
+        await adminClient.from("trial_history").insert({
+          email_hash: emailHash,
+          device_id: profile.device_id,
+          trial_used: true,
+          trial_start_date: new Date().toISOString(),
+          trial_end_date: profile?.trial_end_date || null,
+        });
+      }
+    }
 
     // Delete all user data from all tables
     const tables = [
@@ -49,6 +93,7 @@ Deno.serve(async (req) => {
       "relationship_forecasts",
       "synastry_reports",
       "wealth_reports",
+      "cosmic_hooks",
       "profiles",
     ];
 
@@ -77,3 +122,11 @@ Deno.serve(async (req) => {
     });
   }
 });
+
+async function hashEmail(email: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(email.toLowerCase());
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
