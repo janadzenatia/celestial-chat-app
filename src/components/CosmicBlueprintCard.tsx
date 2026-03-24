@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
 interface BlueprintCategory {
   title: string;
