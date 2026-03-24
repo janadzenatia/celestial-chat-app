@@ -250,7 +250,21 @@ const ProfilePage = () => {
   const handleCancelSubscription = async () => {
     if (!user) return;
     setCanceling(true);
-    await cancelSubscription(user.id);
+    const result = await cancelSubscription(user.id);
+    if (result.success && user.email) {
+      // Send subscription cancelled notification email
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "subscription-cancelled",
+          recipientEmail: user.email,
+          idempotencyKey: `sub-cancelled-${user.id}-${Date.now()}`,
+          templateData: {
+            name: profile?.name || undefined,
+            language: profile?.language_preference || "en",
+          },
+        },
+      }).catch(console.error);
+    }
     await refreshProfile();
     setCanceling(false);
     setCancelOpen(false);
