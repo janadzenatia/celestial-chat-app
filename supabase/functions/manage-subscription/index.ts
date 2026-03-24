@@ -26,26 +26,12 @@ Deno.serve(async (req) => {
     );
 
     if (action === "activate") {
-      // TODO: integrate real payment verification here
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          subscription_plan: "premium",
-          subscription_status: "premium",
-          is_premium: true,
-          trial_end_date: null,
-        })
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error("Activate error:", error);
-        return new Response(JSON.stringify({ error: "Failed to activate subscription" }), {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      return new Response(JSON.stringify({ success: true }), {
+      // SECURITY: Premium activation is disabled until a real payment provider
+      // (e.g. Stripe) is integrated. Activation must only happen from a verified
+      // payment webhook, never from a direct client call.
+      console.warn(`Blocked direct activate attempt by user ${userId}`);
+      return new Response(JSON.stringify({ error: "Payment processing is not yet configured. Please contact support." }), {
+        status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
