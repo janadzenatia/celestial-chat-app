@@ -69,9 +69,18 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { email, name, language } = await req.json();
+    const { name, language } = await req.json();
 
-    const userName = name || email?.split("@")[0] || "there";
+    // Always use the verified email from the authenticated user — never trust request body
+    const email = user.email;
+    if (!email) {
+      return new Response(JSON.stringify({ error: "No email on account" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const userName = name || email.split("@")[0] || "there";
     const userLang = language || "en";
 
     const { subject, html } = getEmailContent(userLang, userName);
