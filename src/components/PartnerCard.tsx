@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { geocodePlace } from "@/lib/geocoding";
-import { getSunSign, ZodiacSign } from "@/lib/zodiac";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign, ZodiacSign } from "@/lib/zodiac";
 import ChineseZodiacBadge from "@/components/ChineseZodiacBadge";
 import { format, parse } from "date-fns";
 import { BirthDatePicker } from "@/components/BirthDatePicker";
