@@ -198,11 +198,18 @@ const CompatibilityPage = () => {
 
         {/* 3. Warning text + Yellow CTA — HIDDEN once deep report is ready */}
         {partnerDobStr && !deepReportReady && (
-          <div className="space-y-4">
-            {/* Warning text */}
-            <p className="text-sm text-muted-foreground leading-relaxed text-center px-2">
+          <div className="glass rounded-2xl p-4 space-y-3 border border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               {t("synastry.cta.message")}
             </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => handleDeepSynastry(partnerName, partnerDobStr)}
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+              >
+                {t("synastry.cta.deepLink")}
+              </button>
+            </div>
           </div>
         )}
 
