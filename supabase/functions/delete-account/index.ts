@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     // Get profile to capture device_id and name before deletion
     const { data: profile } = await adminClient
       .from("profiles")
-      .select("device_id, trial_end_date")
+      .select("device_id, trial_end_date, name, language_preference")
       .eq("user_id", userId)
       .single();
 
