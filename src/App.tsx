@@ -45,6 +45,7 @@ const AppRoutes = () => (
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
+    <Route path="/unsubscribe" element={<UnsubscribePage />} />
     <Route
       element={
         <ProtectedRoute>
