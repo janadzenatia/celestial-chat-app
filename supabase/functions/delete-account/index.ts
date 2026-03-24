@@ -37,9 +37,10 @@ Deno.serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const userId = user.id;
-    const emailHash = await hashEmail(user.email || "");
+    const userEmail = user.email || "";
+    const emailHash = await hashEmail(userEmail);
 
-    // Get profile to capture device_id before deletion
+    // Get profile to capture device_id and name before deletion
     const { data: profile } = await adminClient
       .from("profiles")
       .select("device_id, trial_end_date")
