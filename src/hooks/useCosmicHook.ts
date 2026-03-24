@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
 interface HookData {
   hook: string;
@@ -26,7 +27,6 @@ export const useCosmicHook = () => {
 
     const today = new Date().toISOString().split("T")[0];
 
-    // Check DB cache first
     const { data: cached } = await (supabase as any)
       .from("cosmic_hooks")
       .select("hook, subject, subject_dob")
@@ -52,9 +52,16 @@ export const useCosmicHook = () => {
     setLoading(true);
 
     try {
+      const dob = profile.date_of_birth!;
+      const tob = profile.time_of_birth;
+      const birthLat = (profile as any).birth_lat ?? null;
+      const birthLon = (profile as any).birth_lon ?? null;
+      const sunSign = getSunSign(dob);
+      const moonSign = getApproxMoonSign(dob, tob);
+      const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
+
       const familyMembers: { name: string; dateOfBirth: string; relationship: string }[] = [];
 
-      // Fetch children from database
       const { data: children } = await supabase
         .from("children")
         .select("name, date_of_birth")
@@ -64,7 +71,6 @@ export const useCosmicHook = () => {
         familyMembers.push({ name: c.name, dateOfBirth: c.date_of_birth, relationship: "child" })
       );
 
-      // Include partner from profile data
       if (profile.partner_name && profile.partner_birth_date) {
         familyMembers.push({
           name: profile.partner_name,
@@ -73,9 +79,8 @@ export const useCosmicHook = () => {
         });
       }
 
-      // Build rotation list: user → partner → children
       const rotationList: { name: string; dateOfBirth: string; relationship: string }[] = [
-        { name: profile.name || "self", dateOfBirth: profile.date_of_birth!, relationship: "self" },
+        { name: profile.name || "self", dateOfBirth: dob, relationship: "self" },
       ];
 
       const partner = familyMembers.find((m) => m.relationship === "partner");
@@ -84,7 +89,6 @@ export const useCosmicHook = () => {
       const childMembers = familyMembers.filter((m) => m.relationship === "child");
       childMembers.forEach((c) => rotationList.push(c));
 
-      // Determine today's index using epoch day count
       const epochDays = Math.floor(Date.now() / 86400000);
       const todayIndex = epochDays % rotationList.length;
       const todaySubject = rotationList[todayIndex];
@@ -92,8 +96,12 @@ export const useCosmicHook = () => {
       const resp = await supabase.functions.invoke("cosmic-hook", {
         body: {
           userName: profile.name,
-          dateOfBirth: profile.date_of_birth,
-          timeOfBirth: profile.time_of_birth,
+          dateOfBirth: dob,
+          timeOfBirth: tob,
+          placeOfBirth: profile.place_of_birth,
+          sunSign: sunSign?.name,
+          moonSign: moonSign?.name,
+          risingSign: risingSign?.name,
           familyMembers,
           language,
           todaySubject,
@@ -104,7 +112,6 @@ export const useCosmicHook = () => {
       const data = resp.data as HookData;
       setHookData(data);
 
-      // Cache in DB
       const today = new Date().toISOString().split("T")[0];
       await (supabase as any).from("cosmic_hooks").insert({
         user_id: user.id,
