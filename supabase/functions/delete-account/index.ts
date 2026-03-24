@@ -37,12 +37,13 @@ Deno.serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const userId = user.id;
-    const emailHash = await hashEmail(user.email || "");
+    const userEmail = user.email || "";
+    const emailHash = await hashEmail(userEmail);
 
-    // Get profile to capture device_id before deletion
+    // Get profile to capture device_id and name before deletion
     const { data: profile } = await adminClient
       .from("profiles")
-      .select("device_id, trial_end_date")
+      .select("device_id, trial_end_date, name, language_preference")
       .eq("user_id", userId)
       .single();
 
@@ -99,6 +100,26 @@ Deno.serve(async (req) => {
 
     for (const table of tables) {
       await adminClient.from(table).delete().eq("user_id", userId);
+    }
+
+    // Send account deletion notification email before deleting auth user
+    if (userEmail) {
+      try {
+        await adminClient.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "account-deleted",
+            recipientEmail: userEmail,
+            idempotencyKey: `account-deleted-${userId}`,
+            templateData: {
+              name: profile?.name || undefined,
+              language: profile?.language_preference || "en",
+            },
+          },
+        });
+      } catch (emailErr) {
+        console.error("Failed to send account deletion email:", emailErr);
+        // Don't block account deletion if email fails
+      }
     }
 
     // Delete the auth user
