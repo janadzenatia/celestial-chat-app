@@ -102,6 +102,26 @@ Deno.serve(async (req) => {
       await adminClient.from(table).delete().eq("user_id", userId);
     }
 
+    // Send account deletion notification email before deleting auth user
+    if (userEmail) {
+      try {
+        await adminClient.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "account-deleted",
+            recipientEmail: userEmail,
+            idempotencyKey: `account-deleted-${userId}`,
+            templateData: {
+              name: profile?.name || undefined,
+              language: profile?.language_preference || "en",
+            },
+          },
+        });
+      } catch (emailErr) {
+        console.error("Failed to send account deletion email:", emailErr);
+        // Don't block account deletion if email fails
+      }
+    }
+
     // Delete the auth user
     const { error: deleteError } = await adminClient.auth.admin.deleteUser(userId);
     if (deleteError) {
