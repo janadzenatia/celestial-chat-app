@@ -144,6 +144,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         options: { emailRedirectTo: window.location.origin },
       });
+
+      // After successful signup, check device ID for trial abuse
+      if (!error && data?.user) {
+        const deviceId = getDeviceId();
+        try {
+          const { data: checkData } = await supabase.functions.invoke("check-trial", {
+            body: { device_id: deviceId },
+          });
+          // If device already used trial, revoke it by updating profile
+          if (checkData && !checkData.trial_available) {
+            // Use a small delay to let the trigger create the profile first
+            setTimeout(async () => {
+              await supabase
+                .from("profiles")
+                .update({ device_id: deviceId } as any)
+                .eq("user_id", data.user!.id);
+            }, 1000);
+          } else {
+            // Save device_id for future tracking
+            setTimeout(async () => {
+              await supabase
+                .from("profiles")
+                .update({ device_id: deviceId } as any)
+                .eq("user_id", data.user!.id);
+            }, 1000);
+          }
+        } catch (e) {
+          console.error("Trial check failed:", e);
+        }
+      }
+
       return { error };
     } catch (err: any) {
       return { error: err };
