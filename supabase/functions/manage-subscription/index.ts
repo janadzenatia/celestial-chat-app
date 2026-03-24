@@ -37,6 +37,16 @@ Deno.serve(async (req) => {
     }
 
     if (action === "cancel") {
+      // Get profile info before updating
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name, language_preference")
+        .eq("user_id", userId)
+        .single();
+
+      // Get user email
+      const { data: { user: authUser } } = await supabase.auth.admin.getUserById(userId);
+
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -52,6 +62,25 @@ Deno.serve(async (req) => {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
+      }
+
+      // Send cancellation email server-side
+      if (authUser?.email) {
+        try {
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "subscription-cancelled",
+              recipientEmail: authUser.email,
+              idempotencyKey: `sub-cancelled-${userId}-${Date.now()}`,
+              templateData: {
+                name: profile?.name || undefined,
+                language: profile?.language_preference || "en",
+              },
+            },
+          });
+        } catch (emailErr) {
+          console.error("Failed to send cancellation email:", emailErr);
+        }
       }
 
       return new Response(JSON.stringify({ success: true }), {
