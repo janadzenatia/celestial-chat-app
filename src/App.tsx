@@ -16,6 +16,7 @@ import OnboardingPage from "./pages/OnboardingPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import UnsubscribePage from "./pages/UnsubscribePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
