@@ -79,6 +79,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const prof = data as Profile | null;
     setProfile(prof);
 
+    // Save device_id to profile if not already set
+    if (prof && !prof.device_id) {
+      const deviceId = getDeviceId();
+      await supabase
+        .from("profiles")
+        .update({ device_id: deviceId } as any)
+        .eq("user_id", userId);
+    }
+
     // Auto-geocode existing users who have place_of_birth but no coordinates
     if (prof && prof.place_of_birth && prof.birth_lat == null) {
       const coords = await geocodePlace(prof.place_of_birth);
