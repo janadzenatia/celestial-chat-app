@@ -18,7 +18,7 @@ serve(async (req) => {
     const premiumCheck = await requirePremium(auth.userId);
     if (premiumCheck) return premiumCheck;
 
-    const { dateOfBirth, timeOfBirth, name, language } = await req.json();
+    const { dateOfBirth, timeOfBirth, placeOfBirth, name, sunSign, moonSign, risingSign, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
@@ -28,14 +28,19 @@ serve(async (req) => {
     const birthYear = new Date(dateOfBirth).getFullYear();
     const currentAge = new Date().getFullYear() - birthYear;
 
-    const basePrompt = `You are an elite Vocational Astrologer and Financial Destiny analyst. Today is ${today}. The user is named ${name || "User"}, born on ${dateOfBirth}${timeOfBirth ? ` at ${timeOfBirth}` : ""}, currently approximately ${currentAge} years old.
+    const basePrompt = `You are an elite Vocational Astrologer and Financial Destiny analyst. Today is ${today}. The user is named ${name || "User"}, born on ${dateOfBirth}${timeOfBirth ? ` at ${timeOfBirth}` : ""}${placeOfBirth ? ` in ${placeOfBirth}` : ""}, currently approximately ${currentAge} years old.
 
-You must estimate the 2nd House (wealth), 10th House (Midheaven/career), and Jupiter/Saturn cycles to generate a deep, realistic, lifelong analysis.
+Their Big 3 astrological signs:
+- Sun Sign: ${sunSign || "Unknown"}
+- Moon Sign: ${moonSign || "Unknown"}
+- Ascendant (Rising): ${risingSign || "Unknown"}
+
+You must use their exact Big 3 signs to analyze the 2nd House (wealth), 10th House (Midheaven/career), and Jupiter/Saturn cycles to generate a deep, realistic, lifelong analysis.
 
 Respond ONLY with a valid JSON object (no markdown, no code fences) with exactly these 3 keys:
 
 {
-  "cosmic_calling": "A detailed section about 3 highly specific, modern career paths where this person has the absolute highest chance of success. Lead with their natural talents and strengths. Include why each career aligns with their chart.",
+  "cosmic_calling": "A detailed section about 3 highly specific, modern career paths where this person has the absolute highest chance of success. Lead with their natural talents and strengths based on their Sun=${sunSign}, Moon=${moonSign}, ASC=${risingSign}. Include why each career aligns with their chart.",
   "wealth_dna": "A realistic but empowering assessment of their financial potential. What is their money-making superpower? At what specific age or age range are they most likely to hit their financial peak? Frame challenges as growth opportunities.",
   "career_timeline": "A macro-timeline of their ENTIRE life with 5-7 distinct periods. Each period should have a title and 2-3 sentences. Lead with growth opportunities in each phase, then mention challenges with actionable advice on how to navigate them."
 }

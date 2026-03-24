@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
 interface BlueprintCategory {
   title: string;
@@ -41,13 +42,25 @@ const CosmicBlueprintCard = () => {
   const generate = useCallback(async () => {
     if (!user || !profile?.date_of_birth) return;
     setGenerating(true);
+
+    const dob = profile.date_of_birth;
+    const tob = profile.time_of_birth;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
+    const sunSign = getSunSign(dob);
+    const moonSign = getApproxMoonSign(dob, tob);
+    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
+
     try {
       const resp = await supabase.functions.invoke("cosmic-blueprint", {
         body: {
           name: profile.name || "",
-          dob: profile.date_of_birth,
-          tob: profile.time_of_birth || null,
+          dob,
+          tob: tob || null,
           pob: profile.place_of_birth || null,
+          sunSign: sunSign?.name,
+          moonSign: moonSign?.name,
+          risingSign: risingSign?.name,
           language,
         },
       });

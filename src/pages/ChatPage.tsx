@@ -180,9 +180,11 @@ const ChatPage = () => {
 
   const getBirthData = () => {
     if (!profile?.date_of_birth) return null;
+    const birthLat = (profile as any).birth_lat ?? null;
+    const birthLon = (profile as any).birth_lon ?? null;
     const sun = getSunSign(profile.date_of_birth);
-    const moon = getApproxMoonSign(profile.date_of_birth);
-    const rising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth);
+    const moon = getApproxMoonSign(profile.date_of_birth, profile.time_of_birth);
+    const rising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon);
     return {
       name: profile.name,
       dateOfBirth: profile.date_of_birth,

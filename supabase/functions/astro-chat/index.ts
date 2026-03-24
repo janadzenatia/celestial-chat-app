@@ -23,16 +23,18 @@ serve(async (req) => {
     if (birthData) {
       birthContext = `
 
-The user's birth data:
+You are a professional astrologer. The user's birth data:
 - Name: ${birthData.name || "Unknown"}
 - Date of Birth: ${birthData.dateOfBirth || "Unknown"}
 - Time of Birth: ${birthData.timeOfBirth || "Not provided"}
 - Place of Birth: ${birthData.placeOfBirth || "Unknown"}
-- Sun Sign: ${birthData.sunSign || "Unknown"}
-- Moon Sign: ${birthData.moonSign || "Unknown"}  
-- Rising Sign: ${birthData.risingSign || "Unknown"}
 
-Use this birth chart information to personalize your readings and advice. Reference their specific signs and planetary placements when relevant.`;
+Their Big 3 (calculated from exact birth data):
+- Sun Sign: ${birthData.sunSign || "Unknown"}
+- Moon Sign: ${birthData.moonSign || "Unknown"}
+- Ascendant (Rising): ${birthData.risingSign || "Unknown"}
+
+Answer all questions based on their exact real horoscope using these precise Big 3 values. Reference their specific signs and planetary placements when relevant.`;
     }
 
     const moderationInstruction = language === "ka"

@@ -19,8 +19,8 @@ serve(async (req) => {
     if (premiumCheck) return premiumCheck;
 
     const {
-      userName, userDob, userSunSign, userMoonSign, userRisingSign,
-      partnerName, partnerDob, partnerSunSign, partnerMoonSign, partnerRisingSign,
+      userName, userDob, userTimeOfBirth, userPlaceOfBirth, userSunSign, userMoonSign, userRisingSign,
+      partnerName, partnerDob, partnerTimeOfBirth, partnerPlaceOfBirth, partnerSunSign, partnerMoonSign, partnerRisingSign,
       relationshipDate, language,
     } = await req.json();
 
@@ -39,18 +39,24 @@ CRITICAL CONTEXT:
 Person 1:
 - Name: ${userName || "Person 1"}
 - Date of Birth: ${userDob}
+${userTimeOfBirth ? `- Time of Birth: ${userTimeOfBirth}` : ""}
+${userPlaceOfBirth ? `- Place of Birth: ${userPlaceOfBirth}` : ""}
 - Sun Sign: ${userSunSign || "Unknown"}
 - Moon Sign: ${userMoonSign || "Unknown"}
-- Rising Sign: ${userRisingSign || "Unknown"}
+- Ascendant (Rising): ${userRisingSign || "Unknown"}
 
 Person 2:
 - Name: ${partnerName || "Person 2"}
 - Date of Birth: ${partnerDob}
+${partnerTimeOfBirth ? `- Time of Birth: ${partnerTimeOfBirth}` : ""}
+${partnerPlaceOfBirth ? `- Place of Birth: ${partnerPlaceOfBirth}` : ""}
 - Sun Sign: ${partnerSunSign || "Unknown"}
 - Moon Sign: ${partnerMoonSign || "Unknown"}
-- Rising Sign: ${partnerRisingSign || "Unknown"}
+- Ascendant (Rising): ${partnerRisingSign || "Unknown"}
 
 Relationship Start / Marriage Date: ${relationshipDate}
+
+Generate relationship forecast considering both people's exact Big 3 signs and their synastry.
 
 You MUST respond with ONLY a valid JSON object (no markdown, no code fences):
 
@@ -80,7 +86,7 @@ Rules:
 - Respond with ONLY the JSON object.`;
 
     const systemPrompt = buildSystemPrompt(
-      `You are an elite relationship transit astrologer. Today is ${today}. All forecasts must reference future dates only. Return ONLY valid JSON, no markdown formatting.`,
+      `You are an elite relationship transit astrologer. Today is ${today}. Person 1: Sun=${userSunSign}, Moon=${userMoonSign}, ASC=${userRisingSign}. Person 2: Sun=${partnerSunSign}, Moon=${partnerMoonSign}, ASC=${partnerRisingSign}. All forecasts must reference future dates only. Return ONLY valid JSON, no markdown formatting.`,
       language
     );
 
