@@ -15,7 +15,7 @@ serve(async (req) => {
     const auth = await validateAuth(req);
     if (auth.error) return auth.error;
 
-    const { userName, dateOfBirth, timeOfBirth, familyMembers, language, todaySubject } = await req.json();
+    const { userName, dateOfBirth, timeOfBirth, placeOfBirth, sunSign, moonSign, risingSign, familyMembers, language, todaySubject } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
@@ -50,9 +50,14 @@ serve(async (req) => {
       ? `\nLANGUAGE: Respond ONLY in Georgian. Use informal "შენობითი" form — always "შენ/შენი/გაქვს/შეგიძლია", NEVER "თქვენ/თქვენი/გაქვთ/შეგიძლიათ".`
       : `\nLANGUAGE: Respond ONLY in English. Use warm, friendly, personal tone.`;
 
+    const big3Context = `\n\nThe user's Big 3 signs (calculated from exact birth data):
+- Sun Sign: ${sunSign || "Unknown"}
+- Moon Sign: ${moonSign || "Unknown"}
+- Ascendant (Rising): ${risingSign || "Unknown"}`;
+
     const basePrompt = `You are an elite AI astrologer generating a push notification hook. Today is ${today}.
 
-The user's name is "${userName || "Unknown"}". Their birth date is ${dateOfBirth || "Unknown"}, birth time is ${timeOfBirth || "Not provided"}.${familyContext}${focusInstruction}${langInstruction}
+The user's name is "${userName || "Unknown"}". Their birth date is ${dateOfBirth || "Unknown"}, birth time is ${timeOfBirth || "Not provided"}${placeOfBirth ? `, born in ${placeOfBirth}` : ""}.${big3Context}${familyContext}${focusInstruction}${langInstruction}
 
 TASK: Generate a single highly emotional, intriguing 1-sentence push notification. Rules:
 1. Focus ONLY on today's designated subject as specified above.

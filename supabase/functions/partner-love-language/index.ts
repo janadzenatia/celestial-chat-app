@@ -15,19 +15,24 @@ serve(async (req) => {
     const auth = await validateAuth(req);
     if (auth.error) return auth.error;
 
-    const { partnerName, partnerSign, partnerElement, language } = await req.json();
+    const { partnerName, partnerSign, partnerElement, partnerMoonSign, partnerRisingSign, userSunSign, userMoonSign, userRisingSign, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");
 
-    const basePrompt = `You are generating a SHORT 2-sentence love language & relationship style summary for someone based on their zodiac sign.
+    const basePrompt = `You are generating a SHORT 2-sentence love language & relationship style summary for someone based on their zodiac signs.
 
-The person's name is "${partnerName || "Partner"}". Their Sun sign is ${partnerSign} (${partnerElement} element).
+The person's name is "${partnerName || "Partner"}".
+Their Sun sign is ${partnerSign} (${partnerElement} element).
+${partnerMoonSign ? `Their Moon sign is ${partnerMoonSign}.` : ""}
+${partnerRisingSign ? `Their Ascendant is ${partnerRisingSign}.` : ""}
+
+${userSunSign ? `The user asking has: Sun=${userSunSign}, Moon=${userMoonSign || "Unknown"}, ASC=${userRisingSign || "Unknown"}.` : ""}
 
 RULES:
 1. Write EXACTLY 2 sentences. No more.
-2. First sentence: their primary love language / how they express love.
+2. First sentence: their primary love language / how they express love based on their Moon sign and Sun sign.
 3. Second sentence: their relationship style / what they need from a partner.
-4. Be warm, insightful, and specific to their sign.
+4. Be warm, insightful, and specific to their signs.
 5. Do NOT use generic platitudes. Reference actual astrological traits.`;
 
     const systemPrompt = buildSystemPrompt(basePrompt, language);
@@ -42,7 +47,7 @@ RULES:
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Generate a 2-sentence love language summary for ${partnerName} (${partnerSign}).` },
+          { role: "user", content: `Generate a 2-sentence love language summary for ${partnerName} (Sun=${partnerSign}${partnerMoonSign ? `, Moon=${partnerMoonSign}` : ""}${partnerRisingSign ? `, ASC=${partnerRisingSign}` : ""}).` },
         ],
       }),
     });

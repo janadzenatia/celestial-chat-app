@@ -15,7 +15,7 @@ serve(async (req) => {
     const auth = await validateAuth(req);
     if (auth.error) return auth.error;
 
-    const { name, dob, tob, pob, language } = await req.json();
+    const { name, dob, tob, pob, sunSign, moonSign, risingSign, language } = await req.json();
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("Missing API key");
@@ -29,13 +29,18 @@ Person:
 - Date of Birth: ${dob}
 ${tob ? `- Time of Birth: ${tob}` : "- Time of Birth: unknown"}
 ${pob ? `- Place of Birth: ${pob}` : ""}
+- Sun Sign: ${sunSign || "Unknown"}
+- Moon Sign: ${moonSign || "Unknown"}
+- Ascendant (Rising): ${risingSign || "Unknown"}
+
+Generate cosmic blueprint based on this exact birth data and their precise Big 3 signs.
 
 You MUST respond with ONLY a valid JSON object (no markdown, no code fences) with this exact structure:
 
 {
   "core_personality": {
     "title": "${language === "ka" ? "ბირთვული პიროვნება" : "Core Personality"}",
-    "content": "3-4 sentences about their core personality traits based on Sun, Moon, and Rising sign interplay. Be specific and personal."
+    "content": "3-4 sentences about their core personality traits based on Sun (${sunSign}), Moon (${moonSign}), and Rising (${risingSign}) sign interplay. Be specific and personal."
   },
   "karmic_path": {
     "title": "${language === "ka" ? "კარმული გზა" : "Karmic Path"}",
@@ -49,14 +54,14 @@ You MUST respond with ONLY a valid JSON object (no markdown, no code fences) wit
 
 Rules:
 - Each "content" must be 3-4 sentences, deeply personal and specific
-- Reference actual astrological aspects and placements
+- Reference actual astrological aspects and placements using their exact Big 3: Sun=${sunSign}, Moon=${moonSign}, ASC=${risingSign}
 - Lead with empowering insights
 - Be mystical yet practical
 - ALL text content MUST be written in ${lang}
 - Respond with ONLY the JSON object, nothing else.`;
 
     const systemPrompt = buildSystemPrompt(
-      `You are an expert natal chart astrologer creating a deep personal cosmic blueprint. Return ONLY valid JSON, no markdown formatting.`,
+      `You are an expert natal chart astrologer creating a deep personal cosmic blueprint. The user's Big 3: Sun=${sunSign}, Moon=${moonSign}, Ascendant=${risingSign}. Return ONLY valid JSON, no markdown formatting.`,
       language
     );
 
