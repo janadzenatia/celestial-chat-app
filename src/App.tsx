@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AppLayout from "@/components/AppLayout";
+import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import ChatPage from "./pages/ChatPage";
 import CompatibilityPage from "./pages/CompatibilityPage";
@@ -32,7 +33,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (!session) return <Navigate to="/auth" replace />;
+  if (!session) return <Navigate to="/" replace />;
   if (profile && !profile.onboarding_completed) return <Navigate to="/onboarding" replace />;
 
   return <>{children}</>;
@@ -40,12 +41,20 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/auth" element={<AuthPage />} />
-    <Route path="/onboarding" element={<OnboardingPage />} />
+    {/* Public: Landing page */}
+    <Route path="/" element={<LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
-    <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
+
+    {/* Auth routes — redirect to landing */}
+    <Route path="/auth" element={<Navigate to="/" replace />} />
+    <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+    {/* Onboarding — still needed for authenticated PWA users */}
+    <Route path="/onboarding" element={<OnboardingPage />} />
+
+    {/* Protected app routes — only for existing authenticated (PWA) users */}
     <Route
       element={
         <ProtectedRoute>
@@ -53,13 +62,15 @@ const AppRoutes = () => (
         </ProtectedRoute>
       }
     >
-      <Route path="/" element={<Index />} />
+      <Route path="/home" element={<Index />} />
       <Route path="/chat" element={<ChatPage />} />
       <Route path="/compatibility" element={<CompatibilityPage />} />
       <Route path="/family" element={<FamilyPage />} />
       <Route path="/profile" element={<ProfilePage />} />
     </Route>
-    <Route path="*" element={<NotFound />} />
+
+    {/* Catch-all: redirect to landing */}
+    <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );
 

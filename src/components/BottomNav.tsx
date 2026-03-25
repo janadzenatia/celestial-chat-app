@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const tabs = [
-  { key: "nav.home", icon: Home, path: "/" },
+  { key: "nav.home", icon: Home, path: "/home" },
   { key: "nav.chat", icon: MessageCircle, path: "/chat" },
   { key: "nav.compatibility", icon: Heart, path: "/compatibility" },
   { key: "nav.family", icon: Baby, path: "/family" },
