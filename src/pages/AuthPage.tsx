@@ -213,7 +213,7 @@ const AuthPage = () => {
               variant="outline"
               onClick={async () => {
                 const { error } = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: window.location.origin,
+                  redirect_uri: "https://astrochat.ge",
                 });
                 if (error) toast({ title: error.message, variant: "destructive" });
               }}
