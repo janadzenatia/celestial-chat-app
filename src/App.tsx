@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AppLayout from "@/components/AppLayout";
+import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import ChatPage from "./pages/ChatPage";
 import CompatibilityPage from "./pages/CompatibilityPage";
