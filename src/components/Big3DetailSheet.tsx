@@ -81,6 +81,19 @@ const Big3DetailSheet = ({ open, onOpenChange, type, signName, signEmoji }: Big3
   const Icon = icons[type] || Sun;
   const title = titles[type]?.[language] || titles[type]?.en || "";
 
+  const escapeHtml = (str: string) => {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  const formatBold = (text: string) => {
+    return escapeHtml(text).replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>');
+  };
+
   // Parse markdown-like content for rendering
   const renderContent = (text: string) => {
     const lines = text.split("\n");
@@ -90,10 +103,10 @@ const Big3DetailSheet = ({ open, onOpenChange, type, signName, signEmoji }: Big3
 
       // Headers
       if (trimmed.startsWith("### ")) {
-        return <h3 key={i} className="text-base font-serif text-gradient-gold mt-4 mb-2">{trimmed.slice(4)}</h3>;
+        return <h3 key={i} className="text-base font-serif text-gradient-gold mt-4 mb-2">{escapeHtml(trimmed.slice(4))}</h3>;
       }
       if (trimmed.startsWith("## ")) {
-        return <h2 key={i} className="text-lg font-serif text-gradient-gold mt-4 mb-2">{trimmed.slice(3)}</h2>;
+        return <h2 key={i} className="text-lg font-serif text-gradient-gold mt-4 mb-2">{escapeHtml(trimmed.slice(3))}</h2>;
       }
 
       // Bullet points
@@ -103,7 +116,7 @@ const Big3DetailSheet = ({ open, onOpenChange, type, signName, signEmoji }: Big3
           <div key={i} className="flex gap-2 mb-2">
             <span className="text-primary mt-0.5 shrink-0">✦</span>
             <span className="text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{
-              __html: bulletText.replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
+              __html: formatBold(bulletText)
             }} />
           </div>
         );
@@ -112,7 +125,7 @@ const Big3DetailSheet = ({ open, onOpenChange, type, signName, signEmoji }: Big3
       // Regular paragraph with bold support
       return (
         <p key={i} className="text-sm text-muted-foreground leading-relaxed mb-2" dangerouslySetInnerHTML={{
-          __html: trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
+          __html: formatBold(trimmed)
         }} />
       );
     });
