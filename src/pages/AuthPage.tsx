@@ -9,6 +9,7 @@ import PasswordInput from "@/components/PasswordInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Star } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 import { useToast } from "@/hooks/use-toast";
 import { Link, Navigate } from "react-router-dom";
 
@@ -212,8 +213,11 @@ const AuthPage = () => {
               type="button"
               variant="outline"
               onClick={async () => {
+                const redirectUri = Capacitor.isNativePlatform()
+                  ? "ge.astrochat.app://callback"
+                  : window.location.origin;
                 const { error } = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: "https://astrochat.ge",
+                  redirect_uri: redirectUri,
                 });
                 if (error) toast({ title: error.message, variant: "destructive" });
               }}
