@@ -40,8 +40,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const isNative = Capacitor.isNativePlatform();
-const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
+const isWebLanding = window.location.hostname === "astrochat.ge" || window.location.hostname.endsWith(".astrochat.ge");
 
 const AuthAwareRoot = () => {
   const { session, loading } = useAuth();
