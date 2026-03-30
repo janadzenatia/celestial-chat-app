@@ -55,7 +55,13 @@ const Index = () => {
         {/* Greeting — first thing the user sees */}
         {profile?.name && (
           <p className="text-muted-foreground text-sm">
-            ✨ {t("dashboard.greeting")}, <span className="text-foreground font-medium">{profile.name}</span>
+            ✨ {t((() => {
+              const h = new Date().getHours();
+              if (h >= 6 && h < 12) return "dashboard.greeting.morning";
+              if (h >= 12 && h < 17) return "dashboard.greeting.afternoon";
+              if (h >= 17 && h < 21) return "dashboard.greeting.evening";
+              return "dashboard.greeting.night";
+            })())}, <span className="text-foreground font-medium">{profile.name}</span>
           </p>
         )}
 
