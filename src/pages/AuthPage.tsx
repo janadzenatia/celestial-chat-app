@@ -213,11 +213,17 @@ const AuthPage = () => {
               type="button"
               variant="outline"
               onClick={async () => {
-                const redirectUri = Capacitor.isNativePlatform()
+              const isNative = Capacitor.isNativePlatform();
+                const redirectUri = isNative
                   ? "ge.astrochat.app://callback"
                   : window.location.origin;
                 const { error } = await lovable.auth.signInWithOAuth("google", {
                   redirect_uri: redirectUri,
+                  ...(isNative && {
+                    extraParams: {
+                      client_id: "53594603504-p78bgnrbr8kolhsq48353urfueu2jqja.apps.googleusercontent.com",
+                    },
+                  }),
                 });
                 if (error) toast({ title: error.message, variant: "destructive" });
               }}
