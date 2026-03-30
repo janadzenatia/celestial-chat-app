@@ -16,8 +16,8 @@ serve(async (req) => {
     if (auth.error) return auth.error;
 
     const { partnerName, partnerSign, partnerElement, partnerMoonSign, partnerRisingSign, userSunSign, userMoonSign, userRisingSign, language } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const basePrompt = `You are generating a SHORT 2-sentence love language & relationship style summary for someone based on their zodiac signs.
 
