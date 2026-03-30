@@ -37,14 +37,14 @@ RULES:
 
     const systemPrompt = buildSystemPrompt(basePrompt, language);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-1.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Generate a 2-sentence love language summary for ${partnerName} (Sun=${partnerSign}${partnerMoonSign ? `, Moon=${partnerMoonSign}` : ""}${partnerRisingSign ? `, ASC=${partnerRisingSign}` : ""}).` },
