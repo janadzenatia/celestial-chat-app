@@ -39,10 +39,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname === "localhost";
+
 const AppRoutes = () => (
   <Routes>
-    {/* Public: Landing page */}
-    <Route path="/" element={<LandingPage />} />
+    {/* Public: Landing page (production only) / Redirect to app in preview */}
+    <Route path="/" element={isPreview ? <Navigate to="/home" replace /> : <LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
