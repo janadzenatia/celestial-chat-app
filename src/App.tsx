@@ -43,10 +43,22 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const isNative = Capacitor.isNativePlatform();
 const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
 
+const PreviewRoot = () => {
+  const { session, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+  return session ? <Navigate to="/home" replace /> : <AuthPage />;
+};
+
 const AppRoutes = () => (
   <Routes>
-    {/* Native: AuthPage, Preview: skip to app, Production web: LandingPage */}
-    <Route path="/" element={isNative ? <AuthPage /> : isPreview ? <Navigate to="/home" replace /> : <LandingPage />} />
+    {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
+    <Route path="/" element={isNative ? <AuthPage /> : isPreview ? <PreviewRoot /> : <LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
