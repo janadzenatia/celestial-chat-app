@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
+import { callGeminiWithRetry } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -68,13 +69,9 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
 
     const systemPrompt = buildSystemPrompt(basePrompt, language);
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${GEMINI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await callGeminiWithRetry({
+      apiKey: GEMINI_API_KEY,
+      body: {
         model: "gemini-2.0-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
@@ -100,7 +97,7 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
           },
         ],
         tool_choice: { type: "function", function: { name: "cosmic_hook" } },
-      }),
+      },
     });
 
     if (!response.ok) {
