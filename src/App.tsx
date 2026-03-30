@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AppLayout from "@/components/AppLayout";
@@ -39,12 +40,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const isNative = Capacitor.isNativePlatform();
 const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
 
 const AppRoutes = () => (
   <Routes>
-    {/* Public: Landing page (production only) / Redirect to app in preview */}
-    <Route path="/" element={isPreview ? <Navigate to="/home" replace /> : <LandingPage />} />
+    {/* Native: AuthPage, Preview: skip to app, Production web: LandingPage */}
+    <Route path="/" element={isNative ? <AuthPage /> : isPreview ? <Navigate to="/home" replace /> : <LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
