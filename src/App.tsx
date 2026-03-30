@@ -58,7 +58,7 @@ const AuthAwareRoot = () => {
 const AppRoutes = () => (
   <Routes>
     {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
-    <Route path="/" element={isNative ? <AuthPage /> : isPreview ? <PreviewRoot /> : <LandingPage />} />
+    <Route path="/" element={isNative || isPreview ? <AuthAwareRoot /> : <LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
