@@ -19,8 +19,8 @@ serve(async (req) => {
     if (premiumCheck) return premiumCheck;
 
     const { dateOfBirth, timeOfBirth, sunSign, moonSign, risingSign, month, year, language } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const daysInMonth = new Date(year, month, 0).getDate();
