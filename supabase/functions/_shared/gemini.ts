@@ -1,6 +1,7 @@
-const LOVABLE_AI_URL = "https://ai-gateway.lovable.dev/v1/chat/completions";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const MAX_RETRIES = 3;
-const BASE_DELAY_MS = 1000;
+const BASE_DELAY_MS = 1500;
+const PRE_CALL_DELAY_MS = 400; // Delay before each call to avoid burst rate limits
 
 interface GeminiRequestOptions {
   apiKey: string;
@@ -8,70 +9,40 @@ interface GeminiRequestOptions {
 }
 
 /**
- * Call AI via Lovable AI gateway with exponential backoff retry on 429 errors.
- * Falls back to direct Gemini API if Lovable gateway fails.
+ * Call Gemini API with exponential backoff retry on 429 errors.
+ * Includes a pre-call delay to avoid burst rate limiting.
  */
 export async function callGeminiWithRetry(
   options: GeminiRequestOptions
 ): Promise<Response> {
   const { apiKey, body } = options;
 
-  // Map model names to Lovable AI gateway format
-  const modelMapping: Record<string, string> = {
-    "gemini-2.0-flash-lite": "google/gemini-2.5-flash-lite",
-    "gemini-1.5-flash": "google/gemini-2.5-flash-lite",
-    "gemini-2.5-flash": "google/gemini-2.5-flash",
-  };
-
-  const originalModel = body.model as string;
-  const lovableModel = modelMapping[originalModel] || "google/gemini-2.5-flash-lite";
-
-  const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-
-  // Use Lovable AI gateway if API key is available
-  if (lovableApiKey) {
-    const lovableBody = { ...body, model: lovableModel };
-
-    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-      const response = await fetch(LOVABLE_AI_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${lovableApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(lovableBody),
-      });
-
-      if (response.status !== 429 || attempt === MAX_RETRIES) {
-        return response;
-      }
-
-      await response.text();
-      const delay = BASE_DELAY_MS * Math.pow(2, attempt);
-      console.log(`Lovable AI 429, retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
-      await new Promise((r) => setTimeout(r, delay));
-    }
-  }
-
-  // Fallback to direct Gemini API
-  const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+  // Force model to gemini-1.5-flash for higher rate limits
+  const normalizedBody = { ...body, model: "gemini-1.5-flash" };
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    // Pre-call delay to space out requests
+    if (attempt === 0) {
+      await new Promise((r) => setTimeout(r, PRE_CALL_DELAY_MS));
+    }
+
     const response = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(normalizedBody),
     });
 
     if (response.status !== 429 || attempt === MAX_RETRIES) {
       return response;
     }
 
+    // Consume body to prevent resource leak
     await response.text();
-    const delay = BASE_DELAY_MS * Math.pow(2, attempt);
+
+    const delay = BASE_DELAY_MS * Math.pow(2, attempt); // 1.5s, 3s, 6s
     console.log(`Gemini 429 rate limit, retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
     await new Promise((r) => setTimeout(r, delay));
   }
