@@ -103,6 +103,10 @@ const translations: Translations = {
   "dashboard.daily": { en: "Daily Insight", ka: "დღის ინსაიტი" },
   "dashboard.phrase": { en: "Phrase of the Day", ka: "დღის ფრაზა" },
   "dashboard.greeting": { en: "Welcome", ka: "მოგესალმები" },
+  "dashboard.greeting.morning": { en: "Good morning", ka: "დილამშვიდობის" },
+  "dashboard.greeting.afternoon": { en: "Good afternoon", ka: "შუადღემშვიდობის" },
+  "dashboard.greeting.evening": { en: "Good evening", ka: "საღამომშვიდობის" },
+  "dashboard.greeting.night": { en: "Good night", ka: "ღამემშვიდობის" },
 
   // Synastry CTA
   "synastry.cta.message": {
