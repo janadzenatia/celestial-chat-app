@@ -39,7 +39,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname === "localhost";
+const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
 
 const AppRoutes = () => (
   <Routes>
