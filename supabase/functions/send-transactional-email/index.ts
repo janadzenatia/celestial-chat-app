@@ -39,24 +39,28 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders })
   }
 
-  // Verify caller is service_role — reject regular user JWTs
+  // Verify caller is service_role — reject regular user JWTs and unauthenticated requests
   const authHeader = req.headers.get('Authorization')
-  if (authHeader?.startsWith('Bearer ')) {
+  if (!authHeader?.startsWith('Bearer ')) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+  try {
     const token = authHeader.replace('Bearer ', '')
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]))
-      if (payload.role !== 'service_role') {
-        return new Response(
-          JSON.stringify({ error: 'Forbidden' }),
-          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
-      }
-    } catch {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    if (payload.role !== 'service_role') {
       return new Response(
         JSON.stringify({ error: 'Forbidden' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+  } catch {
+    return new Response(
+      JSON.stringify({ error: 'Forbidden' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
