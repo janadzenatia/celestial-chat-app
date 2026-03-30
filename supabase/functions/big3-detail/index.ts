@@ -16,8 +16,8 @@ serve(async (req) => {
     if (auth.error) return auth.error;
 
     const { type, signName, signEmoji, userName, dateOfBirth, timeOfBirth, language } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
 
