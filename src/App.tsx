@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const isNative = Capacitor.isNativePlatform();
 const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
 
-const PreviewRoot = () => {
+const AuthAwareRoot = () => {
   const { session, loading } = useAuth();
   if (loading) {
     return (
@@ -58,7 +58,7 @@ const PreviewRoot = () => {
 const AppRoutes = () => (
   <Routes>
     {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
-    <Route path="/" element={isNative ? <AuthPage /> : isPreview ? <PreviewRoot /> : <LandingPage />} />
+    <Route path="/" element={isNative || isPreview ? <AuthAwareRoot /> : <LandingPage />} />
     <Route path="/terms" element={<TermsPage />} />
     <Route path="/privacy" element={<PrivacyPage />} />
     <Route path="/unsubscribe" element={<UnsubscribePage />} />
