@@ -44,7 +44,7 @@ RULES:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Generate a 2-sentence love language summary for ${partnerName} (Sun=${partnerSign}${partnerMoonSign ? `, Moon=${partnerMoonSign}` : ""}${partnerRisingSign ? `, ASC=${partnerRisingSign}` : ""}).` },
