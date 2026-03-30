@@ -20,8 +20,8 @@ serve(async (req) => {
 
     const { userName, userSunSign, userMoonSign, userElement, partnerName, partnerSunSign, partnerMoonSign, partnerElement, children, language } = await req.json();
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("Missing API key");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
     const today = new Date().toISOString().split("T")[0];
