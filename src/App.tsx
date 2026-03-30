@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const isNative = Capacitor.isNativePlatform();
 const isPreview = window.location.hostname.includes("lovable.app") || window.location.hostname.includes("lovableproject.com") || window.location.hostname === "localhost";
 
-const PreviewRoot = () => {
+const AuthAwareRoot = () => {
   const { session, loading } = useAuth();
   if (loading) {
     return (
