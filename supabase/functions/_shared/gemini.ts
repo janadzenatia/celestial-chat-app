@@ -18,7 +18,7 @@ export async function callGeminiWithRetry(
   const { apiKey, body } = options;
 
   // Force model to gemini-1.5-flash for higher rate limits
-  const normalizedBody = { ...body, model: "gemini-1.5-flash" };
+  const normalizedBody = { ...body, model: "gemini-2.5-flash-preview-05-20" };
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     // Pre-call delay to space out requests
