@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import type { ZodiacSign } from "@/lib/zodiac";
 
 function getCurrentPeriod(): "morning" | "evening" {
   const hour = new Date().getHours();
