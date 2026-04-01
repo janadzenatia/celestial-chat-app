@@ -54,9 +54,9 @@ const CosmicBlueprintCard = () => {
           dob,
           tob: tob || null,
           pob: profile.place_of_birth || null,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
         },
       });
