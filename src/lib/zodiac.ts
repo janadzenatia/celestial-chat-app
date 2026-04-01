@@ -225,16 +225,18 @@ export function getApproxRisingSign(
   const [year, month, day] = dateOfBirth.split("-").map(Number);
   const [hours, minutes] = timeOfBirth.split(":").map(Number);
 
-  // Convert local time to UTC using browser timezone
-  const localDate = new Date(year, month - 1, day, hours, minutes);
-  const utcOffsetMinutes = localDate.getTimezoneOffset();
-  const utcHours = hours + utcOffsetMinutes / 60;
+  // Convert local time to UTC
+  // Use birth longitude for offset when available
+  const utcOffsetHours = birthLon != null
+    ? birthLon / 15
+    : -(new Date(year, month - 1, day, hours, minutes).getTimezoneOffset() / 60);
+  const utcHours = hours - utcOffsetHours;
 
   const jd = toJulianDay(year, month, day, utcHours, minutes);
 
   // Use exact coordinates if available, otherwise estimate from timezone
   const lat = birthLat ?? 42;
-  const lon = birthLon ?? (-(utcOffsetMinutes / 60) * 15);
+  const lon = birthLon ?? (utcOffsetHours * 15);
 
   const ascLon = getAscendantLon(jd, lat, lon);
   return longitudeToSign(ascLon);
