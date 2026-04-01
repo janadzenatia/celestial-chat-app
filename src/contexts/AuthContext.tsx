@@ -111,6 +111,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProfile({ ...prof, birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName });
       }
     }
+
+    // Cache Big 3 signs if not already cached and DOB is available
+    const currentProf = prof ?? undefined;
+    if (currentProf && currentProf.date_of_birth && !currentProf.cached_sun_sign) {
+      const dob = currentProf.date_of_birth;
+      const tob = currentProf.time_of_birth;
+      const lat = currentProf.birth_lat;
+      const lon = currentProf.birth_lon;
+      const sun = getSunSign(dob);
+      const moon = getApproxMoonSign(dob, tob, lat, lon);
+      const rising = getApproxRisingSign(dob, tob, lat, lon);
+      const cacheData = {
+        cached_sun_sign: sun?.name || null,
+        cached_moon_sign: moon?.name || null,
+        cached_rising_sign: rising?.name || null,
+        cached_sun_emoji: sun?.emoji || null,
+        cached_moon_emoji: moon?.emoji || null,
+        cached_rising_emoji: rising?.emoji || null,
+      };
+      await supabase
+        .from("profiles")
+        .update(cacheData as any)
+        .eq("user_id", userId);
+      setProfile({ ...currentProf, ...cacheData });
+    }
   };
 
   const refreshProfile = async () => {
