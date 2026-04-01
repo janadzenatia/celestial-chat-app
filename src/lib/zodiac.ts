@@ -1,3 +1,6 @@
+// @ts-ignore — tz-lookup has no type declarations
+import tzlookup from "tz-lookup";
+
 // Zodiac sign data with date ranges, emojis, and elements
 export interface ZodiacSign {
   name: string;
@@ -45,6 +48,61 @@ function norm360(deg: number): number { return ((deg % 360) + 360) % 360; }
 function sinD(d: number): number { return Math.sin(d * Math.PI / 180); }
 function cosD(d: number): number { return Math.cos(d * Math.PI / 180); }
 function tanD(d: number): number { return Math.tan(d * Math.PI / 180); }
+
+// ─── Timezone-aware UTC conversion ──────────────────────────
+
+/**
+ * Get UTC offset in minutes for a specific local datetime in a given IANA timezone.
+ * Uses Intl API — handles DST and historical timezone rules correctly.
+ * Returns minutes to ADD to local time to get UTC (negative for east of Greenwich).
+ */
+function getTimezoneOffsetMinutes(
+  timeZone: string,
+  year: number, month: number, day: number,
+  hour: number, minute: number
+): number {
+  // Create a reference UTC instant using the local time values
+  const refUtc = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
+  // Format that instant in both UTC and the target timezone
+  const utcStr = refUtc.toLocaleString("en-US", { timeZone: "UTC" });
+  const tzStr = refUtc.toLocaleString("en-US", { timeZone });
+  // The difference reveals the timezone offset at this approximate instant
+  return (new Date(utcStr).getTime() - new Date(tzStr).getTime()) / 60000;
+}
+
+/**
+ * Convert local birth date/time to Julian Day number using proper IANA timezone
+ * resolution when coordinates are available. Falls back to browser timezone.
+ *
+ * This is the SINGLE source of truth for birth-time → UTC conversion across
+ * all astrological calculations (Moon, Ascendant, houses, etc.).
+ */
+function birthTimeToJD(
+  year: number, month: number, day: number,
+  hour: number, minute: number,
+  lat?: number | null, lon?: number | null
+): number {
+  let offsetMinutes: number;
+
+  if (lat != null && lon != null) {
+    try {
+      const tz = tzlookup(lat, lon); // e.g. "Asia/Tbilisi", "America/New_York"
+      offsetMinutes = getTimezoneOffsetMinutes(tz, year, month, day, hour, minute);
+    } catch {
+      // Fallback: rough estimate from longitude (4 minutes per degree)
+      offsetMinutes = -(lon * 4);
+    }
+  } else {
+    // No coordinates — use the browser's local timezone
+    offsetMinutes = new Date(year, month - 1, day, hour, minute).getTimezoneOffset();
+  }
+
+  // Convert total local time to UTC fractional hours
+  const totalUtcMinutes = hour * 60 + minute + offsetMinutes;
+  const utcFractionalHours = totalUtcMinutes / 60;
+
+  return toJulianDay(year, month, day, utcFractionalHours, 0);
+}
 
 /**
  * Convert calendar date/time to Julian Day number
@@ -175,11 +233,12 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
 
 /**
  * Accurate Moon sign using Meeus lunar ephemeris.
- * Uses birth longitude for UTC offset when available, falls back to browser timezone.
+ * Uses proper IANA timezone resolution when birth coordinates are available.
  */
 export function getApproxMoonSign(
   dateOfBirth: string,
   timeOfBirth?: string | null,
+  birthLat?: number | null,
   birthLon?: number | null
 ): ZodiacSign {
   const [year, month, day] = dateOfBirth.split("-").map(Number);
@@ -191,24 +250,14 @@ export function getApproxMoonSign(
     minutes = parts[1] ?? 0;
   }
 
-  // Convert local time to UTC
-  // Use birth longitude for offset (lon/15 ≈ UTC offset in hours) when available
-  // This is more accurate than browser timezone for birth location calculations
-  const utcOffsetHours = birthLon != null
-    ? birthLon / 15
-    : -(new Date(year, month - 1, day, hours, minutes).getTimezoneOffset() / 60);
-  const utcHours = hours - utcOffsetHours;
-
-  const jd = toJulianDay(year, month, day, utcHours, minutes);
+  const jd = birthTimeToJD(year, month, day, hours, minutes, birthLat, birthLon);
   const moonLon = getMoonLongitude(jd);
   return longitudeToSign(moonLon);
 }
 
 /**
  * Rising (Ascendant) sign using astronomical calculation.
- * Requires birth time. Uses exact coordinates when available.
- * Browser timezone is used for UTC conversion (political timezones are more
- * accurate than solar-longitude estimation).
+ * Requires birth time. Uses proper IANA timezone resolution and exact coordinates.
  */
 export function getApproxRisingSign(
   dateOfBirth: string,
@@ -225,18 +274,10 @@ export function getApproxRisingSign(
   const [year, month, day] = dateOfBirth.split("-").map(Number);
   const [hours, minutes] = timeOfBirth.split(":").map(Number);
 
-  // Convert local time to UTC
-  // Use birth longitude for offset when available
-  const utcOffsetHours = birthLon != null
-    ? birthLon / 15
-    : -(new Date(year, month - 1, day, hours, minutes).getTimezoneOffset() / 60);
-  const utcHours = hours - utcOffsetHours;
+  const jd = birthTimeToJD(year, month, day, hours, minutes, birthLat, birthLon);
 
-  const jd = toJulianDay(year, month, day, utcHours, minutes);
-
-  // Use exact coordinates if available, otherwise estimate from timezone
   const lat = birthLat ?? 42;
-  const lon = birthLon ?? (utcOffsetHours * 15);
+  const lon = birthLon ?? 0;
 
   const ascLon = getAscendantLon(jd, lat, lon);
   return longitudeToSign(ascLon);

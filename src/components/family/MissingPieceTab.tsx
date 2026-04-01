@@ -26,6 +26,8 @@ interface ChildData {
   name: string;
   date_of_birth: string;
   time_of_birth: string | null;
+  birth_place_lat?: number | null;
+  birth_place_lon?: number | null;
 }
 
 interface MissingPieceTabProps {
@@ -72,16 +74,21 @@ export default function MissingPieceTab({ familyVersion = 0 }: MissingPieceTabPr
     setResult(null);
   }, [user?.id, familyVersion]);
 
+  const userBirthLat = profile?.birth_lat ?? null;
+  const userBirthLon = profile?.birth_lon ?? null;
+  const partnerBirthLat = (profile as any)?.partner_birth_place_lat ?? null;
+  const partnerBirthLon = (profile as any)?.partner_birth_place_lon ?? null;
+
   const userSun = profile?.date_of_birth ? getSunSign(profile.date_of_birth) : null;
-  const userMoon = profile?.date_of_birth ? getApproxMoonSign(profile.date_of_birth) : null;
+  const userMoon = profile?.date_of_birth ? getApproxMoonSign(profile.date_of_birth, profile?.time_of_birth, userBirthLat, userBirthLon) : null;
   const partnerSun = partnerDob ? getSunSign(partnerDob) : null;
-  const partnerMoon = partnerDob ? getApproxMoonSign(partnerDob) : null;
+  const partnerMoon = partnerDob ? getApproxMoonSign(partnerDob, (profile as any)?.partner_time_of_birth, partnerBirthLat, partnerBirthLon) : null;
 
   // Build children astro data for the AI
   const childrenAstroData = children.map((child) => ({
     name: child.name,
     sunSign: getSunSign(child.date_of_birth)?.name || "Unknown",
-    moonSign: getApproxMoonSign(child.date_of_birth)?.name || "Unknown",
+    moonSign: getApproxMoonSign(child.date_of_birth, child.time_of_birth, child.birth_place_lat, child.birth_place_lon)?.name || "Unknown",
     element: getSunSign(child.date_of_birth)?.element || "Unknown",
   }));
 

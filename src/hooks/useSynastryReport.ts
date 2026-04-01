@@ -68,13 +68,13 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
     const userBirthLat = (profile as any).birth_lat ?? null;
     const userBirthLon = (profile as any).birth_lon ?? null;
     const userSunSign = getSunSign(dob);
-    const userMoonSign = getApproxMoonSign(dob, tob, userBirthLon);
+    const userMoonSign = getApproxMoonSign(dob, tob, userBirthLat, userBirthLon);
     const userRisingSign = getApproxRisingSign(dob, tob, userBirthLat, userBirthLon);
 
     const partnerBirthLat = (profile as any).partner_birth_place_lat ?? null;
     const partnerBirthLon = (profile as any).partner_birth_place_lon ?? null;
     const partnerSunSign = getSunSign(partnerDob);
-    const partnerMoonSign = getApproxMoonSign(partnerDob, partnerTime || null, partnerBirthLon);
+    const partnerMoonSign = getApproxMoonSign(partnerDob, partnerTime || null, partnerBirthLat, partnerBirthLon);
     const partnerRisingSign = getApproxRisingSign(partnerDob, partnerTime || null, partnerBirthLat, partnerBirthLon);
 
     const partnerHasTime = Boolean(partnerTime && partnerTime.trim().length >= 4);
