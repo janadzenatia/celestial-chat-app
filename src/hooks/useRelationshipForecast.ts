@@ -76,10 +76,10 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
     const partnerBirthLon = (profile as any).partner_birth_place_lon ?? null;
 
     const userSunSign = getSunSign(dob);
-    const userMoonSign = getApproxMoonSign(dob, tob);
+    const userMoonSign = getApproxMoonSign(dob, tob, userBirthLon);
     const userRisingSign = getApproxRisingSign(dob, tob, userBirthLat, userBirthLon);
     const partnerSunSign = getSunSign(partnerDobStr);
-    const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null);
+    const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null, partnerBirthLon);
     const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
 
     try {

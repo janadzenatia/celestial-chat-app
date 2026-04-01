@@ -243,7 +243,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       await supabase.from("child_reports").delete().eq("child_id", member.id).eq("language", language);
 
       const parentSun = getSunSign(profile.date_of_birth);
-      const parentMoon = getApproxMoonSign(profile.date_of_birth, profile.time_of_birth);
+      const parentMoon = getApproxMoonSign(profile.date_of_birth, profile.time_of_birth, profile.birth_lon);
       const parentRising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, profile.birth_lat, profile.birth_lon);
       const { sun: memberSun, moon: memberMoon, rising: memberRising } = getMemberBig3(member);
 
