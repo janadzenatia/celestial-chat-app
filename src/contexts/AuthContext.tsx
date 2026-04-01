@@ -87,54 +87,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const prof = data as Profile | null;
     setProfile(prof);
 
-    // Save device_id to profile if not already set
-    if (prof && !prof.device_id) {
-      const deviceId = getDeviceId();
-      await supabase
-        .from("profiles")
-        .update({ device_id: deviceId } as any)
-        .eq("user_id", userId);
-    }
-
-    // Auto-geocode existing users who have place_of_birth but no coordinates
-    if (prof && prof.place_of_birth && prof.birth_lat == null) {
-      const coords = await geocodePlace(prof.place_of_birth);
-      if (coords) {
-        await supabase
-          .from("profiles")
-          .update({
-            birth_lat: coords.lat,
-            birth_lon: coords.lon,
-            birth_place_normalized: coords.displayName,
-          } as any)
-          .eq("user_id", userId);
-        setProfile({ ...prof, birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName });
+    // Fire-and-forget side effects — never block auth flow
+    if (prof) {
+      // Save device_id if not set
+      if (!prof.device_id) {
+        const deviceId = getDeviceId();
+        supabase.from("profiles").update({ device_id: deviceId } as any).eq("user_id", userId).then(() => {});
       }
-    }
 
-    // Cache Big 3 signs if not already cached and DOB is available
-    const currentProf = prof ?? undefined;
-    if (currentProf && currentProf.date_of_birth && !currentProf.cached_sun_sign) {
-      const dob = currentProf.date_of_birth;
-      const tob = currentProf.time_of_birth;
-      const lat = currentProf.birth_lat;
-      const lon = currentProf.birth_lon;
-      const sun = getSunSign(dob);
-      const moon = getApproxMoonSign(dob, tob, lat, lon);
-      const rising = getApproxRisingSign(dob, tob, lat, lon);
-      const cacheData = {
-        cached_sun_sign: sun?.name || null,
-        cached_moon_sign: moon?.name || null,
-        cached_rising_sign: rising?.name || null,
-        cached_sun_emoji: sun?.emoji || null,
-        cached_moon_emoji: moon?.emoji || null,
-        cached_rising_emoji: rising?.emoji || null,
-      };
-      await supabase
-        .from("profiles")
-        .update(cacheData as any)
-        .eq("user_id", userId);
-      setProfile({ ...currentProf, ...cacheData });
+      // Auto-geocode if needed
+      if (prof.place_of_birth && prof.birth_lat == null) {
+        geocodePlace(prof.place_of_birth).then((coords) => {
+          if (coords) {
+            supabase.from("profiles").update({
+              birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName,
+            } as any).eq("user_id", userId).then(() => {});
+            setProfile((prev) => prev ? { ...prev, birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName } : prev);
+          }
+        });
+      }
+
+      // Big 3: ONLY calculate if ALL cached values are missing (first-time registration)
+      // If any cached sign exists, skip entirely — never overwrite existing values
+      if (prof.date_of_birth && !prof.cached_sun_sign && !prof.cached_moon_sign && !prof.cached_rising_sign) {
+        const sun = getSunSign(prof.date_of_birth);
+        const moon = getApproxMoonSign(prof.date_of_birth, prof.time_of_birth, prof.birth_lat, prof.birth_lon);
+        const rising = getApproxRisingSign(prof.date_of_birth, prof.time_of_birth, prof.birth_lat, prof.birth_lon);
+        const cacheData = {
+          cached_sun_sign: sun?.name || null, cached_moon_sign: moon?.name || null, cached_rising_sign: rising?.name || null,
+          cached_sun_emoji: sun?.emoji || null, cached_moon_emoji: moon?.emoji || null, cached_rising_emoji: rising?.emoji || null,
+        };
+        supabase.from("profiles").update(cacheData as any).eq("user_id", userId).then(() => {});
+        setProfile((prev) => prev ? { ...prev, ...cacheData } : prev);
+      }
     }
   };
 
