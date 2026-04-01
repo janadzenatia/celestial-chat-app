@@ -182,17 +182,18 @@ const ChatPage = () => {
     if (!profile?.date_of_birth) return null;
     const birthLat = (profile as any).birth_lat ?? null;
     const birthLon = (profile as any).birth_lon ?? null;
-    const sun = getSunSign(profile.date_of_birth);
-    const moon = getApproxMoonSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon);
-    const rising = getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon);
+    // Use cached Big 3 if available
+    const sun = (profile as any).cached_sun_sign || getSunSign(profile.date_of_birth)?.name;
+    const moon = (profile as any).cached_moon_sign || getApproxMoonSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon)?.name;
+    const rising = (profile as any).cached_rising_sign || getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon)?.name;
     return {
       name: profile.name,
       dateOfBirth: profile.date_of_birth,
       timeOfBirth: profile.time_of_birth,
       placeOfBirth: profile.place_of_birth,
-      sunSign: sun?.name,
-      moonSign: moon?.name,
-      risingSign: rising?.name,
+      sunSign: sun,
+      moonSign: moon,
+      risingSign: rising,
     };
   };
 
