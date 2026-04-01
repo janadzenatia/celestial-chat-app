@@ -71,14 +71,13 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
 
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
-    const userBirthLat = (profile as any).birth_lat ?? null;
-    const userBirthLon = (profile as any).birth_lon ?? null;
     const partnerBirthLat = (profile as any).partner_birth_place_lat ?? null;
     const partnerBirthLon = (profile as any).partner_birth_place_lon ?? null;
 
-    const userSunSign = getSunSign(dob);
-    const userMoonSign = getApproxMoonSign(dob, tob, userBirthLat, userBirthLon);
-    const userRisingSign = getApproxRisingSign(dob, tob, userBirthLat, userBirthLon);
+    const { sunSign: userSunSign, moonSign: userMoonSign, risingSign: userRisingSign } = getCachedBig3(profile);
+    const partnerSunSign = getSunSign(partnerDobStr);
+    const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
+    const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
     const partnerSunSign = getSunSign(partnerDobStr);
     const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
     const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
