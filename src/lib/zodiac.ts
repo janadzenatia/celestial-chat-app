@@ -49,11 +49,14 @@ function sinD(d: number): number { return Math.sin(d * Math.PI / 180); }
 function cosD(d: number): number { return Math.cos(d * Math.PI / 180); }
 function tanD(d: number): number { return Math.tan(d * Math.PI / 180); }
 
-// ─── Timezone-aware UTC conversion ──────────────────────────
+// ─── Timezone-aware UTC conversion (luxon for historical accuracy) ───
+
+import { DateTime } from "luxon";
 
 /**
  * Get UTC offset in minutes for a specific local datetime in a given IANA timezone.
- * Uses Intl API — handles DST and historical timezone rules correctly.
+ * Uses luxon — correctly handles DST, historical timezone changes, and
+ * Soviet-era time zones for any country.
  * Returns minutes to ADD to local time to get UTC (negative for east of Greenwich).
  */
 function getTimezoneOffsetMinutes(
@@ -61,13 +64,12 @@ function getTimezoneOffsetMinutes(
   year: number, month: number, day: number,
   hour: number, minute: number
 ): number {
-  // Create a reference UTC instant using the local time values
-  const refUtc = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
-  // Format that instant in both UTC and the target timezone
-  const utcStr = refUtc.toLocaleString("en-US", { timeZone: "UTC" });
-  const tzStr = refUtc.toLocaleString("en-US", { timeZone });
-  // The difference reveals the timezone offset at this approximate instant
-  return (new Date(utcStr).getTime() - new Date(tzStr).getTime()) / 60000;
+  const dt = DateTime.fromObject(
+    { year, month, day, hour, minute },
+    { zone: timeZone }
+  );
+  // dt.offset is minutes east of UTC (positive for east), we need the inverse
+  return -dt.offset;
 }
 
 /**
