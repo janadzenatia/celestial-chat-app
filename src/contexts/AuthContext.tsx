@@ -29,6 +29,12 @@ interface Profile {
   birth_lon: number | null;
   birth_place_normalized: string | null;
   device_id: string | null;
+  cached_sun_sign: string | null;
+  cached_moon_sign: string | null;
+  cached_rising_sign: string | null;
+  cached_sun_emoji: string | null;
+  cached_moon_emoji: string | null;
+  cached_rising_emoji: string | null;
 }
 
 /** Derive the effective plan: "free" or "premium" (single tier) */
