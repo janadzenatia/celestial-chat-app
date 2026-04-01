@@ -141,7 +141,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     const partnerTob = profile.partner_time_of_birth;
     const partnerLat = (profile as any).partner_birth_place_lat ?? null;
     const partnerLon = (profile as any).partner_birth_place_lon ?? null;
-    const partnerMoon = partnerDob ? getApproxMoonSign(partnerDob, partnerTob) : null;
+    const partnerMoon = partnerDob ? getApproxMoonSign(partnerDob, partnerTob, partnerLat, partnerLon) : null;
     const partnerRising = partnerDob ? getApproxRisingSign(partnerDob, partnerTob, partnerLat, partnerLon) : null;
 
     const userBirthLat = (profile as any).birth_lat ?? null;
