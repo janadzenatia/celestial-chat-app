@@ -7,6 +7,7 @@ import { Send, Trash2, Sparkles, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 import PaywallModal from "@/components/PaywallModal";
+import { stripMarkdown } from "@/lib/stripMarkdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
