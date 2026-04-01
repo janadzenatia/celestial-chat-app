@@ -188,17 +188,9 @@ const ChatPage = () => {
       dateOfBirth: profile.date_of_birth,
       timeOfBirth: profile.time_of_birth,
       placeOfBirth: profile.place_of_birth,
-      sunSign: sunSign,
-      moonSign: moonSign,
-      risingSign: risingSign,
-    return {
-      name: profile.name,
-      dateOfBirth: profile.date_of_birth,
-      timeOfBirth: profile.time_of_birth,
-      placeOfBirth: profile.place_of_birth,
-      sunSign: sun,
-      moonSign: moon,
-      risingSign: rising,
+      sunSign,
+      moonSign,
+      risingSign,
     };
   };
 
