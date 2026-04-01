@@ -97,13 +97,9 @@ export const useCosmicHook = () => {
       const resp = await supabase.functions.invoke("cosmic-hook", {
         body: {
           userName: profile.name,
-          dateOfBirth: dob,
-          timeOfBirth: tob,
-          placeOfBirth: profile.place_of_birth,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
-          familyMembers,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
           todaySubject,
         },
