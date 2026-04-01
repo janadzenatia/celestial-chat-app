@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; // auth-page
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useLanguage } from "@/contexts/LanguageContext";
