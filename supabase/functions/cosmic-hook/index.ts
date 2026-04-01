@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
-import { callGeminiWithRetry } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdown } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -82,8 +82,9 @@ serve(async (req) => {
     if (toolCall?.function?.arguments) {
       try {
         hookData = JSON.parse(toolCall.function.arguments);
+        if (hookData.hook) hookData.hook = stripMarkdown(hookData.hook);
       } catch {
-        hookData.hook = toolCall.function.arguments;
+        hookData.hook = stripMarkdown(toolCall.function.arguments);
       }
     }
 

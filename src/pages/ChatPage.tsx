@@ -7,6 +7,7 @@ import { Send, Trash2, Sparkles, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 import PaywallModal from "@/components/PaywallModal";
+import { stripMarkdown } from "@/lib/stripMarkdown";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -132,12 +133,13 @@ const ChatPage = () => {
 
       const upsert = (chunk: string) => {
         assistantSoFar += chunk;
+        const cleaned = stripMarkdown(assistantSoFar);
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
-            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: cleaned } : m));
           }
-          return [...prev, { role: "assistant", content: assistantSoFar }];
+          return [...prev, { role: "assistant", content: cleaned }];
         });
       };
 
@@ -165,7 +167,7 @@ const ChatPage = () => {
       }
 
       if (assistantSoFar) {
-        await persistMessage({ role: "assistant", content: assistantSoFar });
+        await persistMessage({ role: "assistant", content: stripMarkdown(assistantSoFar) });
       }
     } catch (e) {
       console.error("Hook chat error:", e);
@@ -268,12 +270,13 @@ const ChatPage = () => {
 
       const upsert = (chunk: string) => {
         assistantSoFar += chunk;
+        const cleaned = stripMarkdown(assistantSoFar);
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
-            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: cleaned } : m));
           }
-          return [...prev, { role: "assistant", content: assistantSoFar }];
+          return [...prev, { role: "assistant", content: cleaned }];
         });
       };
 
@@ -302,7 +305,7 @@ const ChatPage = () => {
       }
 
       if (assistantSoFar) {
-        await persistMessage({ role: "assistant", content: assistantSoFar });
+        await persistMessage({ role: "assistant", content: stripMarkdown(assistantSoFar) });
         // Check for moderation response
         if (MODERATION_MARKERS.some((m) => assistantSoFar.includes(m))) {
           const newCount = violations + 1;

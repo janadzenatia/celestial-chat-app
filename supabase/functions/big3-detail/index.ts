@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
-import { callGeminiWithRetry } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdown } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -49,10 +49,10 @@ ${typeContext}
 
 Please provide:
 1. A brief opening (1-2 sentences) explaining what this type of sign represents in astrology
-2. A section titled "${language === "ka" ? `რას ნიშნავს ${signName}?` : `What does ${signName} mean?`}" with 4-5 key personality traits as bullet points. Each bullet should have a bold trait name followed by a brief explanation.
+2. A section titled "${language === "ka" ? `რას ნიშნავს ${signName}?` : `What does ${signName} mean?`}" with 4-5 key personality traits. Each trait should have the trait name followed by a brief explanation.
 3. A personalized closing insight (1-2 sentences) connecting this placement to ${userName}'s unique energy
 
-Format the traits as a markdown list with **bold** trait names.
+Do NOT use any markdown formatting — no asterisks, no bold, no italic, no headers, no bullet markers. Plain text only. Use line breaks to separate traits.
 Respond ONLY in ${lang}.`;
 
     const systemPrompt = buildSystemPrompt(
@@ -90,7 +90,7 @@ Respond ONLY in ${lang}.`;
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const content = stripMarkdown(data.choices?.[0]?.message?.content || "");
 
     return new Response(JSON.stringify({ content }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

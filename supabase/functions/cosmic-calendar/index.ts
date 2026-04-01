@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth, requirePremium } from "../_shared/auth.ts";
-import { callGeminiWithRetry } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdownDeep } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -114,7 +114,7 @@ Rules:
 
     if (toolCall?.function?.arguments) {
       try {
-        calendarData = JSON.parse(toolCall.function.arguments);
+        calendarData = stripMarkdownDeep(JSON.parse(toolCall.function.arguments));
       } catch {
         console.error("Failed to parse calendar data");
       }

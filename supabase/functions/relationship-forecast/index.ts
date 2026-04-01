@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth, requirePremium } from "../_shared/auth.ts";
-import { callGeminiWithRetry } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdownDeep } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -126,7 +126,7 @@ Rules:
 
     try {
       const parsed = JSON.parse(content);
-      return new Response(JSON.stringify(parsed), {
+      return new Response(JSON.stringify(stripMarkdownDeep(parsed)), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch {
