@@ -90,7 +90,7 @@ Respond ONLY in ${lang}.`;
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const content = stripMarkdown(data.choices?.[0]?.message?.content || "");
 
     return new Response(JSON.stringify({ content }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
