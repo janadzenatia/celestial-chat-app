@@ -106,7 +106,7 @@ Rules:
       parsed = JSON.parse(cleaned);
     }
 
-    return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(stripMarkdownDeep(parsed)), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("child-synastry error:", e);
     return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });

@@ -69,7 +69,7 @@ Rules:
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
     const parsed = JSON.parse(content);
-    return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify(stripMarkdownDeep(parsed)), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("baby-personality error:", e);
     return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
