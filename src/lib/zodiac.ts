@@ -49,6 +49,61 @@ function sinD(d: number): number { return Math.sin(d * Math.PI / 180); }
 function cosD(d: number): number { return Math.cos(d * Math.PI / 180); }
 function tanD(d: number): number { return Math.tan(d * Math.PI / 180); }
 
+// ─── Timezone-aware UTC conversion ──────────────────────────
+
+/**
+ * Get UTC offset in minutes for a specific local datetime in a given IANA timezone.
+ * Uses Intl API — handles DST and historical timezone rules correctly.
+ * Returns minutes to ADD to local time to get UTC (negative for east of Greenwich).
+ */
+function getTimezoneOffsetMinutes(
+  timeZone: string,
+  year: number, month: number, day: number,
+  hour: number, minute: number
+): number {
+  // Create a reference UTC instant using the local time values
+  const refUtc = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
+  // Format that instant in both UTC and the target timezone
+  const utcStr = refUtc.toLocaleString("en-US", { timeZone: "UTC" });
+  const tzStr = refUtc.toLocaleString("en-US", { timeZone });
+  // The difference reveals the timezone offset at this approximate instant
+  return (new Date(utcStr).getTime() - new Date(tzStr).getTime()) / 60000;
+}
+
+/**
+ * Convert local birth date/time to Julian Day number using proper IANA timezone
+ * resolution when coordinates are available. Falls back to browser timezone.
+ *
+ * This is the SINGLE source of truth for birth-time → UTC conversion across
+ * all astrological calculations (Moon, Ascendant, houses, etc.).
+ */
+function birthTimeToJD(
+  year: number, month: number, day: number,
+  hour: number, minute: number,
+  lat?: number | null, lon?: number | null
+): number {
+  let offsetMinutes: number;
+
+  if (lat != null && lon != null) {
+    try {
+      const tz = tzlookup(lat, lon); // e.g. "Asia/Tbilisi", "America/New_York"
+      offsetMinutes = getTimezoneOffsetMinutes(tz, year, month, day, hour, minute);
+    } catch {
+      // Fallback: rough estimate from longitude (4 minutes per degree)
+      offsetMinutes = -(lon * 4);
+    }
+  } else {
+    // No coordinates — use the browser's local timezone
+    offsetMinutes = new Date(year, month - 1, day, hour, minute).getTimezoneOffset();
+  }
+
+  // Convert total local time to UTC fractional hours
+  const totalUtcMinutes = hour * 60 + minute + offsetMinutes;
+  const utcFractionalHours = totalUtcMinutes / 60;
+
+  return toJulianDay(year, month, day, utcFractionalHours, 0);
+}
+
 /**
  * Convert calendar date/time to Julian Day number
  */
