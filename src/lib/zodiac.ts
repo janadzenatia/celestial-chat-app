@@ -175,9 +175,13 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
 
 /**
  * Accurate Moon sign using Meeus lunar ephemeris.
- * Uses browser timezone for UTC conversion.
+ * Uses birth longitude for UTC offset when available, falls back to browser timezone.
  */
-export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | null): ZodiacSign {
+export function getApproxMoonSign(
+  dateOfBirth: string,
+  timeOfBirth?: string | null,
+  birthLon?: number | null
+): ZodiacSign {
   const [year, month, day] = dateOfBirth.split("-").map(Number);
 
   let hours = 12, minutes = 0;
@@ -187,10 +191,13 @@ export function getApproxMoonSign(dateOfBirth: string, timeOfBirth?: string | nu
     minutes = parts[1] ?? 0;
   }
 
-  // Convert local time to UTC using browser timezone
-  const localDate = new Date(year, month - 1, day, hours, minutes);
-  const utcOffsetMinutes = localDate.getTimezoneOffset();
-  const utcHours = hours + utcOffsetMinutes / 60;
+  // Convert local time to UTC
+  // Use birth longitude for offset (lon/15 ≈ UTC offset in hours) when available
+  // This is more accurate than browser timezone for birth location calculations
+  const utcOffsetHours = birthLon != null
+    ? birthLon / 15
+    : -(new Date(year, month - 1, day, hours, minutes).getTimezoneOffset() / 60);
+  const utcHours = hours - utcOffsetHours;
 
   const jd = toJulianDay(year, month, day, utcHours, minutes);
   const moonLon = getMoonLongitude(jd);
@@ -218,16 +225,18 @@ export function getApproxRisingSign(
   const [year, month, day] = dateOfBirth.split("-").map(Number);
   const [hours, minutes] = timeOfBirth.split(":").map(Number);
 
-  // Convert local time to UTC using browser timezone
-  const localDate = new Date(year, month - 1, day, hours, minutes);
-  const utcOffsetMinutes = localDate.getTimezoneOffset();
-  const utcHours = hours + utcOffsetMinutes / 60;
+  // Convert local time to UTC
+  // Use birth longitude for offset when available
+  const utcOffsetHours = birthLon != null
+    ? birthLon / 15
+    : -(new Date(year, month - 1, day, hours, minutes).getTimezoneOffset() / 60);
+  const utcHours = hours - utcOffsetHours;
 
   const jd = toJulianDay(year, month, day, utcHours, minutes);
 
   // Use exact coordinates if available, otherwise estimate from timezone
   const lat = birthLat ?? 42;
-  const lon = birthLon ?? (-(utcOffsetMinutes / 60) * 15);
+  const lon = birthLon ?? (utcOffsetHours * 15);
 
   const ascLon = getAscendantLon(jd, lat, lon);
   return longitudeToSign(ascLon);
