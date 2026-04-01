@@ -12,6 +12,23 @@ interface GeminiRequestOptions {
  * Call Gemini API with exponential backoff retry on 429 errors.
  * Includes a pre-call delay to avoid burst rate limiting.
  */
+/**
+ * Strip markdown formatting from AI-generated text.
+ */
+export function stripMarkdown(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/#{1,6}\s*/g, "")        // headers
+    .replace(/\*\*\*(.*?)\*\*\*/g, "$1") // bold+italic
+    .replace(/\*\*(.*?)\*\*/g, "$1")   // bold
+    .replace(/\*(.*?)\*/g, "$1")       // italic
+    .replace(/__(.*?)__/g, "$1")       // underline bold
+    .replace(/_(.*?)_/g, "$1")         // underline italic
+    .replace(/~~(.*?)~~/g, "$1")       // strikethrough
+    .replace(/`{1,3}(.*?)`{1,3}/gs, "$1") // code
+    .trim();
+}
+
 export async function callGeminiWithRetry(
   options: GeminiRequestOptions
 ): Promise<Response> {
