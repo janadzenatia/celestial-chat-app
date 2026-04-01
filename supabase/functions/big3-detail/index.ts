@@ -49,10 +49,10 @@ ${typeContext}
 
 Please provide:
 1. A brief opening (1-2 sentences) explaining what this type of sign represents in astrology
-2. A section titled "${language === "ka" ? `რას ნიშნავს ${signName}?` : `What does ${signName} mean?`}" with 4-5 key personality traits as bullet points. Each bullet should have a bold trait name followed by a brief explanation.
+2. A section titled "${language === "ka" ? `რას ნიშნავს ${signName}?` : `What does ${signName} mean?`}" with 4-5 key personality traits. Each trait should have the trait name followed by a brief explanation.
 3. A personalized closing insight (1-2 sentences) connecting this placement to ${userName}'s unique energy
 
-Format the traits as a markdown list with **bold** trait names.
+Do NOT use any markdown formatting — no asterisks, no bold, no italic, no headers, no bullet markers. Plain text only. Use line breaks to separate traits.
 Respond ONLY in ${lang}.`;
 
     const systemPrompt = buildSystemPrompt(
