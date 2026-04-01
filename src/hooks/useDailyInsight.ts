@@ -60,14 +60,7 @@ export function useDailyInsight() {
       }
     }
 
-    const dob = profile.date_of_birth!;
-    const tob = profile.time_of_birth;
-    const birthLat = (profile as any).birth_lat ?? null;
-    const birthLon = (profile as any).birth_lon ?? null;
-    // Use cached Big 3 if available
-    const sunSign = (profile as any).cached_sun_sign || getSunSign(dob)?.name;
-    const moonSign = (profile as any).cached_moon_sign || getApproxMoonSign(dob, tob, birthLat, birthLon)?.name;
-    const risingSign = (profile as any).cached_rising_sign || getApproxRisingSign(dob, tob, birthLat, birthLon)?.name;
+    const { sunSign, moonSign, risingSign } = getCachedBig3(profile);
 
     try {
       const resp = await supabase.functions.invoke("daily-insight", {
