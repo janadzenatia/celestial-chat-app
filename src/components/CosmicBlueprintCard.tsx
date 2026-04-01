@@ -48,7 +48,7 @@ const CosmicBlueprintCard = () => {
     const birthLat = (profile as any).birth_lat ?? null;
     const birthLon = (profile as any).birth_lon ?? null;
     const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob, tob);
+    const moonSign = getApproxMoonSign(dob, tob, birthLon);
     const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
 
     try {
