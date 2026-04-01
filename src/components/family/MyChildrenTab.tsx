@@ -226,7 +226,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
 
   const getMemberBig3 = (member: FamilyMember) => {
     const sun = getSunSign(member.date_of_birth);
-    const moon = getApproxMoonSign(member.date_of_birth, member.time_of_birth, member.birth_place_lon);
+    const moon = getApproxMoonSign(member.date_of_birth, member.time_of_birth, member.birth_place_lat, member.birth_place_lon);
     const rising = getApproxRisingSign(
       member.date_of_birth,
       member.time_of_birth,
