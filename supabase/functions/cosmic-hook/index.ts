@@ -16,58 +16,25 @@ serve(async (req) => {
     const auth = await validateAuth(req);
     if (auth.error) return auth.error;
 
-    const { userName, dateOfBirth, timeOfBirth, placeOfBirth, sunSign, moonSign, risingSign, familyMembers, language, todaySubject } = await req.json();
+    const { userName, sunSign, moonSign, risingSign, language, todaySubject } = await req.json();
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
-    const today = new Date().toISOString().split("T")[0];
+    const cta = language === "ka" ? "შეეხე და გაიგე მეტი." : "Tap to discover more.";
 
     const isSelf = todaySubject?.relationship === "self";
-    const isPartner = todaySubject?.relationship === "partner";
-    const isChild = todaySubject?.relationship === "child";
+    const focus = isSelf
+      ? `About ${userName} themselves (subject="self").`
+      : `About "${todaySubject?.name}" (${todaySubject?.relationship}, born ${todaySubject?.dateOfBirth}). Set subject="${todaySubject?.name}".`;
 
-    let familyContext = "";
-    if (familyMembers && familyMembers.length > 0) {
-      familyContext = `\n\nThe user has these saved family members:\n${familyMembers.map((m: any) => `- ${m.name} (born ${m.dateOfBirth}, relationship: ${m.relationship})`).join("\n")}`;
-    }
+    const langRule = language === "ka"
+      ? `Georgian only. Informal "შენობითი" form.`
+      : `English only.`;
 
-    let focusInstruction = "";
-    if (isSelf) {
-      focusInstruction = `\nTODAY'S FOCUS: Generate the hook about the USER THEMSELVES ("${userName}"). Focus on their personal chart — career, personal growth, self-discovery, health, or a hidden opportunity they might be missing today. Set "subject" to "self".`;
-    } else if (isPartner) {
-      focusInstruction = `\nTODAY'S FOCUS: Generate the hook about the user's PARTNER "${todaySubject.name}" (born ${todaySubject.dateOfBirth}).
-- Focus on relationship dynamics, romantic chemistry, communication energy, or emotional connection happening TODAY.
-- Reference how current transits create opportunities for deeper bonding, meaningful conversations, surprise gestures, or resolving old tensions.
-- Make the hook feel personal and relationship-focused.
-- Set "subject" to "${todaySubject.name}".`;
-    } else if (isChild) {
-      focusInstruction = `\nTODAY'S FOCUS: Generate the hook about the user's CHILD "${todaySubject.name}" (born ${todaySubject.dateOfBirth}).
-- Focus on parenting insights, the child's potential, cosmic gifts the child is receiving today, or a special moment to share.
-- Set "subject" to "${todaySubject.name}".`;
-    }
+    const prompt = `Generate 1-sentence cosmic push notification. User: ${userName}, Sun=${sunSign}, Moon=${moonSign}, Rising=${risingSign}. ${focus} Create curiosity, positive urgency, no solutions. End with "${cta}". No negativity. ${langRule} Return JSON: {"hook":"text","subject":"name or self","subjectDob":"dob or null"}`;
 
-    const langInstruction = language === "ka"
-      ? `\nLANGUAGE: Respond ONLY in Georgian. Use informal "შენობითი" form — always "შენ/შენი/გაქვს/შეგიძლია", NEVER "თქვენ/თქვენი/გაქვთ/შეგიძლიათ".`
-      : `\nLANGUAGE: Respond ONLY in English. Use warm, friendly, personal tone.`;
-
-    const big3Context = `\n\nThe user's Big 3 signs (calculated from exact birth data):
-- Sun Sign: ${sunSign || "Unknown"}
-- Moon Sign: ${moonSign || "Unknown"}
-- Ascendant (Rising): ${risingSign || "Unknown"}`;
-
-    const basePrompt = `You are an elite AI astrologer generating a push notification hook. Today is ${today}.
-
-The user's name is "${userName || "Unknown"}". Their birth date is ${dateOfBirth || "Unknown"}, birth time is ${timeOfBirth || "Not provided"}${placeOfBirth ? `, born in ${placeOfBirth}` : ""}.${big3Context}${familyContext}${focusInstruction}${langInstruction}
-
-TASK: Generate a single highly emotional, intriguing 1-sentence push notification. Rules:
-1. Focus ONLY on today's designated subject as specified above.
-2. Do NOT give the solution or advice in the notification. Create curiosity and positive urgency — never fear or dread.
-3. End with a call-to-action like "${language === "ka" ? "შეეხე და გაიგე მეტი." : "Tap to discover more."}".
-4. NEVER predict anything negative, fearful, or fatalistic. Focus on opportunities and cosmic gifts.
-5. Return ONLY a JSON object: { "hook": "the notification text", "subject": "name of the person referenced or 'self'", "subjectDob": "their date of birth or null" }`;
-
-    const systemPrompt = buildSystemPrompt(basePrompt, language);
+    const systemPrompt = buildSystemPrompt("Elite AI astrologer generating push notifications. Return ONLY valid JSON.", language);
 
     const response = await callGeminiWithRetry({
       apiKey: GEMINI_API_KEY,
@@ -75,7 +42,7 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
         model: "gemini-2.0-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: "Generate today's cosmic hook notification." },
+          { role: "user", content: prompt },
         ],
         tools: [
           {
@@ -86,9 +53,9 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
               parameters: {
                 type: "object",
                 properties: {
-                  hook: { type: "string", description: "The notification text" },
-                  subject: { type: "string", description: "Name of the person or 'self'" },
-                  subjectDob: { type: "string", description: "Date of birth of the subject, or null" },
+                  hook: { type: "string" },
+                  subject: { type: "string" },
+                  subjectDob: { type: "string" },
                 },
                 required: ["hook", "subject"],
                 additionalProperties: false,
@@ -101,21 +68,11 @@ TASK: Generate a single highly emotional, intriguing 1-sentence push notificatio
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted" }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const result = await response.json();
