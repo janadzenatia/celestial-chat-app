@@ -26,6 +26,8 @@ interface ChildData {
   name: string;
   date_of_birth: string;
   time_of_birth: string | null;
+  birth_place_lat?: number | null;
+  birth_place_lon?: number | null;
 }
 
 interface MissingPieceTabProps {
