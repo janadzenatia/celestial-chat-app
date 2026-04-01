@@ -305,7 +305,7 @@ const ChatPage = () => {
       }
 
       if (assistantSoFar) {
-        await persistMessage({ role: "assistant", content: assistantSoFar });
+        await persistMessage({ role: "assistant", content: stripMarkdown(assistantSoFar) });
         // Check for moderation response
         if (MODERATION_MARKERS.some((m) => assistantSoFar.includes(m))) {
           const newCount = violations + 1;
