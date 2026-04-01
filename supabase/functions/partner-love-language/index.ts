@@ -68,7 +68,7 @@ RULES:
     }
 
     const result = await response.json();
-    const summary = result.choices?.[0]?.message?.content?.trim() || "";
+    const summary = stripMarkdown(result.choices?.[0]?.message?.content?.trim() || "");
 
     return new Response(JSON.stringify({ summary }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

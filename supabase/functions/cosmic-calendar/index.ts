@@ -114,7 +114,7 @@ Rules:
 
     if (toolCall?.function?.arguments) {
       try {
-        calendarData = JSON.parse(toolCall.function.arguments);
+        calendarData = stripMarkdownDeep(JSON.parse(toolCall.function.arguments));
       } catch {
         console.error("Failed to parse calendar data");
       }
