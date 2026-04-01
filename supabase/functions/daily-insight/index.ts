@@ -50,7 +50,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "The stars are quiet today...";
+    const content = stripMarkdown(data.choices?.[0]?.message?.content || "The stars are quiet today...");
 
     return new Response(JSON.stringify({ content }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

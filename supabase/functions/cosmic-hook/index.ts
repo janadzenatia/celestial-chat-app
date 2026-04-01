@@ -82,8 +82,9 @@ serve(async (req) => {
     if (toolCall?.function?.arguments) {
       try {
         hookData = JSON.parse(toolCall.function.arguments);
+        if (hookData.hook) hookData.hook = stripMarkdown(hookData.hook);
       } catch {
-        hookData.hook = toolCall.function.arguments;
+        hookData.hook = stripMarkdown(toolCall.function.arguments);
       }
     }
 
