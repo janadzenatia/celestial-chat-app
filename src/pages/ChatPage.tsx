@@ -167,7 +167,7 @@ const ChatPage = () => {
       }
 
       if (assistantSoFar) {
-        await persistMessage({ role: "assistant", content: assistantSoFar });
+        await persistMessage({ role: "assistant", content: stripMarkdown(assistantSoFar) });
       }
     } catch (e) {
       console.error("Hook chat error:", e);
