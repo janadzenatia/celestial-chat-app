@@ -550,7 +550,7 @@ const translations: Translations = {
   },
 
   // Hardcoded string translations
-  "dashboard.readingStars": { en: "Reading the stars...", ka: "ვარსკვლავების კითხვა..." },
+  "dashboard.readingStars": { en: "Loading...", ka: "იტვირთება..." },
   "dashboard.approxNote": { en: "ℹ️ Moon & Rising are approximate. Add your birth time in Profile for better accuracy.", ka: "ℹ️ მთვარე და ასცენდენტი მიახლოებითია. დაამატე დაბადების დრო პროფილში უკეთესი სიზუსტისთვის." },
   "dashboard.noInsight": { en: "Add your birth date to receive personalized insights.", ka: "შეიყვანე დაბადების თარიღი პირადი რჩევებისთვის" },
   "cosmic.emptyDesc": { en: "Discover your ideal cosmic partner based on your unique birth chart.", ka: "აღმოაჩინე შენი იდეალური კოსმიური პარტნიორი შენი უნიკალური დაბადების რუქის საფუძველზე." },
