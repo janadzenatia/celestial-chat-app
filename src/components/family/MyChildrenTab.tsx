@@ -506,6 +506,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
             <BirthTimePicker
               value={memberTime}
               onChange={setMemberTime}
+              showUnknownCheckbox
             />
 
             {/* Birth Place with geocoding */}
