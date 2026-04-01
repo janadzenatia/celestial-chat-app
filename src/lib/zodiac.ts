@@ -1,3 +1,6 @@
+// @ts-ignore — tz-lookup has no type declarations
+import tzlookup from "tz-lookup";
+
 // Zodiac sign data with date ranges, emojis, and elements
 export interface ZodiacSign {
   name: string;
