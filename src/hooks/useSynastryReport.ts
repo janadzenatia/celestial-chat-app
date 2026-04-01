@@ -81,9 +81,9 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
         body: {
           userName: profile.name,
           userDob: dob,
-          userSunSign: userSunSign?.name,
-          userMoonSign: userMoonSign?.name,
-          userRisingSign: userRisingSign?.name,
+          userSunSign,
+          userMoonSign,
+          userRisingSign,
           partnerName: partnerName || "",
           partnerDob,
           partnerSunSign: partnerSunSign?.name,

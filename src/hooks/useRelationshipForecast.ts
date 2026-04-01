@@ -78,9 +78,6 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
     const partnerSunSign = getSunSign(partnerDobStr);
     const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
     const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
-    const partnerSunSign = getSunSign(partnerDobStr);
-    const partnerMoonSign = getApproxMoonSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
-    const partnerRisingSign = getApproxRisingSign(partnerDobStr, partnerTime || null, partnerBirthLat, partnerBirthLon);
 
     try {
       const resp = await supabase.functions.invoke("relationship-forecast", {
@@ -89,9 +86,9 @@ export function useRelationshipForecast(partnerDate?: Date, relationshipDate?: D
           userDob: dob,
           userTimeOfBirth: tob,
           userPlaceOfBirth: profile.place_of_birth,
-          userSunSign: userSunSign?.name,
-          userMoonSign: userMoonSign?.name,
-          userRisingSign: userRisingSign?.name,
+          userSunSign,
+          userMoonSign,
+          userRisingSign,
           partnerName: partnerName || "",
           partnerDob: partnerDobStr,
           partnerTimeOfBirth: partnerTime || null,
