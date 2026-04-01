@@ -57,9 +57,9 @@ export function useWealthReport() {
           timeOfBirth: tob,
           placeOfBirth: profile.place_of_birth,
           name: profile.name,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
         },
       });

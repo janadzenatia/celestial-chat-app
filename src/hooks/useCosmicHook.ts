@@ -74,7 +74,7 @@ export const useCosmicHook = () => {
       }
 
       const rotationList: { name: string; dateOfBirth: string; relationship: string }[] = [
-        { name: profile.name || "self", dateOfBirth: dob, relationship: "self" },
+        { name: profile.name || "self", dateOfBirth: profile.date_of_birth!, relationship: "self" },
       ];
 
       const partner = familyMembers.find((m) => m.relationship === "partner");
