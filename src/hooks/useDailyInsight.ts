@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import type { ZodiacSign } from "@/lib/zodiac";
 
 function getCurrentPeriod(): "morning" | "evening" {
   const hour = new Date().getHours();
@@ -64,17 +65,18 @@ export function useDailyInsight() {
     const tob = profile.time_of_birth;
     const birthLat = (profile as any).birth_lat ?? null;
     const birthLon = (profile as any).birth_lon ?? null;
-    const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob, tob, birthLat, birthLon);
-    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
+    // Use cached Big 3 if available
+    const sunSign = (profile as any).cached_sun_sign || getSunSign(dob)?.name;
+    const moonSign = (profile as any).cached_moon_sign || getApproxMoonSign(dob, tob, birthLat, birthLon)?.name;
+    const risingSign = (profile as any).cached_rising_sign || getApproxRisingSign(dob, tob, birthLat, birthLon)?.name;
 
     try {
       const resp = await supabase.functions.invoke("daily-insight", {
         body: {
           name: profile.name,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
           period,
         },

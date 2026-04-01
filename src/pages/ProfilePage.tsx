@@ -192,6 +192,13 @@ const ProfilePage = () => {
         birth_lat: birthLat,
         birth_lon: birthLon,
         birth_place_normalized: birthPlaceNormalized,
+        // Clear cached Big 3 so they get recalculated
+        cached_sun_sign: null,
+        cached_moon_sign: null,
+        cached_rising_sign: null,
+        cached_sun_emoji: null,
+        cached_moon_emoji: null,
+        cached_rising_emoji: null,
       } as any)
       .eq("user_id", user.id);
 

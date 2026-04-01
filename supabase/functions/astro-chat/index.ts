@@ -22,34 +22,15 @@ serve(async (req) => {
 
     let birthContext = "";
     if (birthData) {
-      birthContext = `
-
-You are a professional astrologer. The user's birth data:
-- Name: ${birthData.name || "Unknown"}
-- Date of Birth: ${birthData.dateOfBirth || "Unknown"}
-- Time of Birth: ${birthData.timeOfBirth || "Not provided"}
-- Place of Birth: ${birthData.placeOfBirth || "Unknown"}
-
-Their Big 3 (calculated from exact birth data):
-- Sun Sign: ${birthData.sunSign || "Unknown"}
-- Moon Sign: ${birthData.moonSign || "Unknown"}
-- Ascendant (Rising): ${birthData.risingSign || "Unknown"}
-
-Answer all questions based on their exact real horoscope using these precise Big 3 values. Reference their specific signs and planetary placements when relevant.`;
+      birthContext = `\nUser: ${birthData.name || "?"}, DOB=${birthData.dateOfBirth || "?"}, TOB=${birthData.timeOfBirth || "?"}, POB=${birthData.placeOfBirth || "?"}. Big 3: Sun=${birthData.sunSign}, Moon=${birthData.moonSign}, Rising=${birthData.risingSign}. Use these exact signs.`;
     }
 
-    const moderationInstruction = language === "ka"
-      ? `\n\nCONTENT MODERATION: If the user's message is inappropriate, offensive, sexually explicit, hateful, or unethical, you MUST respond with EXACTLY this text and nothing else: "ეს შეტყობინება ვერ დამუშავდა — გთხოვ დაიცვა კომუნიკაციის ეთიკური ნორმები. ✨"\nDo NOT engage with or elaborate on inappropriate content. Just return the exact moderation message above.`
-      : `\n\nCONTENT MODERATION: If the user's message is inappropriate, offensive, sexually explicit, hateful, or unethical, you MUST respond with EXACTLY this text and nothing else: "This message could not be processed — please keep your communication respectful. ✨"\nDo NOT engage with or elaborate on inappropriate content. Just return the exact moderation message above.`;
+    const modMsg = language === "ka"
+      ? `If inappropriate: respond ONLY "ეს შეტყობინება ვერ დამუშავდა — გთხოვ დაიცვა კომუნიკაციის ეთიკური ნორმები. ✨"`
+      : `If inappropriate: respond ONLY "This message could not be processed — please keep your communication respectful. ✨"`;
 
     const systemPrompt = buildSystemPrompt(
-      `You are Astrochat — a witty, empathetic, and mystical AI astrologer. You speak with warmth and cosmic wisdom, blending modern conversational tone with mystical flair.
-
-Rules:
-- Keep responses to 4 sentences maximum unless the user asks for detail.
-- Use zodiac emojis and celestial references naturally.
-- Always highlight strengths before challenges.
-- Every challenge must come with constructive advice.${birthContext}${moderationInstruction}`,
+      `Astrochat — witty, empathetic AI astrologer. 4 sentences max unless asked for detail. Use zodiac emojis. Strengths before challenges. Every challenge needs constructive advice.${birthContext}\n${modMsg}`,
       language
     );
 
@@ -66,21 +47,11 @@ Rules:
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted" }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     return new Response(response.body, {

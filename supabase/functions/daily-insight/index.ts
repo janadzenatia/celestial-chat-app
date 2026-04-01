@@ -21,34 +21,12 @@ serve(async (req) => {
     if (!GEMINI_API_KEY) throw new Error("Missing API key");
 
     const lang = language === "ka" ? "Georgian" : "English";
-    const userName = name || "Star Seeker";
-    const isMorning = period === "morning";
+    const tone = period === "morning" ? "motivating, energizing" : "reflective, calming";
 
-    const toneInstruction = isMorning
-      ? "This is a MORNING/DAY phrase (00:00–14:00). Be motivating, energizing, and forward-looking. Inspire action and confidence for the day ahead."
-      : "This is an EVENING/NIGHT phrase (14:00–23:59). Be reflective, calming, and introspective. Help them process the day and find peace.";
-
-    const prompt = `Generate a personalized "Phrase of the Day" for ${userName}.
-
-Their Big 3:
-- Sun Sign: ${sunSign || "Unknown"}
-- Moon Sign: ${moonSign || "Unknown"}
-- Rising Sign: ${risingSign || "Unknown"}
-
-${toneInstruction}
-
-Rules:
-- Address them by name directly.
-- Reference their specific signs and how planetary energies affect them TODAY.
-- Be mystical yet practical — give one actionable piece of advice.
-- Keep it to 2-3 sentences maximum.
-- Highlight their strengths first, then offer guidance.
-- Do NOT include any greeting like "Hello" or "Hi" — start directly with the insight.
-- Use zodiac emojis naturally.
-- Respond ONLY in ${lang}.`;
+    const prompt = `Personalized phrase for ${name || "Star Seeker"}. Sun=${sunSign}, Moon=${moonSign}, Rising=${risingSign}. Tone: ${tone}. 2-3 sentences, address by name, reference their signs, one actionable advice. No greeting. Use zodiac emojis. ${lang} only.`;
 
     const systemPrompt = buildSystemPrompt(
-      "You provide personalized daily astrological phrases. Keep responses warm, empowering, and concise.",
+      "Concise daily astrological phrases. Warm, empowering.",
       language
     );
 
@@ -64,21 +42,11 @@ Rules:
     });
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted" }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const data = await response.json();
