@@ -16,7 +16,7 @@ const BottomNav = () => {
   const { t } = useLanguage();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-white/10 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-white/10" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
       <div className="flex items-center justify-around max-w-lg mx-auto px-2 py-2">
         {tabs.map(({ key, icon: Icon, path }) => {
           const active = location.pathname === path;
