@@ -96,7 +96,7 @@ Rules:
 
     try {
       const parsed = JSON.parse(content);
-      return new Response(JSON.stringify(parsed), {
+      return new Response(JSON.stringify(stripMarkdownDeep(parsed)), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch {
