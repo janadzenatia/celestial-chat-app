@@ -74,9 +74,9 @@ export function useDailyInsight() {
       const resp = await supabase.functions.invoke("daily-insight", {
         body: {
           name: profile.name,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
           period,
         },
