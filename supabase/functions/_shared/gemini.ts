@@ -26,7 +26,24 @@ export function stripMarkdown(text: string): string {
     .replace(/_(.*?)_/g, "$1")         // underline italic
     .replace(/~~(.*?)~~/g, "$1")       // strikethrough
     .replace(/`{1,3}(.*?)`{1,3}/gs, "$1") // code
+    .replace(/^[-*+]\s/gm, "• ")         // bullet lists
     .trim();
+}
+
+/**
+ * Recursively strip markdown from all string values in an object.
+ */
+export function stripMarkdownDeep(obj: any): any {
+  if (typeof obj === "string") return stripMarkdown(obj);
+  if (Array.isArray(obj)) return obj.map(stripMarkdownDeep);
+  if (obj && typeof obj === "object") {
+    const result: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = stripMarkdownDeep(value);
+    }
+    return result;
+  }
+  return obj;
 }
 
 export async function callGeminiWithRetry(
