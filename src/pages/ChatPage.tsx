@@ -5,7 +5,7 @@ import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Send, Trash2, Sparkles, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { getCachedBig3 } from "@/lib/getCachedBig3";
 import PaywallModal from "@/components/PaywallModal";
 import { stripMarkdown } from "@/lib/stripMarkdown";
 
