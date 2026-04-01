@@ -270,12 +270,13 @@ const ChatPage = () => {
 
       const upsert = (chunk: string) => {
         assistantSoFar += chunk;
+        const cleaned = stripMarkdown(assistantSoFar);
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
-            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: cleaned } : m));
           }
-          return [...prev, { role: "assistant", content: assistantSoFar }];
+          return [...prev, { role: "assistant", content: cleaned }];
         });
       };
 
