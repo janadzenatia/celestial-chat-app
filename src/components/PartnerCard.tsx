@@ -534,7 +534,7 @@ const PartnerFormDialog = ({
           {/* Birth Time */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">{t("partner.birthTime")}</label>
-            <BirthTimePicker value={birthTime} onChange={setBirthTime} />
+            <BirthTimePicker value={birthTime} onChange={setBirthTime} showUnknownCheckbox />
           </div>
 
           {/* Place of Birth with geocoding verification */}

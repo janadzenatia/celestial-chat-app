@@ -140,6 +140,7 @@ const OnboardingPage = () => {
             <BirthTimePicker
               value={time}
               onChange={setTime}
+              showUnknownCheckbox
             />
           </div>
 
