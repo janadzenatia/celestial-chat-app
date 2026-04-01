@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { getCachedBig3 } from "@/lib/getCachedBig3";
 
 interface WealthReport {
   cosmic_calling: string;
@@ -48,11 +48,7 @@ export function useWealthReport() {
 
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
-    const birthLat = (profile as any).birth_lat ?? null;
-    const birthLon = (profile as any).birth_lon ?? null;
-    const sunSign = getSunSign(dob);
-    const moonSign = getApproxMoonSign(dob, tob, birthLat, birthLon);
-    const risingSign = getApproxRisingSign(dob, tob, birthLat, birthLon);
+    const { sunSign, moonSign, risingSign } = getCachedBig3(profile);
 
     try {
       const { data, error } = await supabase.functions.invoke("wealth-career", {
@@ -61,9 +57,9 @@ export function useWealthReport() {
           timeOfBirth: tob,
           placeOfBirth: profile.place_of_birth,
           name: profile.name,
-          sunSign: sunSign?.name,
-          moonSign: moonSign?.name,
-          risingSign: risingSign?.name,
+          sunSign,
+          moonSign,
+          risingSign,
           language,
         },
       });

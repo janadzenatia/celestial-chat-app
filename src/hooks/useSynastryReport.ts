@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { getCachedBig3 } from "@/lib/getCachedBig3";
 
 export interface SynastryCategory {
   score: number;
@@ -65,11 +66,7 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
 
     const dob = profile.date_of_birth;
     const tob = profile.time_of_birth;
-    const userBirthLat = (profile as any).birth_lat ?? null;
-    const userBirthLon = (profile as any).birth_lon ?? null;
-    const userSunSign = getSunSign(dob);
-    const userMoonSign = getApproxMoonSign(dob, tob, userBirthLat, userBirthLon);
-    const userRisingSign = getApproxRisingSign(dob, tob, userBirthLat, userBirthLon);
+    const { sunSign: userSunSign, moonSign: userMoonSign, risingSign: userRisingSign } = getCachedBig3(profile);
 
     const partnerBirthLat = (profile as any).partner_birth_place_lat ?? null;
     const partnerBirthLon = (profile as any).partner_birth_place_lon ?? null;
@@ -84,9 +81,9 @@ export function useSynastryReport(partnerDob?: string, partnerName?: string, par
         body: {
           userName: profile.name,
           userDob: dob,
-          userSunSign: userSunSign?.name,
-          userMoonSign: userMoonSign?.name,
-          userRisingSign: userRisingSign?.name,
+          userSunSign,
+          userMoonSign,
+          userRisingSign,
           partnerName: partnerName || "",
           partnerDob,
           partnerSunSign: partnerSunSign?.name,

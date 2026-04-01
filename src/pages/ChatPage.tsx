@@ -5,7 +5,7 @@ import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Send, Trash2, Sparkles, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { getCachedBig3 } from "@/lib/getCachedBig3";
 import PaywallModal from "@/components/PaywallModal";
 import { stripMarkdown } from "@/lib/stripMarkdown";
 
@@ -182,20 +182,15 @@ const ChatPage = () => {
 
   const getBirthData = () => {
     if (!profile?.date_of_birth) return null;
-    const birthLat = (profile as any).birth_lat ?? null;
-    const birthLon = (profile as any).birth_lon ?? null;
-    // Use cached Big 3 if available
-    const sun = (profile as any).cached_sun_sign || getSunSign(profile.date_of_birth)?.name;
-    const moon = (profile as any).cached_moon_sign || getApproxMoonSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon)?.name;
-    const rising = (profile as any).cached_rising_sign || getApproxRisingSign(profile.date_of_birth, profile.time_of_birth, birthLat, birthLon)?.name;
+    const { sunSign, moonSign, risingSign } = getCachedBig3(profile);
     return {
       name: profile.name,
       dateOfBirth: profile.date_of_birth,
       timeOfBirth: profile.time_of_birth,
       placeOfBirth: profile.place_of_birth,
-      sunSign: sun,
-      moonSign: moon,
-      risingSign: rising,
+      sunSign,
+      moonSign,
+      risingSign,
     };
   };
 
