@@ -218,19 +218,27 @@ const AuthPage = () => {
               type="button"
               variant="outline"
               onClick={async () => {
-              const isNative = Capacitor.isNativePlatform();
-                const redirectUri = isNative
-                  ? "ge.astrochat.app://callback"
-                  : window.location.origin;
-                const { error } = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: redirectUri,
-                  ...(isNative && {
-                    extraParams: {
-                      client_id: "53594603504-p78bgnrbr8kolhsq48353urfueu2jqja.apps.googleusercontent.com",
-                    },
-                  }),
-                });
-                if (error) toast({ title: error.message, variant: "destructive" });
+                try {
+                  const isNative = Capacitor.isNativePlatform();
+                  const redirectUri = isNative
+                    ? "ge.astrochat.app://callback"
+                    : window.location.origin;
+                  const result = await lovable.auth.signInWithOAuth("google", {
+                    redirect_uri: redirectUri,
+                    ...(isNative && {
+                      extraParams: {
+                        client_id: "53594603504-p78bgnrbr8kolhsq48353urfueu2jqja.apps.googleusercontent.com",
+                      },
+                    }),
+                  });
+                  if (result.redirected) return;
+                  if (result.error) {
+                    toast({ title: String(result.error.message || result.error), variant: "destructive" });
+                  }
+                } catch (err: any) {
+                  console.error("Google sign-in error:", err);
+                  toast({ title: err?.message || t("auth.genericError"), variant: "destructive" });
+                }
               }}
               className="w-full glass border-white/10 h-11 rounded-xl font-medium"
             >
