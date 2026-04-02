@@ -108,8 +108,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
 
-      // Big 3 values are calculated ONLY during onboarding/profile update
-      // via edge functions with proper timezone handling. Never recalculate client-side.
+      // Calculate Big 3 ONLY if all cached values are missing (first login or after cache clear)
+      // Once calculated and saved, these values are never overwritten unless user updates birth data
+      if (prof.date_of_birth && !prof.cached_sun_sign && !prof.cached_moon_sign && !prof.cached_rising_sign) {
+        const lat = prof.birth_lat;
+        const lon = prof.birth_lon;
+        const sun = getSunSign(prof.date_of_birth);
+        const moon = getApproxMoonSign(prof.date_of_birth, prof.time_of_birth, lat, lon);
+        const rising = getApproxRisingSign(prof.date_of_birth, prof.time_of_birth, lat, lon);
+        const cacheData = {
+          cached_sun_sign: sun?.name || null, cached_moon_sign: moon?.name || null, cached_rising_sign: rising?.name || null,
+          cached_sun_emoji: sun?.emoji || null, cached_moon_emoji: moon?.emoji || null, cached_rising_emoji: rising?.emoji || null,
+        };
+        supabase.from("profiles").update(cacheData as any).eq("user_id", userId).then(() => {});
+        setProfile((prev) => prev ? { ...prev, ...cacheData } : prev);
+      }
     }
   };
 
