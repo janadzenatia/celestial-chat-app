@@ -87,30 +87,76 @@ export function extractTokenUsage(data: any): { prompt_tokens: number; completio
 
 /**
  * Log token usage to Supabase token_usage table.
- * Fire-and-forget — does not throw on error.
+ * Fire-and-forget — does not throw on error, but logs all failure details.
  */
 export async function logTokenUsage(
   userId: string,
   functionName: string,
   tokenData: { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string }
 ): Promise<void> {
-  try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const payload = {
+    user_id: userId,
+    function_name: functionName,
+    prompt_tokens: tokenData.prompt_tokens,
+    completion_tokens: tokenData.completion_tokens,
+    total_tokens: tokenData.total_tokens,
+    model: tokenData.model,
+    created_at: new Date().toISOString(),
+  };
 
-    await supabase.from("token_usage").insert({
-      user_id: userId,
-      function_name: functionName,
-      prompt_tokens: tokenData.prompt_tokens,
-      completion_tokens: tokenData.completion_tokens,
-      total_tokens: tokenData.total_tokens,
+  console.log("[tokens] logTokenUsage:start", {
+    functionName,
+    userId,
+    hasSupabaseUrl: Boolean(supabaseUrl),
+    hasServiceRoleKey: Boolean(serviceRoleKey),
+    payload,
+  });
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.error("[tokens] Missing Supabase admin env vars", {
+      functionName,
+      userId,
+      hasSupabaseUrl: Boolean(supabaseUrl),
+      hasServiceRoleKey: Boolean(serviceRoleKey),
+    });
+    return;
+  }
+
+  try {
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+    const { error } = await supabase.from("token_usage").insert(payload);
+
+    if (error) {
+      console.error("[tokens] token_usage insert failed", {
+        functionName,
+        userId,
+        payload,
+        error: {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        },
+      });
+      return;
+    }
+
+    console.log("[tokens] token_usage insert succeeded", {
+      functionName,
+      userId,
+      totalTokens: tokenData.total_tokens,
       model: tokenData.model,
     });
-
-    console.log(`[tokens] ${functionName}: prompt=${tokenData.prompt_tokens} completion=${tokenData.completion_tokens} total=${tokenData.total_tokens}`);
   } catch (e) {
-    console.error("Failed to log token usage:", e);
+    console.error("[tokens] Unexpected error while logging token usage", {
+      functionName,
+      userId,
+      payload,
+      error: e instanceof Error
+        ? { name: e.name, message: e.message, stack: e.stack }
+        : String(e),
+    });
   }
 }
