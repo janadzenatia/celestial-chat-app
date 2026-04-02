@@ -1,38 +1,30 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1500;
-const PRE_CALL_DELAY_MS = 400; // Delay before each call to avoid burst rate limits
+const PRE_CALL_DELAY_MS = 400;
 
 interface GeminiRequestOptions {
   apiKey: string;
   body: Record<string, unknown>;
 }
 
-/**
- * Call Gemini API with exponential backoff retry on 429 errors.
- * Includes a pre-call delay to avoid burst rate limiting.
- */
-/**
- * Strip markdown formatting from AI-generated text.
- */
 export function stripMarkdown(text: string): string {
   if (!text) return text;
   return text
-    .replace(/#{1,6}\s*/g, "")        // headers
-    .replace(/\*\*\*(.*?)\*\*\*/g, "$1") // bold+italic
-    .replace(/\*\*(.*?)\*\*/g, "$1")   // bold
-    .replace(/\*(.*?)\*/g, "$1")       // italic
-    .replace(/__(.*?)__/g, "$1")       // underline bold
-    .replace(/_(.*?)_/g, "$1")         // underline italic
-    .replace(/~~(.*?)~~/g, "$1")       // strikethrough
-    .replace(/`{1,3}(.*?)`{1,3}/gs, "$1") // code
-    .replace(/^[-*+]\s/gm, "• ")         // bullet lists
+    .replace(/#{1,6}\s*/g, "")
+    .replace(/\*\*\*(.*?)\*\*\*/g, "$1")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/_(.*?)_/g, "$1")
+    .replace(/~~(.*?)~~/g, "$1")
+    .replace(/`{1,3}(.*?)`{1,3}/gs, "$1")
+    .replace(/^[-*+]\s/gm, "• ")
     .trim();
 }
 
-/**
- * Recursively strip markdown from all string values in an object.
- */
 export function stripMarkdownDeep(obj: any): any {
   if (typeof obj === "string") return stripMarkdown(obj);
   if (Array.isArray(obj)) return obj.map(stripMarkdownDeep);
@@ -50,12 +42,9 @@ export async function callGeminiWithRetry(
   options: GeminiRequestOptions
 ): Promise<Response> {
   const { apiKey, body } = options;
-
-  // Force model to gemini-1.5-flash for higher rate limits
   const normalizedBody = { ...body, model: "gemini-2.5-flash" };
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    // Pre-call delay to space out requests
     if (attempt === 0) {
       await new Promise((r) => setTimeout(r, PRE_CALL_DELAY_MS));
     }
@@ -73,13 +62,55 @@ export async function callGeminiWithRetry(
       return response;
     }
 
-    // Consume body to prevent resource leak
     await response.text();
-
-    const delay = BASE_DELAY_MS * Math.pow(2, attempt); // 1.5s, 3s, 6s
+    const delay = BASE_DELAY_MS * Math.pow(2, attempt);
     console.log(`Gemini 429 rate limit, retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`);
     await new Promise((r) => setTimeout(r, delay));
   }
 
   throw new Error("Exhausted retries");
+}
+
+/**
+ * Extract token usage from a Gemini API response JSON.
+ * Call this AFTER parsing the response JSON (data = await response.json()).
+ */
+export function extractTokenUsage(data: any): { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string } {
+  const usage = data?.usage || {};
+  return {
+    prompt_tokens: usage.prompt_tokens || 0,
+    completion_tokens: usage.completion_tokens || 0,
+    total_tokens: usage.total_tokens || 0,
+    model: data?.model || "gemini-2.5-flash",
+  };
+}
+
+/**
+ * Log token usage to Supabase token_usage table.
+ * Fire-and-forget — does not throw on error.
+ */
+export async function logTokenUsage(
+  userId: string,
+  functionName: string,
+  tokenData: { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string }
+): Promise<void> {
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    await supabase.from("token_usage").insert({
+      user_id: userId,
+      function_name: functionName,
+      prompt_tokens: tokenData.prompt_tokens,
+      completion_tokens: tokenData.completion_tokens,
+      total_tokens: tokenData.total_tokens,
+      model: tokenData.model,
+    });
+
+    console.log(`[tokens] ${functionName}: prompt=${tokenData.prompt_tokens} completion=${tokenData.completion_tokens} total=${tokenData.total_tokens}`);
+  } catch (e) {
+    console.error("Failed to log token usage:", e);
+  }
 }
