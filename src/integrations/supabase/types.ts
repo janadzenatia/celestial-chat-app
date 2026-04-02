@@ -538,6 +538,39 @@ export type Database = {
         }
         Relationships: []
       }
+      token_usage: {
+        Row: {
+          completion_tokens: number
+          created_at: string
+          function_name: string
+          id: string
+          model: string | null
+          prompt_tokens: number
+          total_tokens: number
+          user_id: string
+        }
+        Insert: {
+          completion_tokens?: number
+          created_at?: string
+          function_name: string
+          id?: string
+          model?: string | null
+          prompt_tokens?: number
+          total_tokens?: number
+          user_id: string
+        }
+        Update: {
+          completion_tokens?: number
+          created_at?: string
+          function_name?: string
+          id?: string
+          model?: string | null
+          prompt_tokens?: number
+          total_tokens?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       trial_history: {
         Row: {
           created_at: string

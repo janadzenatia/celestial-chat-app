@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
-import { callGeminiWithRetry } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, extractTokenUsage, logTokenUsage } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -53,6 +53,16 @@ serve(async (req) => {
       console.error("AI gateway error:", response.status, t);
       return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+
+    // For streaming, log estimated tokens (we can't get exact count from stream)
+    // Estimate: ~1 token per 4 chars of messages
+    const estimatedPromptTokens = Math.ceil(JSON.stringify(messages).length / 4);
+    logTokenUsage(auth.userId, "astro-chat", {
+      prompt_tokens: estimatedPromptTokens,
+      completion_tokens: 0, // unknown for streaming
+      total_tokens: estimatedPromptTokens,
+      model: "gemini-2.5-flash",
+    });
 
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },

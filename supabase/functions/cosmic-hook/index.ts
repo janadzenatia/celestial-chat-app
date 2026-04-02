@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
-import { callGeminiWithRetry, stripMarkdown } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdown, extractTokenUsage, logTokenUsage } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -76,6 +76,9 @@ serve(async (req) => {
     }
 
     const result = await response.json();
+    const tokenData = extractTokenUsage(result);
+    logTokenUsage(auth.userId, "cosmic-hook", tokenData);
+
     const toolCall = result.choices?.[0]?.message?.tool_calls?.[0];
     let hookData = { hook: "", subject: "self", subjectDob: null };
 
