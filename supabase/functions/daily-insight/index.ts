@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildSystemPrompt } from "../_shared/persona.ts";
 import { validateAuth } from "../_shared/auth.ts";
-import { callGeminiWithRetry, stripMarkdown } from "../_shared/gemini.ts";
+import { callGeminiWithRetry, stripMarkdown, extractTokenUsage, logTokenUsage } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -50,6 +50,9 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    const tokenData = extractTokenUsage(data);
+    logTokenUsage(auth.userId, "daily-insight", tokenData);
+
     const content = stripMarkdown(data.choices?.[0]?.message?.content || "The stars are quiet today...");
 
     return new Response(JSON.stringify({ content }), {
