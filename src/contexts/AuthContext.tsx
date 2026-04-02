@@ -3,6 +3,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { geocodePlace } from "@/lib/geocoding";
 import { getDeviceId } from "@/lib/deviceId";
+import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
 
 interface Profile {
