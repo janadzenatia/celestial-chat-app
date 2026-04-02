@@ -3,7 +3,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { geocodePlace } from "@/lib/geocoding";
 import { getDeviceId } from "@/lib/deviceId";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+
 
 interface Profile {
   id: string;
@@ -107,19 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
 
-      // Big 3: ONLY calculate if ALL cached values are missing (first-time registration)
-      // If any cached sign exists, skip entirely — never overwrite existing values
-      if (prof.date_of_birth && !prof.cached_sun_sign && !prof.cached_moon_sign && !prof.cached_rising_sign) {
-        const sun = getSunSign(prof.date_of_birth);
-        const moon = getApproxMoonSign(prof.date_of_birth, prof.time_of_birth, prof.birth_lat, prof.birth_lon);
-        const rising = getApproxRisingSign(prof.date_of_birth, prof.time_of_birth, prof.birth_lat, prof.birth_lon);
-        const cacheData = {
-          cached_sun_sign: sun?.name || null, cached_moon_sign: moon?.name || null, cached_rising_sign: rising?.name || null,
-          cached_sun_emoji: sun?.emoji || null, cached_moon_emoji: moon?.emoji || null, cached_rising_emoji: rising?.emoji || null,
-        };
-        supabase.from("profiles").update(cacheData as any).eq("user_id", userId).then(() => {});
-        setProfile((prev) => prev ? { ...prev, ...cacheData } : prev);
-      }
+      // Big 3 values are calculated ONLY during onboarding/profile update
+      // via edge functions with proper timezone handling. Never recalculate client-side.
     }
   };
 
