@@ -12,7 +12,7 @@ import Big3DetailSheet from "@/components/Big3DetailSheet";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sun, Moon, Sunrise, Loader2, RefreshCw } from "lucide-react";
-import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+
 import { useDailyInsight } from "@/hooks/useDailyInsight";
 
 const Index = () => {
