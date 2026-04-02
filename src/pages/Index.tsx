@@ -28,16 +28,16 @@ const Index = () => {
   const birthLat = profile?.birth_lat ?? null;
   const birthLon = profile?.birth_lon ?? null;
 
-  // Always use cached Big 3 from Supabase profile — never recalculate client-side
+  // Prefer cached Big 3 from Supabase; fallback to client-side calculation only for display
   const sunSign = profile?.cached_sun_sign
     ? { name: profile.cached_sun_sign, emoji: profile.cached_sun_emoji || "☀️" }
-    : null;
+    : dob ? getSunSign(dob) : null;
   const moonSign = profile?.cached_moon_sign
     ? { name: profile.cached_moon_sign, emoji: profile.cached_moon_emoji || "🌙" }
-    : null;
+    : dob ? getApproxMoonSign(dob, tob, birthLat, birthLon) : null;
   const risingSign = profile?.cached_rising_sign
     ? { name: profile.cached_rising_sign, emoji: profile.cached_rising_emoji || "🌅" }
-    : null;
+    : dob ? getApproxRisingSign(dob, tob, birthLat, birthLon) : null;
 
   const handleBig3Refresh = async () => {
     setBig3Refreshing(true);
