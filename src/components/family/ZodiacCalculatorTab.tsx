@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Calculator, Loader2, Sparkles, Baby, XCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSunSign } from "@/lib/zodiac";
 import { DueDatePicker } from "@/components/DueDatePicker";
 import { Button } from "@/components/ui/button";
+import PaywallModal from "@/components/PaywallModal";
 import { cn } from "@/lib/utils";
 
 const ZODIAC_SIGNS = [
@@ -30,21 +31,17 @@ function getConceptionWindow(signName: string, language: string): { from: string
   const now = new Date();
   const currentYear = now.getFullYear();
 
-  // Try this year and next year to find the NEXT FUTURE birth window
   for (let yearOffset = 0; yearOffset <= 2; yearOffset++) {
     const year = currentYear + yearOffset;
     let birthStart = new Date(`${year}-${sign.start}`);
     let birthEnd = new Date(`${year}-${sign.end}`);
-    // Capricorn wraps around Dec → Jan
     if (birthEnd < birthStart) birthEnd.setFullYear(year + 1);
 
-    // Conception = birth date - 280 days (40 weeks)
     const conceptionStart = new Date(birthStart);
     conceptionStart.setDate(conceptionStart.getDate() - 280);
     const conceptionEnd = new Date(birthEnd);
     conceptionEnd.setDate(conceptionEnd.getDate() - 280);
 
-    // Only return if the conception window end is in the future
     if (conceptionEnd >= now) {
       const locale = language === "ka" ? "ka-GE" : "en-US";
       return {
@@ -54,7 +51,6 @@ function getConceptionWindow(signName: string, language: string): { from: string
     }
   }
 
-  // Fallback: next year + 2
   const year = currentYear + 2;
   let birthStart = new Date(`${year}-${sign.start}`);
   let birthEnd = new Date(`${year}-${sign.end}`);
@@ -72,21 +68,34 @@ function getConceptionWindow(signName: string, language: string): { from: string
 
 export default function ZodiacCalculatorTab() {
   const { t, language } = useLanguage();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [mode, setMode] = useState<"plan" | "expecting">("plan");
+  const [paywallOpen, setPaywallOpen] = useState(false);
 
   // Plan mode
   const [selectedSign, setSelectedSign] = useState<string | null>(null);
 
   // Expecting mode
-  const [dueDate, setDueDate] = useState<Date | undefined>();
+  const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [babySummary, setBabySummary] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+
+  const isPremium = getEffectivePlan(profile) === "premium";
 
   const conceptionWindow = selectedSign ? getConceptionWindow(selectedSign, language) : null;
   const babySign = dueDate ? getSunSign(dueDate.toISOString().split("T")[0]) : null;
 
+  const handleClear = () => {
+    setDueDate(undefined);
+    setBabySummary(null);
+    setGenerating(false);
+  };
+
   const generateBabySummary = async () => {
+    if (!isPremium) {
+      setPaywallOpen(true);
+      return;
+    }
     if (!babySign) return;
     setGenerating(true);
     try {
@@ -107,7 +116,7 @@ export default function ZodiacCalculatorTab() {
       {/* Mode Toggle */}
       <div className="glass rounded-xl p-1 flex">
         <button
-          onClick={() => { setMode("plan"); setBabySummary(null); }}
+          onClick={() => { setMode("plan"); setBabySummary(null); setGenerating(false); }}
           className={cn(
             "flex-1 py-2.5 rounded-lg text-sm font-medium transition-all",
             mode === "plan" ? "gradient-cosmic text-foreground" : "text-muted-foreground"
@@ -116,7 +125,7 @@ export default function ZodiacCalculatorTab() {
           {t("family.planSign")}
         </button>
         <button
-          onClick={() => { setMode("expecting"); setSelectedSign(null); }}
+          onClick={() => { setMode("expecting"); setSelectedSign(null); setGenerating(false); }}
           className={cn(
             "flex-1 py-2.5 rounded-lg text-sm font-medium transition-all",
             mode === "expecting" ? "gradient-cosmic text-foreground" : "text-muted-foreground"
@@ -134,7 +143,6 @@ export default function ZodiacCalculatorTab() {
             <p className="text-xs text-muted-foreground">{t("family.planSignDesc")}</p>
           </div>
 
-          {/* Sign Grid */}
           <div className="grid grid-cols-4 gap-2">
             {ZODIAC_SIGNS.map(z => (
               <button
@@ -153,7 +161,6 @@ export default function ZodiacCalculatorTab() {
             ))}
           </div>
 
-          {/* Result */}
           {conceptionWindow && selectedSign && (
             <div className="rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 p-4 space-y-2 animate-in fade-in duration-300">
               <h4 className="font-serif text-sm text-foreground text-center">{t("family.conceptionWindow")}</h4>
@@ -181,7 +188,7 @@ export default function ZodiacCalculatorTab() {
             />
             {dueDate && (
               <button
-                onClick={() => { setDueDate(undefined); setBabySummary(null); }}
+                onClick={handleClear}
                 className="flex items-center gap-1 text-xs text-destructive/70 hover:text-destructive transition-colors mt-1"
               >
                 <XCircle className="w-3.5 h-3.5" />
@@ -215,6 +222,8 @@ export default function ZodiacCalculatorTab() {
           )}
         </div>
       )}
+
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
     </div>
   );
 }
