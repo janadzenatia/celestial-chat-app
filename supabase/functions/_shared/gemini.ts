@@ -5,6 +5,10 @@ const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1500;
 const PRE_CALL_DELAY_MS = 400;
 
+// Default token limits per call type.
+// Override by passing max_tokens in the body if a function needs more.
+const DEFAULT_MAX_TOKENS = 800;
+
 interface GeminiRequestOptions {
   apiKey: string;
   body: Record<string, unknown>;
@@ -38,11 +42,15 @@ export function stripMarkdownDeep(obj: any): any {
   return obj;
 }
 
-export async function callGeminiWithRetry(
-  options: GeminiRequestOptions
-): Promise<Response> {
+export async function callGeminiWithRetry(options: GeminiRequestOptions): Promise<Response> {
   const { apiKey, body } = options;
-  const normalizedBody = { ...body, model: "gemini-2.5-flash" };
+
+  // FIX: use gemini-2.0-flash-lite (correct cheaper model) and enforce max_tokens
+  const normalizedBody = {
+    ...body,
+    model: "gemini-2.0-flash-lite",
+    max_tokens: body.max_tokens ?? DEFAULT_MAX_TOKENS,
+  };
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     if (attempt === 0) {
@@ -75,13 +83,18 @@ export async function callGeminiWithRetry(
  * Extract token usage from a Gemini API response JSON.
  * Call this AFTER parsing the response JSON (data = await response.json()).
  */
-export function extractTokenUsage(data: any): { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string } {
+export function extractTokenUsage(data: any): {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  model: string;
+} {
   const usage = data?.usage || {};
   return {
     prompt_tokens: usage.prompt_tokens || 0,
     completion_tokens: usage.completion_tokens || 0,
     total_tokens: usage.total_tokens || 0,
-    model: data?.model || "gemini-2.5-flash",
+    model: data?.model || "gemini-2.0-flash-lite",
   };
 }
 
@@ -92,7 +105,7 @@ export function extractTokenUsage(data: any): { prompt_tokens: number; completio
 export async function logTokenUsage(
   userId: string,
   functionName: string,
-  tokenData: { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string }
+  tokenData: { prompt_tokens: number; completion_tokens: number; total_tokens: number; model: string },
 ): Promise<void> {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -154,9 +167,7 @@ export async function logTokenUsage(
       functionName,
       userId,
       payload,
-      error: e instanceof Error
-        ? { name: e.name, message: e.message, stack: e.stack }
-        : String(e),
+      error: e instanceof Error ? { name: e.name, message: e.message, stack: e.stack } : String(e),
     });
   }
 }
