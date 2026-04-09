@@ -213,7 +213,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     if (error) {
       toast({ title: t("auth.genericError"), variant: "destructive" });
     } else {
-      // Sync to family partner card
+      // Sync to family partner card — create or update
       const { data: familyPartner } = await supabase
         .from("children")
         .select("id")
@@ -222,18 +222,28 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         .limit(1)
         .maybeSingle();
 
+      const familyData = {
+        name: name.trim(),
+        date_of_birth: dobStr,
+        time_of_birth: birthTime.trim() || null,
+        birth_place: location.trim() || null,
+        birth_place_lat: partnerGeo?.lat ?? null,
+        birth_place_lon: partnerGeo?.lon ?? null,
+      };
+
       if (familyPartner) {
         await supabase
           .from("children")
-          .update({
-            name: name.trim(),
-            date_of_birth: dobStr,
-            time_of_birth: birthTime.trim() || null,
-            birth_place: location.trim() || null,
-            birth_place_lat: partnerGeo?.lat ?? null,
-            birth_place_lon: partnerGeo?.lon ?? null,
-          })
+          .update(familyData)
           .eq("id", familyPartner.id);
+      } else {
+        await supabase
+          .from("children")
+          .insert({
+            user_id: user.id,
+            relationship_type: "partner",
+            ...familyData,
+          } as any);
       }
 
       await refreshProfile();
@@ -246,8 +256,21 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setSaving(false);
   };
 
-  const handleDelete = async () => {
+  const requestDelete = () => {
+    const isPrem = getEffectivePlan(profile) === "premium";
+    if (isPrem) {
+      // Premium user — changing partner costs $1.99
+      setPendingDelete(true);
+      setChangeFeeOpen(true);
+    } else {
+      // Free user can delete freely
+      executeDelete();
+    }
+  };
+
+  const executeDelete = async () => {
     if (!user) return;
+    // Delete from profile
     await supabase
       .from("profiles")
       .update({
@@ -259,6 +282,12 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         relationship_start_date: null,
       } as any)
       .eq("user_id", user.id);
+    // Also delete partner from family table
+    await supabase
+      .from("children")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("relationship_type", "partner");
     await refreshProfile();
     onPartnerChange();
   };
