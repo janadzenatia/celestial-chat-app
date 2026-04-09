@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import PaywallModal from "@/components/PaywallModal";
+import PartnerChangeFeeModal from "@/components/PartnerChangeFeeModal";
 import { SynastryReport, SynastryCategory } from "@/hooks/useSynastryReport";
 import {
   Dialog,
@@ -64,6 +65,8 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [saving, setSaving] = useState(false);
   const [generatingLove, setGeneratingLove] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [changeFeeOpen, setChangeFeeOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
@@ -210,7 +213,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     if (error) {
       toast({ title: t("auth.genericError"), variant: "destructive" });
     } else {
-      // Sync to family partner card
+      // Sync to family partner card — create or update
       const { data: familyPartner } = await supabase
         .from("children")
         .select("id")
@@ -219,18 +222,28 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         .limit(1)
         .maybeSingle();
 
+      const familyData = {
+        name: name.trim(),
+        date_of_birth: dobStr,
+        time_of_birth: birthTime.trim() || null,
+        birth_place: location.trim() || null,
+        birth_place_lat: partnerGeo?.lat ?? null,
+        birth_place_lon: partnerGeo?.lon ?? null,
+      };
+
       if (familyPartner) {
         await supabase
           .from("children")
-          .update({
-            name: name.trim(),
-            date_of_birth: dobStr,
-            time_of_birth: birthTime.trim() || null,
-            birth_place: location.trim() || null,
-            birth_place_lat: partnerGeo?.lat ?? null,
-            birth_place_lon: partnerGeo?.lon ?? null,
-          })
+          .update(familyData)
           .eq("id", familyPartner.id);
+      } else {
+        await supabase
+          .from("children")
+          .insert({
+            user_id: user.id,
+            relationship_type: "partner",
+            ...familyData,
+          } as any);
       }
 
       await refreshProfile();
@@ -243,8 +256,21 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setSaving(false);
   };
 
-  const handleDelete = async () => {
+  const requestDelete = () => {
+    const isPrem = getEffectivePlan(profile) === "premium";
+    if (isPrem) {
+      // Premium user — changing partner costs $1.99
+      setPendingDelete(true);
+      setChangeFeeOpen(true);
+    } else {
+      // Free user can delete freely
+      executeDelete();
+    }
+  };
+
+  const executeDelete = async () => {
     if (!user) return;
+    // Delete from profile
     await supabase
       .from("profiles")
       .update({
@@ -256,6 +282,12 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         relationship_start_date: null,
       } as any)
       .eq("user_id", user.id);
+    // Also delete partner from family table
+    await supabase
+      .from("children")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("relationship_type", "partner");
     await refreshProfile();
     onPartnerChange();
   };
@@ -349,7 +381,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>{t("family.cancel")}</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+                  <AlertDialogAction onClick={requestDelete} className="bg-destructive text-destructive-foreground">
                     {t("partner.deleteConfirm")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -475,6 +507,11 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         geoCoords={geoCoords}
       />
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
+      <PartnerChangeFeeModal
+        open={changeFeeOpen}
+        onOpenChange={(open) => { setChangeFeeOpen(open); if (!open) setPendingDelete(false); }}
+        onConfirm={() => { if (pendingDelete) executeDelete(); }}
+      />
     </>
   );
 };

@@ -73,7 +73,7 @@ const PaywallModal = ({ open, onOpenChange, onSuccess }: PaywallModalProps) => {
           {/* Single price card */}
           <div className="rounded-xl p-4 text-center border border-primary bg-primary/10 shadow-lg">
             <span className="block text-2xl font-bold text-foreground">
-              $1.99
+              $2.99
               <span className="text-sm font-normal text-muted-foreground">
                 {language === "ka" ? "/თვეში" : "/month"}
               </span>
