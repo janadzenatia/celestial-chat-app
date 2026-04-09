@@ -191,6 +191,8 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       time_of_birth: profile.partner_time_of_birth || null,
       relationship_type: "partner",
       birth_place: profile.partner_place_of_birth || null,
+      birth_place_lat: (profile as any).partner_birth_place_lat || null,
+      birth_place_lon: (profile as any).partner_birth_place_lon || null,
     } as any);
     if (!error) {
       resetForm();
