@@ -29,25 +29,33 @@ const signs: ZodiacSign[] = [
 
 // Sign lookup by ecliptic longitude (0° = Aries)
 const signsByLongitude: ZodiacSign[] = [
-  signs[3],  // Aries 0-30
-  signs[4],  // Taurus 30-60
-  signs[5],  // Gemini 60-90
-  signs[6],  // Cancer 90-120
-  signs[7],  // Leo 120-150
-  signs[8],  // Virgo 150-180
-  signs[9],  // Libra 180-210
+  signs[3], // Aries 0-30
+  signs[4], // Taurus 30-60
+  signs[5], // Gemini 60-90
+  signs[6], // Cancer 90-120
+  signs[7], // Leo 120-150
+  signs[8], // Virgo 150-180
+  signs[9], // Libra 180-210
   signs[10], // Scorpio 210-240
   signs[11], // Sagittarius 240-270
-  signs[0],  // Capricorn 270-300
-  signs[1],  // Aquarius 300-330
-  signs[2],  // Pisces 330-360
+  signs[0], // Capricorn 270-300
+  signs[1], // Aquarius 300-330
+  signs[2], // Pisces 330-360
 ];
 
 // ─── Utility math ───────────────────────────────────────────
-function norm360(deg: number): number { return ((deg % 360) + 360) % 360; }
-function sinD(d: number): number { return Math.sin(d * Math.PI / 180); }
-function cosD(d: number): number { return Math.cos(d * Math.PI / 180); }
-function tanD(d: number): number { return Math.tan(d * Math.PI / 180); }
+function norm360(deg: number): number {
+  return ((deg % 360) + 360) % 360;
+}
+function sinD(d: number): number {
+  return Math.sin((d * Math.PI) / 180);
+}
+function cosD(d: number): number {
+  return Math.cos((d * Math.PI) / 180);
+}
+function tanD(d: number): number {
+  return Math.tan((d * Math.PI) / 180);
+}
 
 // ─── Timezone-aware UTC conversion (luxon for historical accuracy) ───
 
@@ -61,13 +69,13 @@ import { DateTime } from "luxon";
  */
 function getTimezoneOffsetMinutes(
   timeZone: string,
-  year: number, month: number, day: number,
-  hour: number, minute: number
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
 ): number {
-  const dt = DateTime.fromObject(
-    { year, month, day, hour, minute },
-    { zone: timeZone }
-  );
+  const dt = DateTime.fromObject({ year, month, day, hour, minute }, { zone: timeZone });
   // dt.offset is minutes east of UTC (positive for east), we need the inverse
   return -dt.offset;
 }
@@ -80,9 +88,13 @@ function getTimezoneOffsetMinutes(
  * all astrological calculations (Moon, Ascendant, houses, etc.).
  */
 function birthTimeToJD(
-  year: number, month: number, day: number,
-  hour: number, minute: number,
-  lat?: number | null, lon?: number | null
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
+  lat?: number | null,
+  lon?: number | null,
 ): number {
   let offsetMinutes: number;
 
@@ -111,8 +123,12 @@ function birthTimeToJD(
  */
 function toJulianDay(year: number, month: number, day: number, hour: number, minute: number): number {
   const h = hour + minute / 60;
-  let y = year, m = month;
-  if (m <= 2) { y--; m += 12; }
+  let y = year,
+    m = month;
+  if (m <= 2) {
+    y--;
+    m += 12;
+  }
   const A = Math.floor(y / 100);
   const B = 2 - A + Math.floor(A / 4);
   return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + h / 24 + B - 1524.5;
@@ -130,32 +146,69 @@ function getMoonLongitude(jd: number): number {
 
   // Fundamental arguments (degrees)
   const Lp = norm360(218.3164477 + 481267.88123421 * T - 0.0015786 * T2 + T3 / 538841 - T4 / 65194000);
-  const D  = norm360(297.8501921 + 445267.1114034 * T - 0.0018819 * T2 + T3 / 545868 - T4 / 113065000);
-  const M  = norm360(357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000);
+  const D = norm360(297.8501921 + 445267.1114034 * T - 0.0018819 * T2 + T3 / 545868 - T4 / 113065000);
+  const M = norm360(357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000);
   const Mp = norm360(134.9633964 + 477198.8675055 * T + 0.0087414 * T2 + T3 / 69699 - T4 / 14712000);
-  const F  = norm360(93.2720950 + 483202.0175233 * T - 0.0036539 * T2 - T3 / 3526000 + T4 / 863310000);
+  const F = norm360(93.272095 + 483202.0175233 * T - 0.0036539 * T2 - T3 / 3526000 + T4 / 863310000);
 
   const A1 = norm360(119.75 + 131.849 * T);
-  const A2 = norm360(53.09 + 479264.290 * T);
+  const A2 = norm360(53.09 + 479264.29 * T);
 
   let E = 1 - 0.002516 * T - 0.0000074 * T2;
   const E2 = E * E;
 
   // Periodic terms for longitude (Meeus Table 47.A — top ~50 terms)
   const lonTerms: [number, number, number, number, number][] = [
-    [0,0,1,0, 6288774], [2,0,-1,0, 1274027], [2,0,0,0, 658314], [0,0,2,0, 213618],
-    [0,1,0,0, -185116], [0,0,0,2, -114332], [2,0,-2,0, 58793], [2,-1,-1,0, 57066],
-    [2,0,1,0, 53322], [2,-1,0,0, 45758], [0,1,-1,0, -40923], [1,0,0,0, -34720],
-    [0,1,1,0, -30383], [2,0,0,-2, 15327], [0,0,1,2, -12528], [0,0,1,-2, 10980],
-    [4,0,-1,0, 10675], [0,0,3,0, 10034], [4,0,-2,0, 8548], [2,1,-1,0, -7888],
-    [2,1,0,0, -6766], [1,0,-1,0, -5163], [1,1,0,0, 4987], [2,-1,1,0, 4036],
-    [2,0,2,0, 3994], [4,0,0,0, 3861], [2,0,-3,0, 3665], [0,1,-2,0, -2689],
-    [2,0,-1,2, -2602], [2,-1,-2,0, 2390], [1,0,1,0, -2348], [2,-2,0,0, 2236],
-    [0,1,2,0, -2120], [0,2,0,0, -2069], [2,-2,-1,0, 2048], [2,0,1,-2, -1773],
-    [2,0,0,2, -1595], [4,-1,-1,0, 1215], [0,0,2,2, -1110], [3,0,-1,0, -892],
-    [2,1,1,0, -810], [4,-1,-2,0, 759], [0,2,-1,0, -713], [2,2,-1,0, -700],
-    [2,1,-2,0, 691], [2,-1,0,-2, 596], [4,0,1,0, 549], [0,0,4,0, 537],
-    [4,-1,0,0, 520], [1,0,-2,0, -487],
+    [0, 0, 1, 0, 6288774],
+    [2, 0, -1, 0, 1274027],
+    [2, 0, 0, 0, 658314],
+    [0, 0, 2, 0, 213618],
+    [0, 1, 0, 0, -185116],
+    [0, 0, 0, 2, -114332],
+    [2, 0, -2, 0, 58793],
+    [2, -1, -1, 0, 57066],
+    [2, 0, 1, 0, 53322],
+    [2, -1, 0, 0, 45758],
+    [0, 1, -1, 0, -40923],
+    [1, 0, 0, 0, -34720],
+    [0, 1, 1, 0, -30383],
+    [2, 0, 0, -2, 15327],
+    [0, 0, 1, 2, -12528],
+    [0, 0, 1, -2, 10980],
+    [4, 0, -1, 0, 10675],
+    [0, 0, 3, 0, 10034],
+    [4, 0, -2, 0, 8548],
+    [2, 1, -1, 0, -7888],
+    [2, 1, 0, 0, -6766],
+    [1, 0, -1, 0, -5163],
+    [1, 1, 0, 0, 4987],
+    [2, -1, 1, 0, 4036],
+    [2, 0, 2, 0, 3994],
+    [4, 0, 0, 0, 3861],
+    [2, 0, -3, 0, 3665],
+    [0, 1, -2, 0, -2689],
+    [2, 0, -1, 2, -2602],
+    [2, -1, -2, 0, 2390],
+    [1, 0, 1, 0, -2348],
+    [2, -2, 0, 0, 2236],
+    [0, 1, 2, 0, -2120],
+    [0, 2, 0, 0, -2069],
+    [2, -2, -1, 0, 2048],
+    [2, 0, 1, -2, -1773],
+    [2, 0, 0, 2, -1595],
+    [4, -1, -1, 0, 1215],
+    [0, 0, 2, 2, -1110],
+    [3, 0, -1, 0, -892],
+    [2, 1, 1, 0, -810],
+    [4, -1, -2, 0, 759],
+    [0, 2, -1, 0, -713],
+    [2, 2, -1, 0, -700],
+    [2, 1, -2, 0, 691],
+    [2, -1, 0, -2, 596],
+    [4, 0, 1, 0, 549],
+    [0, 0, 4, 0, 537],
+    [4, -1, 0, 0, 520],
+    [1, 0, -2, 0, -487],
   ];
 
   let SigmaL = 0;
@@ -184,10 +237,7 @@ function getObliquity(jd: number): number {
  */
 function getGMST(jd: number): number {
   const T = (jd - 2451545.0) / 36525;
-  return norm360(
-    280.46061837 + 360.98564736629 * (jd - 2451545.0) +
-    0.000387933 * T * T - T * T * T / 38710000
-  );
+  return norm360(280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - (T * T * T) / 38710000);
 }
 
 /**
@@ -197,11 +247,8 @@ function getAscendantLon(jd: number, latDeg: number, lonDeg: number): number {
   const gmst = getGMST(jd);
   const lst = norm360(gmst + lonDeg);
   const eps = getObliquity(jd);
-  const ascRad = Math.atan2(
-    cosD(lst),
-    -(sinD(lst) * cosD(eps) + tanD(latDeg) * sinD(eps))
-  );
-  return norm360(ascRad * 180 / Math.PI);
+  const ascRad = Math.atan2(cosD(lst), -(sinD(lst) * cosD(eps) + tanD(latDeg) * sinD(eps)));
+  return norm360((ascRad * 180) / Math.PI);
 }
 
 function longitudeToSign(lon: number): ZodiacSign {
@@ -223,10 +270,7 @@ export function getSunSign(dateOfBirth: string): ZodiacSign | null {
   for (const sign of signs) {
     if (sign.startMonth === 12 && sign.endMonth === 1) {
       if ((month === 12 && day >= sign.startDay) || (month === 1 && day <= sign.endDay)) return sign;
-    } else if (
-      (month === sign.startMonth && day >= sign.startDay) ||
-      (month === sign.endMonth && day <= sign.endDay)
-    ) {
+    } else if ((month === sign.startMonth && day >= sign.startDay) || (month === sign.endMonth && day <= sign.endDay)) {
       return sign;
     }
   }
@@ -241,11 +285,12 @@ export function getApproxMoonSign(
   dateOfBirth: string,
   timeOfBirth?: string | null,
   birthLat?: number | null,
-  birthLon?: number | null
+  birthLon?: number | null,
 ): ZodiacSign {
   const [year, month, day] = dateOfBirth.split("-").map(Number);
 
-  let hours = 12, minutes = 0;
+  let hours = 12,
+    minutes = 0;
   if (timeOfBirth) {
     const parts = timeOfBirth.split(":").map(Number);
     hours = parts[0] ?? 12;
@@ -259,18 +304,21 @@ export function getApproxMoonSign(
 
 /**
  * Rising (Ascendant) sign using astronomical calculation.
- * Requires birth time. Uses proper IANA timezone resolution and exact coordinates.
+ * Requires birth time AND coordinates for accuracy.
+ *
+ * FIX: Returns null when birth time is unknown.
+ * Previously returned Sun sign as fallback — this was WRONG and caused
+ * the Big 3 display to show the same sign for both Sun and Rising.
  */
 export function getApproxRisingSign(
   dateOfBirth: string,
   timeOfBirth: string | null,
   birthLat?: number | null,
-  birthLon?: number | null
-): ZodiacSign {
-  const sunSign = getSunSign(dateOfBirth);
-
+  birthLon?: number | null,
+): ZodiacSign | null {
+  // FIX: No birth time = Rising is unknown. Return null, not Sun sign.
   if (!timeOfBirth) {
-    return sunSign ?? signs[0];
+    return null;
   }
 
   const [year, month, day] = dateOfBirth.split("-").map(Number);
@@ -315,7 +363,7 @@ export function getDailyInsight(sunSign: ZodiacSign | null): string {
   const element = sunSign?.element ?? "Fire";
   const insights = insightsByElement[element];
   const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24)
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24),
   );
   return insights[dayOfYear % insights.length];
 }
