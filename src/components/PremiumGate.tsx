@@ -23,11 +23,11 @@ const PremiumGate = ({ children }: PremiumGateProps) => {
   return (
     <>
       <div
-        className="relative rounded-2xl overflow-hidden cursor-pointer"
+        className="relative rounded-2xl overflow-visible cursor-pointer"
         onClick={() => setPaywallOpen(true)}
       >
         <div
-          className="pointer-events-none select-none"
+          className="pointer-events-none select-none overflow-hidden rounded-2xl"
           style={{ filter: "blur(12px)" }}
         >
           {children}
