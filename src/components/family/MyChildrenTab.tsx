@@ -361,7 +361,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
         const expandedSection = expanded[member.id] || null;
 
         return (
-          <div key={member.id} className="glass rounded-2xl p-5 space-y-3">
+          <div key={member.id} className="glass rounded-2xl p-5 pb-20 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{sun?.emoji || "⭐"}</span>
@@ -428,7 +428,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
                 </div>
               </PremiumGate>
             ) : (
-              <div className="p-3">
+              <div className="p-3 mb-4">
                 <PremiumGate>
                   <Button
                     onClick={() => generateReport(member)}
