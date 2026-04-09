@@ -5,7 +5,6 @@ import { geocodePlace } from "@/lib/geocoding";
 import { getDeviceId } from "@/lib/deviceId";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
 
-
 interface Profile {
   id: string;
   user_id: string;
@@ -73,6 +72,42 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// FIX: Extracted helper to calculate and save Big 3 with known coordinates.
+// This ensures Moon and Rising are always calculated with correct lat/lon,
+// never with null coordinates due to geocode race condition.
+async function calculateAndCacheBig3(
+  userId: string,
+  prof: Profile,
+  lat: number | null,
+  lon: number | null,
+  setProfile: React.Dispatch<React.SetStateAction<Profile | null>>,
+) {
+  if (!prof.date_of_birth) return;
+
+  const sun = getSunSign(prof.date_of_birth);
+  const moon = getApproxMoonSign(prof.date_of_birth, prof.time_of_birth, lat, lon);
+
+  // FIX: Rising sign is only calculated if birth time is known.
+  // If time is unknown, we store null — do NOT fall back to Sun sign.
+  const rising = prof.time_of_birth ? getApproxRisingSign(prof.date_of_birth, prof.time_of_birth, lat, lon) : null;
+
+  const cacheData = {
+    cached_sun_sign: sun?.name || null,
+    cached_moon_sign: moon?.name || null,
+    cached_rising_sign: rising?.name || null,
+    cached_sun_emoji: sun?.emoji || null,
+    cached_moon_emoji: moon?.emoji || null,
+    cached_rising_emoji: rising?.emoji || null,
+  };
+
+  supabase
+    .from("profiles")
+    .update(cacheData as any)
+    .eq("user_id", userId)
+    .then(() => {});
+  setProfile((prev) => (prev ? { ...prev, ...cacheData } : prev));
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -80,11 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+    const { data } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
     const prof = data as Profile | null;
     setProfile(prof);
 
@@ -93,35 +124,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Save device_id if not set
       if (!prof.device_id) {
         const deviceId = getDeviceId();
-        supabase.from("profiles").update({ device_id: deviceId } as any).eq("user_id", userId).then(() => {});
+        supabase
+          .from("profiles")
+          .update({ device_id: deviceId } as any)
+          .eq("user_id", userId)
+          .then(() => {});
       }
 
-      // Auto-geocode if needed
+      const needsBig3 =
+        prof.date_of_birth && !prof.cached_sun_sign && !prof.cached_moon_sign && !prof.cached_rising_sign;
+
+      // FIX: geocode and Big 3 calculation are now sequential, not parallel.
+      // Big 3 is always calculated AFTER we have the correct coordinates.
       if (prof.place_of_birth && prof.birth_lat == null) {
-        geocodePlace(prof.place_of_birth).then((coords) => {
+        // Need to geocode first, then calculate Big 3 with real coordinates
+        geocodePlace(prof.place_of_birth).then(async (coords) => {
           if (coords) {
-            supabase.from("profiles").update({
-              birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName,
-            } as any).eq("user_id", userId).then(() => {});
-            setProfile((prev) => prev ? { ...prev, birth_lat: coords.lat, birth_lon: coords.lon, birth_place_normalized: coords.displayName } : prev);
+            const updates = {
+              birth_lat: coords.lat,
+              birth_lon: coords.lon,
+              birth_place_normalized: coords.displayName,
+            };
+            supabase
+              .from("profiles")
+              .update(updates as any)
+              .eq("user_id", userId)
+              .then(() => {});
+            setProfile((prev) => (prev ? { ...prev, ...updates } : prev));
+
+            // Now calculate Big 3 with correct coordinates
+            if (needsBig3) {
+              await calculateAndCacheBig3(userId, prof, coords.lat, coords.lon, setProfile);
+            }
+          } else if (needsBig3) {
+            // Geocode returned nothing — calculate Big 3 without coordinates
+            await calculateAndCacheBig3(userId, prof, null, null, setProfile);
           }
         });
-      }
-
-      // Calculate Big 3 ONLY if all cached values are missing (first login or after cache clear)
-      // Once calculated and saved, these values are never overwritten unless user updates birth data
-      if (prof.date_of_birth && !prof.cached_sun_sign && !prof.cached_moon_sign && !prof.cached_rising_sign) {
-        const lat = prof.birth_lat;
-        const lon = prof.birth_lon;
-        const sun = getSunSign(prof.date_of_birth);
-        const moon = getApproxMoonSign(prof.date_of_birth, prof.time_of_birth, lat, lon);
-        const rising = getApproxRisingSign(prof.date_of_birth, prof.time_of_birth, lat, lon);
-        const cacheData = {
-          cached_sun_sign: sun?.name || null, cached_moon_sign: moon?.name || null, cached_rising_sign: rising?.name || null,
-          cached_sun_emoji: sun?.emoji || null, cached_moon_emoji: moon?.emoji || null, cached_rising_emoji: rising?.emoji || null,
-        };
-        supabase.from("profiles").update(cacheData as any).eq("user_id", userId).then(() => {});
-        setProfile((prev) => prev ? { ...prev, ...cacheData } : prev);
+      } else if (needsBig3) {
+        // Coordinates already known (or no place set) — calculate immediately
+        await calculateAndCacheBig3(userId, prof, prof.birth_lat, prof.birth_lon, setProfile);
       }
     }
   };
@@ -146,20 +188,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!mounted) return;
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          // Fire and forget — never await inside this callback
-          fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
-        setLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        // Fire and forget — never await inside this callback
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
       }
-    );
+      setLoading(false);
+    });
 
     return () => {
       mounted = false;
