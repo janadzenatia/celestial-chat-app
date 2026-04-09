@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import PaywallModal from "@/components/PaywallModal";
+import PartnerChangeFeeModal from "@/components/PartnerChangeFeeModal";
 import { SynastryReport, SynastryCategory } from "@/hooks/useSynastryReport";
 import {
   Dialog,
@@ -64,8 +65,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [saving, setSaving] = useState(false);
   const [generatingLove, setGeneratingLove] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [changeFeeOpen, setChangeFeeOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
-  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
 
   const partnerName = profile?.partner_name as string | undefined;

@@ -195,8 +195,11 @@ const Index = () => {
           </PremiumGate>
         )}
 
-        {/* Cosmic Match — free hook, no premium badge */}
-        {dob && <CosmicMatchCard />}
+        {dob && (
+          <PremiumGate overlay>
+            <CosmicMatchCard />
+          </PremiumGate>
+        )}
 
         {/* Synastry CTA — below match results, above deep analysis */}
         {dob && <SynastryCTABanner />}
