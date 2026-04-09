@@ -507,6 +507,11 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
         geoCoords={geoCoords}
       />
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
+      <PartnerChangeFeeModal
+        open={changeFeeOpen}
+        onOpenChange={(open) => { setChangeFeeOpen(open); if (!open) setPendingDelete(false); }}
+        onConfirm={() => { if (pendingDelete) executeDelete(); }}
+      />
     </>
   );
 };
