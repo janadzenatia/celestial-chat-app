@@ -163,6 +163,17 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       birth_place_lon: lon,
     } as any);
     if (!error) {
+      // If partner type, sync to profile partner fields
+      if (effectiveType === "partner") {
+        await supabase.from("profiles").update({
+          partner_name: memberName.trim(),
+          partner_birth_date: dob,
+          partner_time_of_birth: memberTime.trim() || null,
+          partner_place_of_birth: placeText,
+          partner_birth_place_lat: lat,
+          partner_birth_place_lon: lon,
+        } as any).eq("user_id", user.id);
+      }
       resetForm();
       await loadMembers();
       onFamilyChanged?.();
@@ -219,8 +230,29 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
     setGeoCoords(null);
   };
 
-  const deleteMember = async (id: string) => {
+  const requestDeleteMember = (id: string) => {
+    if (isPremium) {
+      setPendingDeleteId(id);
+      setChangeFeeOpen(true);
+    } else {
+      executeMemberDelete(id);
+    }
+  };
+
+  const executeMemberDelete = async (id: string) => {
+    const member = members.find(m => m.id === id);
     await supabase.from("children").delete().eq("id", id);
+    // If partner type, also clear profile partner fields
+    if (member?.relationship_type === "partner" && user) {
+      await supabase.from("profiles").update({
+        partner_name: null,
+        partner_birth_date: null,
+        partner_love_language: null,
+        partner_time_of_birth: null,
+        partner_place_of_birth: null,
+        relationship_start_date: null,
+      } as any).eq("user_id", user.id);
+    }
     setMembers(prev => prev.filter(c => c.id !== id));
     setReports(prev => { const n = { ...prev }; delete n[id]; return n; });
     onFamilyChanged?.();
