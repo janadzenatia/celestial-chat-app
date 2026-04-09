@@ -20,8 +20,8 @@ const TrialBanner = () => {
         <Clock className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
         <p className="text-xs text-muted-foreground leading-relaxed">
           {language === "ka"
-            ? "შენი 3-დღიანი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი და განაგრძე კოსმიური მოგზაურობა — მხოლოდ $1.99/თვეში"
-            : "Your 3-day free trial has ended. Activate Premium and continue your cosmic journey — only $1.99/month"}
+            ? "შენი 3-დღიანი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი და განაგრძე კოსმიური მოგზაურობა — მხოლოდ $2.99/თვეში"
+            : "Your 3-day free trial has ended. Activate Premium and continue your cosmic journey — only $2.99/month"}
         </p>
       </div>
     );
