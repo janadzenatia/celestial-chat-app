@@ -400,45 +400,49 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
 
             {/* Report or Generate */}
             {report ? (
-              <div className="space-y-2">
-                {[
-                  { key: "blueprint", icon: Star, label: t("family.blueprint"), content: report.blueprint },
-                  { key: "emotional", icon: Heart, label: t("family.emotionalBond"), content: report.emotional_connection },
-                  { key: "advice", icon: BookOpen, label: t("family.parentingAdvice"), content: report.parenting_advice },
-                ].map(({ key, icon: Icon, label, content }) => (
-                  <div key={key} className="rounded-xl border border-white/10 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection(member.id, key)}
-                      className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium text-foreground">{label}</span>
-                      </div>
-                      {expandedSection === key ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-                    </button>
-                    {expandedSection === key && (
-                      <div className="px-3 pb-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                        <p className="text-sm text-muted-foreground leading-relaxed">{content}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <PremiumGate overlay>
-                <Button
-                  onClick={() => generateReport(member)}
-                  disabled={isGenerating}
-                  className="w-full gradient-cosmic text-foreground font-medium"
-                >
-                  {isGenerating ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
-                  ) : (
-                    <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
-                  )}
-                </Button>
+              <PremiumGate>
+                <div className="space-y-2">
+                  {[
+                    { key: "blueprint", icon: Star, label: t("family.blueprint"), content: report.blueprint },
+                    { key: "emotional", icon: Heart, label: t("family.emotionalBond"), content: report.emotional_connection },
+                    { key: "advice", icon: BookOpen, label: t("family.parentingAdvice"), content: report.parenting_advice },
+                  ].map(({ key, icon: Icon, label, content }) => (
+                    <div key={key} className="rounded-xl border border-white/10 overflow-hidden">
+                      <button
+                        onClick={() => toggleSection(member.id, key)}
+                        className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium text-foreground">{label}</span>
+                        </div>
+                        {expandedSection === key ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                      </button>
+                      {expandedSection === key && (
+                        <div className="px-3 pb-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                          <p className="text-sm text-muted-foreground leading-relaxed">{content}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </PremiumGate>
+            ) : (
+              <div className="p-3">
+                <PremiumGate>
+                  <Button
+                    onClick={() => generateReport(member)}
+                    disabled={isGenerating}
+                    className="w-full gradient-cosmic text-foreground font-medium"
+                  >
+                    {isGenerating ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t("family.analyzingChild")}</>
+                    ) : (
+                      <><Sparkles className="w-4 h-4 mr-2" />{t("family.analyzeChild")}</>
+                    )}
+                  </Button>
+                </PremiumGate>
+              </div>
             )}
           </div>
         );
