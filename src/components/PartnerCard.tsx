@@ -68,6 +68,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
   const [changeFeeOpen, setChangeFeeOpen] = useState(false);
   const [pendingDelete, setPendingDelete] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
 
   const partnerName = profile?.partner_name as string | undefined;
