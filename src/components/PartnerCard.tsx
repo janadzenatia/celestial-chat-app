@@ -381,7 +381,7 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>{t("family.cancel")}</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+                  <AlertDialogAction onClick={requestDelete} className="bg-destructive text-destructive-foreground">
                     {t("partner.deleteConfirm")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
