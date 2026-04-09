@@ -1,5 +1,5 @@
 /**
- * Subscription Service — Single Premium Plan ($1.99/mo)
+ * Subscription Service — Single Premium Plan ($2.99/mo)
  * All subscription changes go through the server-side edge function.
  */
 
