@@ -31,13 +31,22 @@ const Index = () => {
   // Prefer cached Big 3 from Supabase; fallback to client-side calculation only for display
   const sunSign = profile?.cached_sun_sign
     ? { name: profile.cached_sun_sign, emoji: profile.cached_sun_emoji || "☀️" }
-    : dob ? getSunSign(dob) : null;
+    : dob
+      ? getSunSign(dob)
+      : null;
   const moonSign = profile?.cached_moon_sign
     ? { name: profile.cached_moon_sign, emoji: profile.cached_moon_emoji || "🌙" }
-    : dob ? getApproxMoonSign(dob, tob, birthLat, birthLon) : null;
+    : dob
+      ? getApproxMoonSign(dob, tob, birthLat, birthLon)
+      : null;
+
+  // FIX: Rising can be null when birth time is unknown.
+  // cached_rising_sign is null when time was not provided — show "?" instead of wrong Sun sign.
   const risingSign = profile?.cached_rising_sign
     ? { name: profile.cached_rising_sign, emoji: profile.cached_rising_emoji || "🌅" }
-    : dob ? getApproxRisingSign(dob, tob, birthLat, birthLon) : null;
+    : dob
+      ? getApproxRisingSign(dob, tob, birthLat, birthLon)
+      : null;
 
   const handleBig3Refresh = async () => {
     setBig3Refreshing(true);
@@ -45,15 +54,45 @@ const Index = () => {
     setBig3Refreshing(false);
   };
 
+  // FIX: Rising label — show "?" and a hint when time is unknown
+  const risingLabel = risingSign
+    ? t(`zodiac.${risingSign.name}`)
+    : tob === null && dob
+      ? language === "ka"
+        ? "?"
+        : "?"
+      : "—";
+
+  const risingEmoji = risingSign?.emoji ?? (tob === null && dob ? "🌅" : "🌅");
+
   const big3 = [
-    { key: "sun" as const, label: t("dashboard.sun"), icon: Sun, sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—", emoji: sunSign?.emoji ?? "☀️" },
-    { key: "moon" as const, label: t("dashboard.moon"), icon: Moon, sign: moonSign ? t(`zodiac.${moonSign.name}`) : "—", emoji: moonSign?.emoji ?? "🌙" },
-    { key: "rising" as const, label: t("dashboard.rising"), icon: Sunrise, sign: risingSign ? t(`zodiac.${risingSign.name}`) : "—", emoji: risingSign?.emoji ?? "🌅" },
+    {
+      key: "sun" as const,
+      label: t("dashboard.sun"),
+      icon: Sun,
+      sign: sunSign ? t(`zodiac.${sunSign.name}`) : "—",
+      emoji: sunSign?.emoji ?? "☀️",
+    },
+    {
+      key: "moon" as const,
+      label: t("dashboard.moon"),
+      icon: Moon,
+      sign: moonSign ? t(`zodiac.${moonSign.name}`) : "—",
+      emoji: moonSign?.emoji ?? "🌙",
+    },
+    { key: "rising" as const, label: t("dashboard.rising"), icon: Sunrise, sign: risingLabel, emoji: risingEmoji },
   ];
 
   const selectedSign = selectedBig3 === "sun" ? sunSign : selectedBig3 === "moon" ? moonSign : risingSign;
   const selectedSignName = selectedSign ? t(`zodiac.${selectedSign.name}`) : "";
   const selectedSignEmoji = selectedSign?.emoji ?? "";
+
+  // FIX: clicking Rising when time is unknown should not open detail sheet
+  const handleBig3Click = (key: "sun" | "moon" | "rising") => {
+    if (!dob) return;
+    if (key === "rising" && !tob) return; // no time = no Rising detail
+    setSelectedBig3(key);
+  };
 
   return (
     <div className="flex flex-col">
@@ -63,13 +102,17 @@ const Index = () => {
         {/* Greeting — first thing the user sees */}
         {profile?.name && (
           <p className="text-muted-foreground text-sm">
-            ✨ {t((() => {
-              const h = new Date().getHours();
-              if (h >= 6 && h < 12) return "dashboard.greeting.morning";
-              if (h >= 12 && h < 17) return "dashboard.greeting.afternoon";
-              if (h >= 17 && h < 21) return "dashboard.greeting.evening";
-              return "dashboard.greeting.night";
-            })())}, <span className="text-foreground font-medium">{profile.name}</span>
+            ✨{" "}
+            {t(
+              (() => {
+                const h = new Date().getHours();
+                if (h >= 6 && h < 12) return "dashboard.greeting.morning";
+                if (h >= 12 && h < 17) return "dashboard.greeting.afternoon";
+                if (h >= 17 && h < 21) return "dashboard.greeting.evening";
+                return "dashboard.greeting.night";
+              })(),
+            )}
+            , <span className="text-foreground font-medium">{profile.name}</span>
           </p>
         )}
 
@@ -96,7 +139,7 @@ const Index = () => {
             {big3.map(({ key, label, icon: Icon, sign, emoji }) => (
               <button
                 key={key}
-                onClick={() => dob && setSelectedBig3(key)}
+                onClick={() => handleBig3Click(key)}
                 className="flex flex-col items-center gap-2 glass rounded-xl p-3 cursor-pointer hover:border-primary/30 hover:shadow-gold/20 transition-all active:scale-95 border border-transparent"
               >
                 <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
@@ -106,10 +149,9 @@ const Index = () => {
               </button>
             ))}
           </div>
+          {/* FIX: approxNote now also shows when Rising is unknown due to missing birth time */}
           {!tob && dob && (
-            <p className="text-xs text-muted-foreground mt-3 text-center opacity-70">
-              {t("dashboard.approxNote")}
-            </p>
+            <p className="text-xs text-muted-foreground mt-3 text-center opacity-70">{t("dashboard.approxNote")}</p>
           )}
         </section>
 
@@ -119,7 +161,13 @@ const Index = () => {
             <div>
               <h2 className="font-serif text-xl text-gradient-gold">{t("dashboard.phrase")}</h2>
               <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                {period === "morning" ? (language === "ka" ? "☀️ დღის" : "☀️ Morning") : (language === "ka" ? "🌙 საღამოს" : "🌙 Evening")}
+                {period === "morning"
+                  ? language === "ka"
+                    ? "☀️ დღის"
+                    : "☀️ Morning"
+                  : language === "ka"
+                    ? "🌙 საღამოს"
+                    : "🌙 Evening"}
               </span>
             </div>
             <button
@@ -137,9 +185,7 @@ const Index = () => {
               <span>{t("dashboard.readingStars")}</span>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              ✨ {insight || t("dashboard.noInsight")}
-            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">✨ {insight || t("dashboard.noInsight")}</p>
           )}
         </section>
         {/* My Cosmic Blueprint — Premium gated */}
