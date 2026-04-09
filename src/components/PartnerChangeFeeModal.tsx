@@ -53,7 +53,7 @@ const PartnerChangeFeeModal = ({ open, onOpenChange, onConfirm, memberType }: Pa
         </DialogHeader>
         <div className="space-y-3 pt-2">
           <div className="rounded-xl p-3 text-center border border-amber-500/30 bg-amber-500/10">
-            <span className="text-xl font-bold text-foreground">$1.99</span>
+            <span className="text-xl font-bold text-foreground">$2.99</span>
             <span className="text-sm text-muted-foreground ml-1">{t("changeFee.oneTime")}</span>
           </div>
           <Button
