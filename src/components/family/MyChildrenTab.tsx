@@ -67,7 +67,8 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
   const [memberPlace, setMemberPlace] = useState("");
   const [saving, setSaving] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
-
+  const [changeFeeOpen, setChangeFeeOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   // Geocode verification state
   const [geoStatus, setGeoStatus] = useState<"idle" | "checking" | "found" | "not_found">("idle");
   const [geoCoords, setGeoCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
