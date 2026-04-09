@@ -563,6 +563,19 @@ const translations: Translations = {
   "profile.defaultName": { en: "Stargazer", ka: "ვარსკვლავთმრიცხველი" },
   "profile.languageValue": { en: "English", ka: "ქართული" },
   "onboarding.error": { en: "Something went wrong", ka: "რაღაც შეცდომა მოხდა" },
+
+  // Premium Gate
+  "premiumGate.upgrade": { en: "Upgrade to Premium", ka: "გახდი პრემიუმი" },
+
+  // Partner / Family Change Fee
+  "changeFee.title": { en: "New Analysis Required", ka: "ახალი ანალიზი საჭიროა" },
+  "changeFee.description": {
+    en: "Changing a partner or family member requires generating a new synastry analysis. This is a one-time fee of $1.99.",
+    ka: "პარტნიორის ან ოჯახის წევრის შეცვლა მოითხოვს ახალი სინასტრიის ანალიზის გენერაციას. ეს არის ერთჯერადი საფასური — $1.99."
+  },
+  "changeFee.oneTime": { en: "one-time", ka: "ერთჯერადი" },
+  "changeFee.confirm": { en: "Pay & Continue", ka: "გადაიხადე და გააგრძელე" },
+  "changeFee.success": { en: "Payment successful! Proceeding...", ka: "გადახდა წარმატებულია! მიმდინარეობს..." },
 };
 
 interface LanguageContextType {
