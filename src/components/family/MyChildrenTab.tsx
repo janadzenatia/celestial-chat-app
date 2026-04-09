@@ -376,7 +376,7 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
                   </div>
                 </div>
               </div>
-              <button onClick={() => deleteMember(member.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
+              <button onClick={() => requestDeleteMember(member.id)} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
