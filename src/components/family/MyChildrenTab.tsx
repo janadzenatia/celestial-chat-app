@@ -600,6 +600,11 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
       )}
 
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} />
+      <PartnerChangeFeeModal
+        open={changeFeeOpen}
+        onOpenChange={(open) => { setChangeFeeOpen(open); if (!open) setPendingDeleteId(null); }}
+        onConfirm={() => { if (pendingDeleteId) executeMemberDelete(pendingDeleteId); }}
+      />
     </div>
   );
 }
