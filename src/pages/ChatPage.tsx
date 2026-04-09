@@ -403,8 +403,8 @@ const ChatPage = () => {
             <p className="text-sm text-muted-foreground">
               {trialExpired
                 ? (language === "ka"
-                  ? "შენი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი — $1.99/თვეში"
-                  : "Your trial has ended. Activate Premium — $1.99/month")
+                   ? "შენი საცდელი პერიოდი დასრულდა. გააქტიურე პრემიუმი — $2.99/თვეში"
+                   : "Your trial has ended. Activate Premium — $2.99/month")
                 : (language === "ka"
                   ? "დღის ლიმიტი ამოიწურა. გააქტიურე პრემიუმი შეუზღუდავი ჩატისთვის!"
                   : "Daily limit reached. Upgrade to Premium for unlimited chat!")}

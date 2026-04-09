@@ -435,7 +435,7 @@ const ProfilePage = () => {
         <AlertDialogContent className="glass border-border/50">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-serif">
-              {language === "ka" ? "გააუქმო $1.99/თვიანი გამოწერა?" : "Cancel your $1.99/month subscription?"}
+              {language === "ka" ? "გააუქმო $2.99/თვიანი გამოწერა?" : "Cancel your $2.99/month subscription?"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {language === "ka"
