@@ -181,7 +181,9 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     }
   };
 
-  const handleSave = async () => {
+  const [pendingSave, setPendingSave] = useState(false);
+
+  const executeSave = async () => {
     if (!user || !name.trim() || !dob) return;
     setSaving(true);
     const dobStr = format(dob, "yyyy-MM-dd");
@@ -256,14 +258,26 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
     setSaving(false);
   };
 
+  const handleSave = () => {
+    if (!user || !name.trim() || !dob) return;
+    const isPrem = getEffectivePlan(profile) === "premium";
+    const isReplacing = Boolean(partnerName && partnerDob);
+    if (isPrem && isReplacing) {
+      setPendingSave(true);
+      setPendingDelete(false);
+      setChangeFeeOpen(true);
+    } else {
+      executeSave();
+    }
+  };
+
   const requestDelete = () => {
     const isPrem = getEffectivePlan(profile) === "premium";
     if (isPrem) {
-      // Premium user — changing partner costs $1.99
       setPendingDelete(true);
+      setPendingSave(false);
       setChangeFeeOpen(true);
     } else {
-      // Free user can delete freely
       executeDelete();
     }
   };
@@ -509,8 +523,16 @@ const PartnerCard = ({ onPartnerChange, onDeepSynastry, synastryReport, synastry
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} onSuccess={onPaywallSuccess} />
       <PartnerChangeFeeModal
         open={changeFeeOpen}
-        onOpenChange={(open) => { setChangeFeeOpen(open); if (!open) setPendingDelete(false); }}
-        onConfirm={() => { if (pendingDelete) executeDelete(); }}
+        onOpenChange={(open) => {
+          setChangeFeeOpen(open);
+          if (!open) { setPendingDelete(false); setPendingSave(false); }
+        }}
+        onConfirm={() => {
+          if (pendingDelete) executeDelete();
+          if (pendingSave) executeSave();
+          setPendingDelete(false);
+          setPendingSave(false);
+        }}
       />
     </>
   );
