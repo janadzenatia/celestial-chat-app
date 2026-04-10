@@ -33,8 +33,9 @@ const PartnerChangeFeeModal = ({ open, onOpenChange, onConfirm, memberType }: Pa
     await new Promise(r => setTimeout(r, 2000));
     toast({ title: t("changeFee.success") });
     setLoading(false);
-    onOpenChange(false);
+    // Call onConfirm BEFORE closing, so parent state (pendingDelete/pendingSave) is still valid
     onConfirm();
+    onOpenChange(false);
   };
 
   return (
