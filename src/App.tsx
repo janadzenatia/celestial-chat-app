@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,19 +8,20 @@ import { Capacitor } from "@capacitor/core";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AppLayout from "@/components/AppLayout";
-import LandingPage from "./pages/LandingPage";
-import Index from "./pages/Index";
-import ChatPage from "./pages/ChatPage";
-import CompatibilityPage from "./pages/CompatibilityPage";
-import FamilyPage from "./pages/FamilyPage";
-import ProfilePage from "./pages/ProfilePage";
-import AuthPage from "./pages/AuthPage";
-import OnboardingPage from "./pages/OnboardingPage";
-import TermsPage from "./pages/TermsPage";
-import PrivacyPage from "./pages/PrivacyPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import UnsubscribePage from "./pages/UnsubscribePage";
-import NotFound from "./pages/NotFound";
+
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Index = lazy(() => import("./pages/Index"));
+const ChatPage = lazy(() => import("./pages/ChatPage"));
+const CompatibilityPage = lazy(() => import("./pages/CompatibilityPage"));
+const FamilyPage = lazy(() => import("./pages/FamilyPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const AuthPage = lazy(() => import("./pages/AuthPage"));
+const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
+const UnsubscribePage = lazy(() => import("./pages/UnsubscribePage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -54,39 +56,47 @@ const AuthAwareRoot = () => {
   return session ? <Navigate to="/home" replace /> : <AuthPage />;
 };
 
+const PageLoader = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
 const AppRoutes = () => (
-  <Routes>
-    {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
-    <Route path="/" element={isWebLanding ? <LandingPage /> : <AuthAwareRoot />} />
-    <Route path="/terms" element={<TermsPage />} />
-    <Route path="/privacy" element={<PrivacyPage />} />
-    <Route path="/unsubscribe" element={<UnsubscribePage />} />
+  <Suspense fallback={<PageLoader />}>
+    <Routes>
+      {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
+      <Route path="/" element={isWebLanding ? <LandingPage /> : <AuthAwareRoot />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/unsubscribe" element={<UnsubscribePage />} />
 
-    {/* Auth routes — redirect to landing */}
-    <Route path="/auth" element={<Navigate to="/" replace />} />
-    <Route path="/reset-password" element={<ResetPasswordPage />} />
+      {/* Auth routes — redirect to landing */}
+      <Route path="/auth" element={<Navigate to="/" replace />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-    {/* Onboarding — still needed for authenticated PWA users */}
-    <Route path="/onboarding" element={<OnboardingPage />} />
+      {/* Onboarding — still needed for authenticated PWA users */}
+      <Route path="/onboarding" element={<OnboardingPage />} />
 
-    {/* Protected app routes — only for existing authenticated (PWA) users */}
-    <Route
-      element={
-        <ProtectedRoute>
-          <AppLayout />
-        </ProtectedRoute>
-      }
-    >
-      <Route path="/home" element={<Index />} />
-      <Route path="/chat" element={<ChatPage />} />
-      <Route path="/compatibility" element={<CompatibilityPage />} />
-      <Route path="/family" element={<FamilyPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-    </Route>
+      {/* Protected app routes — only for existing authenticated (PWA) users */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/home" element={<Index />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/compatibility" element={<CompatibilityPage />} />
+        <Route path="/family" element={<FamilyPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Route>
 
-    {/* Catch-all: redirect to landing */}
-    <Route path="*" element={<Navigate to="/" replace />} />
-  </Routes>
+      {/* Catch-all: redirect to landing */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </Suspense>
 );
 
 const App = () => (
