@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { geocodePlace } from "@/lib/geocoding";
 import { getDeviceId } from "@/lib/deviceId";
 import { getSunSign, getApproxMoonSign, getApproxRisingSign } from "@/lib/zodiac";
+import { initPushNotifications } from "@/lib/pushNotifications";
 
 interface Profile {
   id: string;
@@ -121,6 +122,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Fire-and-forget side effects — never block auth flow
     if (prof) {
+      // Register for push notifications (no-op on web)
+      initPushNotifications(userId).catch((e) => console.error("push init failed:", e));
+
       // Save device_id if not set
       if (!prof.device_id) {
         const deviceId = getDeviceId();

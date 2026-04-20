@@ -576,6 +576,11 @@ const translations: Translations = {
   "changeFee.oneTime": { en: "one-time", ka: "ერთჯერადი" },
   "changeFee.confirm": { en: "Pay & Continue", ka: "გადაიხადე და გააგრძელე" },
   "changeFee.success": { en: "Payment successful! Proceeding...", ka: "გადახდა წარმატებულია! მიმდინარეობს..." },
+
+  // Notifications
+  "profile.notifications": { en: "Daily Notifications", ka: "ყოველდღიური შეტყობინებები" },
+  "profile.notificationsOn": { en: "Notifications enabled", ka: "შეტყობინებები ჩართულია" },
+  "profile.notificationsOff": { en: "Notifications disabled", ka: "შეტყობინებები გამორთულია" },
 };
 
 interface LanguageContextType {
