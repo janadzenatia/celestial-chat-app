@@ -340,11 +340,15 @@ export type Database = {
           daily_chat_count: number
           date_of_birth: string | null
           device_id: string | null
+          fcm_platform: string | null
+          fcm_token: string | null
+          fcm_token_updated_at: string | null
           id: string
           is_premium: boolean
           language_preference: string
           last_chat_date: string | null
           name: string | null
+          notifications_enabled: boolean
           onboarding_completed: boolean
           partner_birth_date: string | null
           partner_birth_place_lat: number | null
@@ -359,6 +363,7 @@ export type Database = {
           subscription_plan: string
           subscription_status: string
           time_of_birth: string | null
+          timezone: string | null
           trial_end_date: string | null
           updated_at: string
           user_id: string
@@ -377,11 +382,15 @@ export type Database = {
           daily_chat_count?: number
           date_of_birth?: string | null
           device_id?: string | null
+          fcm_platform?: string | null
+          fcm_token?: string | null
+          fcm_token_updated_at?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
           last_chat_date?: string | null
           name?: string | null
+          notifications_enabled?: boolean
           onboarding_completed?: boolean
           partner_birth_date?: string | null
           partner_birth_place_lat?: number | null
@@ -396,6 +405,7 @@ export type Database = {
           subscription_plan?: string
           subscription_status?: string
           time_of_birth?: string | null
+          timezone?: string | null
           trial_end_date?: string | null
           updated_at?: string
           user_id: string
@@ -414,11 +424,15 @@ export type Database = {
           daily_chat_count?: number
           date_of_birth?: string | null
           device_id?: string | null
+          fcm_platform?: string | null
+          fcm_token?: string | null
+          fcm_token_updated_at?: string | null
           id?: string
           is_premium?: boolean
           language_preference?: string
           last_chat_date?: string | null
           name?: string | null
+          notifications_enabled?: boolean
           onboarding_completed?: boolean
           partner_birth_date?: string | null
           partner_birth_place_lat?: number | null
@@ -433,8 +447,42 @@ export type Database = {
           subscription_plan?: string
           subscription_status?: string
           time_of_birth?: string | null
+          timezone?: string | null
           trial_end_date?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_send_log: {
+        Row: {
+          created_at: string
+          error: string | null
+          fcm_message_id: string | null
+          id: string
+          kind: string
+          send_date: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          fcm_message_id?: string | null
+          id?: string
+          kind: string
+          send_date?: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          fcm_message_id?: string | null
+          id?: string
+          kind?: string
+          send_date?: string
+          status?: string
           user_id?: string
         }
         Relationships: []
