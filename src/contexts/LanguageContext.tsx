@@ -90,6 +90,7 @@ const translations: Translations = {
   "auth.invalidCredentials": { en: "Invalid login credentials", ka: "არასწორი ელ.ფოსტა ან პაროლი" },
   "auth.userNotFound": { en: "User not found", ka: "მომხმარებელი ვერ მოიძებნა" },
   "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
+  "auth.alreadyRegistered": { en: "This email is already registered. Please sign in instead — or reset your password if you've forgotten it.", ka: "ეს ელ.ფოსტა უკვე დარეგისტრირებულია. გთხოვ შეხვიდე ანგარიშზე — ან აღადგინე პაროლი თუ დაგავიწყდა." },
   "auth.loading": { en: "Please wait...", ka: "გთხოვ მოიცადო..." },
   "auth.alreadyHaveAccount": { en: "Already have an account?", ka: "უკვე გაქვს ანგარიში?" },
   "auth.noAccount": { en: "Don't have an account?", ka: "არ გაქვს ანგარიში?" },
