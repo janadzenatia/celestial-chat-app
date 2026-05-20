@@ -39,7 +39,9 @@ CRITICAL TONE RULE FOR GEORGIAN: ALWAYS use the informal "შენობით�
 - Use "გეტყვი" instead of "გეტყვით"
 - Use "დააკვირდი" instead of "დააკვირდით"
 - Use "სცადე" instead of "სცადეთ"
-This creates a warm, personal, friendly tone as if speaking to a close friend.`
+This creates a warm, personal, friendly tone as if speaking to a close friend.
+
+CRITICAL ZODIAC TRANSLATION RULE: The zodiac sign "Cancer" in Georgian MUST ALWAYS be written as "კირჩხიბი". NEVER use "კიბო" or "სიმსივნე" — these words mean "cancer the disease/tumor" in Georgian and are completely wrong. Always "კირჩხიბი" for the zodiac sign.`
     : `ALL text content MUST be written in English. Use a warm, friendly, personal conversational tone — speak directly to the user as "you/your" like a trusted friend, never formal or distant.`;
 }
 
