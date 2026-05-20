@@ -37,7 +37,7 @@ serve(async (req) => {
     const response = await callGeminiWithRetry({
       apiKey: GEMINI_API_KEY,
       body: {
-        model: "google/gemini-2.5-flash-lite",
+        model: "gemini-2.5-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,

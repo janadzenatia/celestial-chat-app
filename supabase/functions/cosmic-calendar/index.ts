@@ -52,7 +52,7 @@ Rules:
     const response = await callGeminiWithRetry({
       apiKey: GEMINI_API_KEY,
       body: {
-        model: "google/gemini-2.5-flash-lite",
+        model: "gemini-2.5-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Generate the cosmic calendar for all ${daysInMonth} days.` },
