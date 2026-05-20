@@ -49,8 +49,12 @@ const AuthPage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      // Always send reset links to the public web reset page so they work
+      // from any context (web, PWA, native app). The /reset-password route
+      // is registered on all domains, including astrochat.ge.
+      const resetRedirect = "https://astrochat.ge/reset-password";
       const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: resetRedirect,
       });
       if (error) {
         toast({ title: getLocalizedError(error.message), variant: "destructive" });
