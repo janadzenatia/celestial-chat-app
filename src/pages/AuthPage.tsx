@@ -75,6 +75,15 @@ const AuthPage = () => {
     try {
       const { error } = isSignUp ? await signUp(email, password) : await signIn(email, password);
       if (error) {
+        const msg = (error.message || "").toLowerCase();
+        // If user tries to sign up with an email that already exists,
+        // auto-switch to login mode and surface a helpful message + forgot-password.
+        if (isSignUp && (msg.includes("already registered") || msg.includes("user_already_exists") || msg.includes("already exists"))) {
+          toast({ title: t("auth.alreadyRegistered") });
+          setIsSignUp(false);
+          setForgotEmail(email);
+          return;
+        }
         toast({ title: getLocalizedError(error.message), variant: "destructive" });
       } else if (isSignUp) {
         toast({ title: t("auth.checkEmail") });
