@@ -41,7 +41,7 @@ RULES:
     const response = await callGeminiWithRetry({
       apiKey: GEMINI_API_KEY,
       body: {
-        model: "gemini-2.0-flash-lite",
+        model: "google/gemini-2.5-flash-lite",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Generate a 2-sentence love language summary for ${partnerName} (Sun=${partnerSign}${partnerMoonSign ? `, Moon=${partnerMoonSign}` : ""}${partnerRisingSign ? `, ASC=${partnerRisingSign}` : ""}).` },

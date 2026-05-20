@@ -45,10 +45,10 @@ export function stripMarkdownDeep(obj: any): any {
 export async function callGeminiWithRetry(options: GeminiRequestOptions): Promise<Response> {
   const { apiKey, body } = options;
 
-  // FIX: use gemini-2.0-flash-lite (correct cheaper model) and enforce max_tokens
+  // FIX: use google/gemini-2.5-flash-lite (correct cheaper model) and enforce max_tokens
   const normalizedBody = {
     ...body,
-    model: "gemini-2.0-flash-lite",
+    model: "google/gemini-2.5-flash-lite",
     max_tokens: body.max_tokens ?? DEFAULT_MAX_TOKENS,
   };
 
@@ -94,7 +94,7 @@ export function extractTokenUsage(data: any): {
     prompt_tokens: usage.prompt_tokens || 0,
     completion_tokens: usage.completion_tokens || 0,
     total_tokens: usage.total_tokens || 0,
-    model: data?.model || "gemini-2.0-flash-lite",
+    model: data?.model || "google/gemini-2.5-flash-lite",
   };
 }
 
