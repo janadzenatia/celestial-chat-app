@@ -574,9 +574,9 @@ const translations: Translations = {
   "gate.blueprint.b3": { en: "Practical guidance written just for you", ka: "პრაქტიკული რჩევები მხოლოდ შენთვის" },
 
   "gate.match.title": { en: "Cosmic Match", ka: "კოსმოსური თავსებადობა" },
-  "gate.match.b1": { en: "See who in the zodiac fits you best today", ka: "ნახე, ვინ გიხდება ზოდიაქოდან დღეს" },
-  "gate.match.b2": { en: "Love, friendship & energy compatibility scores", ka: "სიყვარულის, მეგობრობის და ენერგიის თავსებადობის ქულები" },
-  "gate.match.b3": { en: "Updated daily based on planetary transits", ka: "ყოველდღიურად განახლდება პლანეტარული ტრანზიტების მიხედვით" },
+  "gate.match.b1": { en: "Discover your cosmic soulmate from the zodiac", ka: "ვარსკვლავები გეტყვიან, ვინ არის შენი სულიერი წყვილი" },
+  "gate.match.b2": { en: "Love, friendship and energy compatibility scores", ka: "სიყვარულის, მეგობრობის და ენერგეტიკული თავსებადობის ქულები" },
+  "gate.match.b3": { en: "Updated daily based on planetary transits", ka: "ყოველდღე განახლდება ციური მოვლენების მიხედვით" },
 
   "gate.calendar.title": { en: "Cosmic Traffic Light Calendar", ka: "კოსმოსური შუქნიშნის კალენდარი" },
   "gate.calendar.b1": { en: "Green, yellow & red days for the month ahead", ka: "მწვანე, ყვითელი და წითელი დღეები მომავალი თვისთვის" },
