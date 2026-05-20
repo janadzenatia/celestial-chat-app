@@ -584,9 +584,9 @@ const translations: Translations = {
   "gate.calendar.b3": { en: "Avoid energy traps before they happen", ka: "აიცილე ენერგიული ხაფანგები წინასწარ" },
 
   "gate.wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედი" },
-  "gate.wealth.b1": { en: "Your natural money & career archetype", ka: "შენი ბუნებრივი ფულის და კარიერის არქეტიპი" },
-  "gate.wealth.b2": { en: "Best industries and roles for your chart", ka: "საუკეთესო ინდუსტრიები და როლები შენი ქარტისთვის" },
-  "gate.wealth.b3": { en: "Timing windows for growth and risk", ka: "ზრდისა და რისკის დროის ფანჯრები" },
+  "gate.wealth.b1": { en: "Your natural money energy and career archetype", ka: "შენი თანდაყოლილი ნიჭი და ფულის ენერგია" },
+  "gate.wealth.b2": { en: "Professions and industries where the stars promise success", ka: "პროფესიები და სფეროები, სადაც ვარსკვლავები წარმატებას გპირდებიან" },
+  "gate.wealth.b3": { en: "Best periods for bold moves and new beginnings", ka: "საუკეთესო პერიოდები ახალი ნაბიჯებისა და გაბედული გადაწყვეტილებებისთვის" },
 
   "gate.forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
   "gate.forecast.b1": { en: "Month-by-month outlook for you two", ka: "თვიური პროგნოზი თქვენი წყვილისთვის" },
