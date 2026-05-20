@@ -2,14 +2,18 @@ import { useState } from "react";
 import { useAuth, getEffectivePlan } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PaywallModal from "./PaywallModal";
-import { Lock } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 
 interface PremiumGateProps {
   children: React.ReactNode;
   overlay?: boolean;
+  /** Translation key for preview title shown above the blurred content */
+  previewTitleKey?: string;
+  /** Translation keys for 2-3 bullet points describing the locked benefits */
+  previewBulletKeys?: string[];
 }
 
-const PremiumGate = ({ children }: PremiumGateProps) => {
+const PremiumGate = ({ children, previewTitleKey, previewBulletKeys }: PremiumGateProps) => {
   const { profile } = useAuth();
   const { t } = useLanguage();
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -19,9 +23,34 @@ const PremiumGate = ({ children }: PremiumGateProps) => {
 
   if (hasAccess) return <>{children}</>;
 
-  // Always show blurred content with lock overlay
+  const title = previewTitleKey ? t(previewTitleKey) : null;
+  const bullets = previewBulletKeys?.map((k) => t(k)) ?? [];
+
   return (
     <>
+      {(title || bullets.length > 0) && (
+        <div
+          className="rounded-2xl border border-primary/20 bg-card/60 p-4 mb-2 cursor-pointer"
+          onClick={() => setPaywallOpen(true)}
+        >
+          {title && (
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+            </div>
+          )}
+          {bullets.length > 0 && (
+            <ul className="space-y-1">
+              {bullets.map((b, i) => (
+                <li key={i} className="text-xs text-muted-foreground leading-relaxed flex gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
       <div
         className="relative rounded-2xl overflow-visible cursor-pointer"
         onClick={() => setPaywallOpen(true)}

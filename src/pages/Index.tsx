@@ -190,13 +190,21 @@ const Index = () => {
         </section>
         {/* My Cosmic Blueprint — Premium gated */}
         {dob && (
-          <PremiumGate overlay>
+          <PremiumGate
+            overlay
+            previewTitleKey="gate.blueprint.title"
+            previewBulletKeys={["gate.blueprint.b1", "gate.blueprint.b2", "gate.blueprint.b3"]}
+          >
             <CosmicBlueprintCard />
           </PremiumGate>
         )}
 
         {dob && (
-          <PremiumGate overlay>
+          <PremiumGate
+            overlay
+            previewTitleKey="gate.match.title"
+            previewBulletKeys={["gate.match.b1", "gate.match.b2", "gate.match.b3"]}
+          >
             <CosmicMatchCard />
           </PremiumGate>
         )}
@@ -206,14 +214,22 @@ const Index = () => {
 
         {/* Cosmic Traffic Light Calendar */}
         {dob && (
-          <PremiumGate overlay>
+          <PremiumGate
+            overlay
+            previewTitleKey="gate.calendar.title"
+            previewBulletKeys={["gate.calendar.b1", "gate.calendar.b2", "gate.calendar.b3"]}
+          >
             <CosmicCalendarCard />
           </PremiumGate>
         )}
 
         {/* Wealth & Career Destiny */}
         {dob && (
-          <PremiumGate overlay>
+          <PremiumGate
+            overlay
+            previewTitleKey="gate.wealth.title"
+            previewBulletKeys={["gate.wealth.b1", "gate.wealth.b2", "gate.wealth.b3"]}
+          >
             <WealthCareerCard />
           </PremiumGate>
         )}
