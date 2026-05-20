@@ -215,7 +215,11 @@ const CompatibilityPage = () => {
 
         {/* Relationship Forecast — ONLY shown after deep synastry + premium */}
         {partnerDobStr && showDeepReport && (
-          <PremiumGate overlay>
+          <PremiumGate
+            overlay
+            previewTitleKey="gate.forecast.title"
+            previewBulletKeys={["gate.forecast.b1", "gate.forecast.b2", "gate.forecast.b3"]}
+          >
             <RelationshipForecastCard
               intro={forecast?.intro}
               periods={forecast?.periods ?? null}
