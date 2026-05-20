@@ -400,7 +400,10 @@ export default function MyChildrenTab({ onFamilyChanged }: MyChildrenTabProps) {
 
             {/* Report or Generate */}
             {report ? (
-              <PremiumGate>
+              <PremiumGate
+                previewTitleKey="gate.family.title"
+                previewBulletKeys={["gate.family.b1", "gate.family.b2", "gate.family.b3"]}
+              >
                 <div className="space-y-2">
                   {[
                     { key: "blueprint", icon: Star, label: t("family.blueprint"), content: report.blueprint },
