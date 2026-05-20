@@ -9,6 +9,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function fallbackInsight(language: string, name?: string, period?: string) {
+  const isGeorgian = language === "ka";
+  if (isGeorgian) {
+    return `${name || "შენ"}, დღეს შენი ენერგია რბილად გთხოვს, საკუთარ ინტუიციას ენდო. ${period === "morning" ? "დღე დაიწყე ერთი მშვიდი გადაწყვეტილებით." : "საღამოს დატოვე ადგილი სიმშვიდისთვის და შინაგანი პასუხებისთვის."}`;
+  }
+
+  return `${name || "Star Seeker"}, today your energy gently asks you to trust your intuition. ${period === "morning" ? "Begin with one calm decision." : "Leave room tonight for quiet and inner answers."}`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -42,11 +51,9 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ content: fallbackInsight(language, name, period), fallback: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const data = await response.json();
@@ -60,8 +67,6 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("daily-insight error:", e);
-    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({ content: fallbackInsight("en"), fallback: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
