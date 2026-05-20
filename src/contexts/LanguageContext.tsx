@@ -567,6 +567,37 @@ const translations: Translations = {
   // Premium Gate
   "premiumGate.upgrade": { en: "Upgrade to Premium", ka: "გახდი პრემიუმი" },
 
+  // Preview titles + bullets for locked sections
+  "gate.blueprint.title": { en: "My Cosmic Blueprint", ka: "ჩემი კოსმოსური გეგმა" },
+  "gate.blueprint.b1": { en: "Personalized analysis of your Sun, Moon & Rising", ka: "მზის, მთვარისა და ასცენდენტის პერსონალური ანალიზი" },
+  "gate.blueprint.b2": { en: "Your strengths, shadows & life purpose", ka: "შენი ძლიერი მხარეები, ჩრდილები და ცხოვრების მიზანი" },
+  "gate.blueprint.b3": { en: "Practical guidance written just for you", ka: "პრაქტიკული რჩევები მხოლოდ შენთვის" },
+
+  "gate.match.title": { en: "Cosmic Match", ka: "კოსმოსური თავსებადობა" },
+  "gate.match.b1": { en: "See who in the zodiac fits you best today", ka: "ნახე, ვინ გიხდება ზოდიაქოდან დღეს" },
+  "gate.match.b2": { en: "Love, friendship & energy compatibility scores", ka: "სიყვარულის, მეგობრობის და ენერგიის თავსებადობის ქულები" },
+  "gate.match.b3": { en: "Updated daily based on planetary transits", ka: "ყოველდღიურად განახლდება პლანეტარული ტრანზიტების მიხედვით" },
+
+  "gate.calendar.title": { en: "Cosmic Traffic Light Calendar", ka: "კოსმოსური შუქნიშნის კალენდარი" },
+  "gate.calendar.b1": { en: "Green, yellow & red days for the month ahead", ka: "მწვანე, ყვითელი და წითელი დღეები მომავალი თვისთვის" },
+  "gate.calendar.b2": { en: "Know the best days to act, rest or wait", ka: "გაიგე საუკეთესო დღეები მოქმედებისთვის, დასვენებისთვის ან ლოდინისთვის" },
+  "gate.calendar.b3": { en: "Avoid energy traps before they happen", ka: "აიცილე ენერგიული ხაფანგები წინასწარ" },
+
+  "gate.wealth.title": { en: "Wealth & Career Destiny", ka: "სიმდიდრე და კარიერის ბედი" },
+  "gate.wealth.b1": { en: "Your natural money & career archetype", ka: "შენი ბუნებრივი ფულის და კარიერის არქეტიპი" },
+  "gate.wealth.b2": { en: "Best industries and roles for your chart", ka: "საუკეთესო ინდუსტრიები და როლები შენი ქარტისთვის" },
+  "gate.wealth.b3": { en: "Timing windows for growth and risk", ka: "ზრდისა და რისკის დროის ფანჯრები" },
+
+  "gate.forecast.title": { en: "Relationship Forecast", ka: "ურთიერთობის პროგნოზი" },
+  "gate.forecast.b1": { en: "Month-by-month outlook for you two", ka: "თვიური პროგნოზი თქვენი წყვილისთვის" },
+  "gate.forecast.b2": { en: "Hot spots, calm windows & turning points", ka: "ცხელი წერტილები, მშვიდი ფანჯრები და გარდამტეხი მომენტები" },
+  "gate.forecast.b3": { en: "Advice timed to your shared cycles", ka: "რჩევები თქვენი საერთო ციკლების მიხედვით" },
+
+  "gate.family.title": { en: "Family Member Insights", ka: "ოჯახის წევრის ანალიზი" },
+  "gate.family.b1": { en: "Personality blueprint from their birth chart", ka: "პიროვნების გეგმა მათი დაბადების ქარტიდან" },
+  "gate.family.b2": { en: "Emotional bond & how you connect", ka: "ემოციური კავშირი და როგორ უკავშირდებით" },
+  "gate.family.b3": { en: "Parenting advice tailored to them", ka: "მშობლობის რჩევები სპეციალურად მათთვის" },
+
   // Partner / Family Change Fee
   "changeFee.title": { en: "New Analysis Required", ka: "ახალი ანალიზი საჭიროა" },
   "changeFee.description": {
