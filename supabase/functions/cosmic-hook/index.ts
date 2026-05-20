@@ -9,6 +9,21 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function fallbackHook(language: string, userName?: string, todaySubject?: { name?: string; relationship?: string; dateOfBirth?: string }) {
+  const isGeorgian = language === "ka";
+  const subject = todaySubject?.relationship === "self" ? "self" : todaySubject?.name || "self";
+  const hook = isGeorgian
+    ? `${userName || "შენ"}, დღეს ვარსკვლავები გირჩევენ, ერთ პატარა ნიშანს განსაკუთრებით ყურადღებით მოუსმინო. შეეხე და გაიგე მეტი.`
+    : `${userName || "Star Seeker"}, today the stars are pointing you toward one subtle sign worth noticing. Tap to discover more.`;
+
+  return {
+    hook,
+    subject,
+    subjectDob: todaySubject?.relationship === "self" ? null : todaySubject?.dateOfBirth || null,
+    fallback: true,
+  };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -68,11 +83,9 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      if (response.status === 429) return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (response.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify(fallbackHook(language, userName, todaySubject)), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const result = await response.json();
@@ -96,8 +109,6 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("cosmic-hook error:", e);
-    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(fallbackHook("en")), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
