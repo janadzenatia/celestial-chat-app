@@ -91,8 +91,14 @@ const AuthPage = () => {
         }
         toast({ title: getLocalizedError(error.message), variant: "destructive" });
       } else if (isSignUp) {
-        toast({ title: t("auth.checkEmail") });
+        // Email confirmation is disabled — user is auto-signed in.
+        // Show success toast and fire-and-forget a welcome email.
+        toast({ title: t("auth.accountCreated") });
+        const lang = (typeof navigator !== "undefined" && navigator.language?.startsWith("ka")) ? "ka" : "en";
+        sendWelcomeEmail(email, undefined, lang).catch(() => {});
+        // AuthContext will pick up the new session and redirect to /onboarding.
       }
+
     } catch (err: any) {
       toast({ title: t("auth.genericError"), variant: "destructive" });
     } finally {
