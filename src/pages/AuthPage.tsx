@@ -100,11 +100,21 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative">
-      {/* Language Toggle */}
-      <div className="absolute top-4 right-4 z-10">
+    <div
+      className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative"
+      style={{
+        paddingTop: "max(2rem, env(safe-area-inset-top))",
+        paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+      }}
+    >
+      {/* Language Toggle - always visible, respects iOS safe area */}
+      <div
+        className="fixed right-4 z-50"
+        style={{ top: "max(1rem, calc(env(safe-area-inset-top) + 0.5rem))" }}
+      >
         <LanguageToggle />
       </div>
+
       {/* Logo / Splash */}
       <div className="flex flex-col items-center mb-10 animate-float">
         <div className="relative mb-4">
