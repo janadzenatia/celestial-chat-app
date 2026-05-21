@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Sparkles, Star } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 import { useToast } from "@/hooks/use-toast";
+import { sendWelcomeEmail } from "@/services/authService";
 import { Link, Navigate } from "react-router-dom";
 
 const AuthPage = () => {
