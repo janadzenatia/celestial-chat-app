@@ -87,6 +87,8 @@ const translations: Translations = {
   },
   "auth.acceptTerms": { en: "Please accept the Terms & Conditions", ka: "გთხოვ დაეთანხმო წესებსა და პირობებს" },
   "auth.checkEmail": { en: "Check your email to verify your account! ✨", ka: "შეამოწმე ელ.ფოსტა ანგარიშის დასადასტურებლად! ✨" },
+  "auth.accountCreated": { en: "Your account has been successfully created!", ka: "თქვენი ანგარიში წარმატებით შეიქმნა!" },
+
   "auth.invalidCredentials": { en: "Invalid login credentials", ka: "არასწორი ელ.ფოსტა ან პაროლი" },
   "auth.userNotFound": { en: "User not found", ka: "მომხმარებელი ვერ მოიძებნა" },
   "auth.genericError": { en: "Something went wrong. Please try again.", ka: "რაღაც შეცდომა მოხდა. სცადე თავიდან." },
