@@ -42,6 +42,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const hasRecoveryRedirect = window.location.search.includes("type=recovery") || window.location.hash.includes("type=recovery");
+if (window.location.pathname === "/" && hasRecoveryRedirect) {
+  window.history.replaceState(null, "", `/reset-password${window.location.search}${window.location.hash}`);
+}
+
 const isWebLanding = window.location.hostname === "astrochat.ge" || window.location.hostname.endsWith(".astrochat.ge");
 
 const AuthAwareRoot = () => {
@@ -66,7 +71,7 @@ const AppRoutes = () => (
   <Suspense fallback={<PageLoader />}>
     <Routes>
       {/* Native: AuthPage, Preview: auth-aware, Production web: LandingPage */}
-      <Route path="/" element={isWebLanding ? <LandingPage /> : <AuthAwareRoot />} />
+      <Route path="/" element={hasRecoveryRedirect ? <ResetPasswordPage /> : isWebLanding ? <LandingPage /> : <AuthAwareRoot />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/unsubscribe" element={<UnsubscribePage />} />

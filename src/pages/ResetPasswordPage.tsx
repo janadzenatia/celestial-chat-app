@@ -19,9 +19,11 @@ const ResetPasswordPage = () => {
   const [isRecovery, setIsRecovery] = useState(false);
 
   useEffect(() => {
-    // Check for recovery token in URL hash
+    // Check for recovery token in URL hash/search. Some email clients/providers
+    // preserve the recovery params in the query string instead of the hash.
     const hash = window.location.hash;
-    if (hash.includes("type=recovery")) {
+    const search = window.location.search;
+    if (hash.includes("type=recovery") || search.includes("type=recovery")) {
       setIsRecovery(true);
     }
 
