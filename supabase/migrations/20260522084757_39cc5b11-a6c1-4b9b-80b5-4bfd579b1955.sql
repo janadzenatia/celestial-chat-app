@@ -1,0 +1,1 @@
+DELETE FROM public.cosmic_hooks WHERE language='ka' AND hook ~ '^[A-Za-z]';
