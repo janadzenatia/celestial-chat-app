@@ -44,10 +44,10 @@ serve(async (req) => {
       : `About "${todaySubject?.name}" (${todaySubject?.relationship}, born ${todaySubject?.dateOfBirth}). Set subject="${todaySubject?.name}".`;
 
     const langRule = language === "ka"
-      ? `Georgian only. Informal "შენობითი" form.`
-      : `English only.`;
+      ? `*** OUTPUT LANGUAGE: GEORGIAN ONLY (ქართული). The "hook" field MUST be written in Georgian script (ქართული ანბანი). DO NOT write in English. Use informal "შენობითი" form. Translate ALL zodiac sign names to Georgian (Cancer = კირჩხიბი, never კიბო). ***`
+      : `*** OUTPUT LANGUAGE: ENGLISH ONLY. ***`;
 
-    const prompt = `Generate 1-sentence cosmic push notification. User: ${userName}, Sun=${sunSign}, Moon=${moonSign}, Rising=${risingSign}. ${focus} Create curiosity, positive urgency, no solutions. End with "${cta}". No negativity. ${langRule} Return JSON: {"hook":"text","subject":"name or self","subjectDob":"dob or null"}`;
+    const prompt = `${langRule}\n\nGenerate 1-sentence cosmic push notification. User: ${userName}, Sun=${sunSign}, Moon=${moonSign}, Rising=${risingSign}. ${focus} Create curiosity, positive urgency, no solutions. End with "${cta}". No negativity.\n\n${langRule}\n\nReturn JSON: {"hook":"text in ${lang}","subject":"name or self","subjectDob":"dob or null"}`;
 
     const systemPrompt = buildSystemPrompt("Elite AI astrologer generating push notifications. Return ONLY valid JSON.", language);
 
